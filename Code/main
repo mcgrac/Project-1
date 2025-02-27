@@ -1,1 +1,75 @@
+/*
+Raylib example file.
+This is an example main file for a simple raylib project.
+Use this as a starting point or replace it with your code.
+
+by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit https://creativecommons.org/publicdomain/zero/1.0/
+
+*/
+
+#include "raylib.h"
+
+#include "resource_dir.h"	// utility header for SearchAndSetResourceDir
+
+// Estructura para el personaje
+typedef struct {
+	Rectangle rect;  // Rectángulo que representa al personaje
+	Vector2 speed;   // Velocidad del personaje
+	bool isJumping;  // Bandera para saber si está en el aire
+} Player;
+
+#define GRAVITY  0.5f    // Gravedad aplicada en cada frame
+#define JUMP_FORCE 10.0f // Fuerza del salto
+#define SPEED 5.0f       // Velocidad del personaje
+
+int main ()
+{
+	// Tell the window to use vsync and work on high DPI displays
+	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
+	
+	// Create the window and OpenGL context
+	InitWindow(1280, 800, "Hello Raylib");
+
+	Player mario = { {640, 400, 40, 40}, {0, 0}, false };
+
+	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
+	SearchAndSetResourceDir("resources");
+
+	// Load a texture from the resources directory
+	//Texture wabbit = LoadTexture("wabbit_alpha.png");
+	
+	// game loop
+	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
+	{
+		if (IsKeyDown(KEY_RIGHT)) mario.rect.x += SPEED;
+		if (IsKeyDown(KEY_LEFT)) mario.rect.x -= SPEED;
+
+		// drawing
+		BeginDrawing();
+
+		// Setup the back buffer for drawing (clear color and depth buffers)
+		ClearBackground(BLACK);
+
+		DrawRectangleRec(mario.rect, RED); //dubujar personaje
+
+		// draw some text using the default font
+		//DrawText("Hello Raylib", 200,200,20,WHITE);
+
+		if (IsKeyDown(KEY_RIGHT)) mario.rect.x += SPEED;
+		if (IsKeyDown(KEY_LEFT)) mario.rect.x -= SPEED;
+		// draw our texture to the screen
+		//DrawTexture(wabbit, 400, 200, WHITE);
+		
+		// end the frame and get ready for the next one  (display frame, poll input, etc...)
+		EndDrawing();
+	}
+
+	// cleanup
+	// unload our texture so it can be cleaned up
+	//UnloadTexture(wabbit);
+
+	// destroy the window and cleanup the OpenGL context
+	CloseWindow();
+	return 0;
+}
 
