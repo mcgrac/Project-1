@@ -65,8 +65,11 @@ int main() {
 
 	InitWindow(screenWidth, screenHeight, "Mapa en Movimiento");
 
-	Image marioImage = LoadImage("resources/bmario 1.png"); // If the file is inside an 'assets' folder
-
+	Image marioImage1 = LoadImage("resources/bmario 1.png"); // If the file is inside an 'assets' folder
+	Image marioImage2 = LoadImage("resources/bmario 2.png");
+	Image marioImage3 = LoadImage("resources/bmario 3.png");
+	Image marioImage4 = LoadImage("resources/bmario 4.png");
+	Image marioImage5 = LoadImage("resources/bmario 5.png");
 
 	Vector2 playerPos = { screenWidth / 3, screenHeight - TILE_SIZE * 2 };
 	float velocityY = 0;
@@ -118,14 +121,16 @@ int main() {
 
 		// Dibujar el personaje
 		//DrawRectangle(playerPos.x - 20, playerPos.y - 40, 40, 40, BLUE);
-	    
-		//Texture2D mario = LoadTexture("bmario 1.png");
-		//DrawTexture(mario, screenWidth/3, screenHeight/3, WHITE);
 
-		Texture2D marioTexture = LoadTextureFromImage(marioImage);  // Convert Image to Texture
-		//DrawTexture(marioTexture, screenWidth / 3, screenHeight / 3, WHITE);  // Draw the image at position (100, 100)
-		DrawTexture(marioTexture, screenWidth / 3, screenHeight / 3, WHITE);
+		Texture2D marioTexture1 = LoadTextureFromImage(marioImage1);  // Convert Image to Texture
+		Texture2D marioTexture2 = LoadTextureFromImage(marioImage2);
+		Texture2D marioTexture3 = LoadTextureFromImage(marioImage3);
+		Texture2D marioTexture4 = LoadTextureFromImage(marioImage4);
+		Texture2D marioTexture5 = LoadTextureFromImage(marioImage5);
 
+		//DrawTexture(marioTexture, screenWidth / 3, screenHeight / 3, WHITE);
+		if (onGround == true) { DrawTexture(marioTexture1, playerPos.x - 20, playerPos.y - 160, WHITE); }
+		else{ DrawTexture(marioTexture5, playerPos.x - 20, playerPos.y - 160, WHITE); }
 		DrawText("Usa las flechas para mover el mapa", 10, 10, 20, RAYWHITE);
 
 		EndDrawing();
