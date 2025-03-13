@@ -1,7 +1,4 @@
-
-
 #include "raylib.h"
-
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
 #define GRAVITY  0.5f    // Gravedad aplicada en cada frame
@@ -14,8 +11,12 @@
 #define MAP_COLS 32   // Columnas del mapa
 
 #define GOOMBA_FACING_RIGHT 1
-#define GOOMBA_FACING_LEFT 2
+#define GOOMBA_FACING_LEFT -1
 
+#define MARIO_DEAD 0
+#define MARIO_LITTLE 1
+#define MARIO_BIG 2
+#define MARIO_POWER_UP 3
 
 //#define MAP_COLS 100  // Aumentamos el tamaño del nivel en columnas
 
@@ -39,7 +40,7 @@ int map[MAP_ROWS][MAP_COLS] = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
 };
 
@@ -71,12 +72,16 @@ typedef struct {
 	Rectangle rect;  // Rectángulo que representa al personaje
 	Vector2 speed;   // Velocidad del personaje
 	bool isJumping;  // Bandera para saber si está en el aire
+	int state; //0 muerto, 1 little, 2 big, 3 power up
+	bool immunity;
+	float time;
 } Player;
 
 typedef struct {
 	Rectangle rect;  // Rectángulo que representa al personaje
 	Vector2 speed;
 	int facing;// Velocidad del personaje
+	bool alive;
 } Enemy;
 
 int main()
@@ -94,11 +99,18 @@ int main()
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
-	Player mario = { {640, 400, 40, 40}, {0, 0}, false };
-	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT};
+	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 3, false, 0};
+	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, true};
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
+
+	while (mario.immunity == true) {
+		mario.time += GetFrameTime();
+		if (mario.time == 3) {
+			mario.immunity = false;
+		}
+	}
 
 	// game loop
 	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
@@ -121,40 +133,45 @@ int main()
 				mario.rect.x -= SPEED;
 			}
 		}
+		if (mario.state == MARIO_DEAD) {
+			return 0;
+		}
 
 		//ENEMY
 		int newTileGoombaX, nextTileGoombaX, nextTileGoombaXBack;
 		int newTileGoombaY = (int)(goomba.rect.y / TILE_SIZE);
 
-		if (goomba.facing == GOOMBA_FACING_RIGHT) {
-			newTileGoombaX = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right
-			nextTileGoombaXBack = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left for reversing
-		}
-		else { // Goomba is facing left
-			newTileGoombaX = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left
-			nextTileGoombaXBack = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right for reversing
-		}
-
-		if (map[newTileGoombaY][newTileGoombaX] == 0) {
-			// Goomba moves in its current direction (right or left)
+		if (goomba.alive) {
 			if (goomba.facing == GOOMBA_FACING_RIGHT) {
-				goomba.rect.x += SPEED_ENEMY;
+				newTileGoombaX = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right
+				nextTileGoombaXBack = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left for reversing
 			}
-			else {
-				goomba.rect.x -= SPEED_ENEMY;
+			else { // Goomba is facing left
+				newTileGoombaX = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left
+				nextTileGoombaXBack = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right for reversing
 			}
-		}
-		else {
-			// If there's an obstacle in the current direction, goomba will reverse direction
-			if (map[newTileGoombaY][nextTileGoombaXBack] == 0) {
-				// Reverse movement and update facing direction
+
+			if (map[newTileGoombaY][newTileGoombaX] == 0) {
+				// Goomba moves in its current direction (right or left)
 				if (goomba.facing == GOOMBA_FACING_RIGHT) {
-					goomba.rect.x -= SPEED_ENEMY;  // Move left
-					goomba.facing = GOOMBA_FACING_LEFT;  // Change direction
+					goomba.rect.x += SPEED_ENEMY;
 				}
 				else {
-					goomba.rect.x += SPEED_ENEMY;  // Move right
-					goomba.facing = GOOMBA_FACING_RIGHT;  // Change direction
+					goomba.rect.x -= SPEED_ENEMY;
+				}
+			}
+			else {
+				// If there's an obstacle in the current direction, goomba will reverse direction
+				if (map[newTileGoombaY][nextTileGoombaXBack] == 0) {
+					// Reverse movement and update facing direction
+					if (goomba.facing == GOOMBA_FACING_RIGHT) {
+						goomba.rect.x -= SPEED_ENEMY;  // Move left
+						goomba.facing = GOOMBA_FACING_LEFT;  // Change direction
+					}
+					else {
+						goomba.rect.x += SPEED_ENEMY;  // Move right
+						goomba.facing = GOOMBA_FACING_RIGHT;  // Change direction
+					}
 				}
 			}
 		}
@@ -162,6 +179,25 @@ int main()
 		//Aplicar gravedad
 		mario.speed.y += GRAVITY;
 		mario.rect.y += mario.speed.y;
+
+		//Mario mata a goomba
+		if (goomba.alive && CheckCollisionRecs(mario.rect, goomba.rect)) {
+			// Mario's feet are touching Goomba's head (stomp)
+			if (mario.rect.y + mario.rect.height - mario.speed.y <= goomba.rect.y) {
+				goomba.alive = false; // Goomba dies
+			}
+			// Mario is hit from the side (dies)
+			//REVISAR
+			else {
+				if (mario.state > 1 && mario.immunity == false) {
+					mario.state--; // Mario loses a power level
+					mario.immunity = true;
+				}
+				else {
+					mario.state = 0; // Mario dies
+				}
+			}
+		}
 
 		// Comprobación de colisión con el suelo usando la matriz
 		int tileX = mario.rect.x / TILE_SIZE;
@@ -204,9 +240,14 @@ int main()
 		}
 
 		//dibujar personaje
-		DrawRectangleRec(mario.rect, RED);
-
-		DrawRectangleRec(goomba.rect, GREEN);
+		
+		if (mario.state != MARIO_DEAD) {
+			DrawRectangleRec(mario.rect, RED);
+		}
+		if (goomba.alive) {
+			DrawRectangleRec(goomba.rect, GREEN);
+		}
+		DrawText(TextFormat("Timer: %f", &mario.time), 10, 10, 20, WHITE);
 
 		EndMode2D();
 
