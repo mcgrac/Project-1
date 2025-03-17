@@ -1,0 +1,40 @@
+#include "raylib.h"
+
+class Player {
+
+public:
+
+	Rectangle rect;  // Rectángulo que representa al personaje
+	Vector2 speed;   // Velocidad del personaje
+	bool isJumping;  // Bandera para saber si está en el aire
+	bool onGround;
+	bool colliding;
+	int state; //0 dead, 1 little, 2 big, 3 powerUp
+
+	//constructor
+	Player(float x, float y, float width, float height, float speedX, float speedY, int initialState)
+		: rect{ x, y, width, height }, speed{ speedX, speedY }, isJumping(false), onGround(false), colliding(false), state(initialState) {
+	}
+
+	void jump(float jumpForce) {
+
+		if (!isJumping) { // Solo permitir el salto si no está en el aire
+			speed.y = -jumpForce;
+			isJumping = true;
+		}
+
+	}
+
+	void move(int direction, float speed) {
+
+		if (direction == 1) {
+
+			rect.x += speed;
+		}
+		else {
+
+			rect.x -= speed;
+		}
+
+	}
+};
