@@ -6,14 +6,15 @@ public:
 
 	Rectangle rect;  // Rectángulo que representa al personaje
 	Vector2 speed;   // Velocidad del personaje
+	float movementSpeed; // spped of the movement
 	bool isJumping;  // Bandera para saber si está en el aire
 	bool onGround;
 	bool colliding;
 	int state; //0 dead, 1 little, 2 big, 3 powerUp
 
 	//constructor
-	Player(float x, float y, float width, float height, float speedX, float speedY, int initialState)
-		: rect{ x, y, width, height }, speed{ speedX, speedY }, isJumping(false), onGround(false), colliding(false), state(initialState) {
+	Player(float x, float y, float width, float height, float speedX, float speedY, float movementSpeed_, int initialState)
+		: rect{ x, y, width, height }, speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
 	}
 
 	void jump(float jumpForce) {
@@ -25,15 +26,15 @@ public:
 
 	}
 
-	void move(int direction, float speed) {
+	void move(int direction) {
 
 		if (direction == 1) {
 
-			rect.x += speed;
+			rect.x += movementSpeed;
 		}
 		else {
 
-			rect.x -= speed;
+			rect.x -= movementSpeed;
 		}
 
 	}
