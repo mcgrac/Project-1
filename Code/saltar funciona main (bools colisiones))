@@ -74,9 +74,9 @@ int map[MAP_ROWS][MAP_COLS] = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
 };
@@ -139,25 +139,37 @@ void drawBlocks(vector<Block> list) {
 	}
 }
 
-bool marioCollidingBottom(Player p, Block b) {
-
-	return p.rect.y < b.block.y;
-}
-
-bool marioCollidingAbove(Player p, Block b) {
-
-	return p.rect.y > b.block.y;
-}
 
 bool marioCollidingRight(Player p, Block b) {
 
-	return p.rect.x < b.block.x;
+	return (p.rect.x + p.rect.width >= b.block.x) && 
+			(p.rect.x + p.rect.width <= b.block.x + b.block.width) && 
+			(p.rect.y>= b.block.y) && 
+			(p.rect.y <= b.block.y+b.block.height);
 }
 
 bool marioCollidingLeft(Player p, Block b) {
 
-	return p.rect.x > b.block.x;
+	return (p.rect.x <= b.block.x + b.block.width) && 
+			(p.rect.x >= b.block.x) && 
+			(p.rect.y >= b.block.y) && 
+			(p.rect.y <= b.block.y + b.block.height);
 }
+
+bool marioCollidingBottom(Player p, Block b) {
+	return (p.rect.y + p.rect.height >= b.block.y) &&  // Los pies de Mario están tocando el bloque
+		(p.rect.y + p.rect.height <= b.block.y + b.block.height) && // Evita detectar si Mario está en medio del bloque
+		(p.rect.x + p.rect.width > b.block.x) &&  // Hay superposición horizontal
+		(p.rect.x < b.block.x + b.block.width);
+}
+
+bool marioCollidingAbove(Player p, Block b) {
+	return (p.rect.y <= b.block.y + b.block.height) && // La cabeza de Mario toca la parte inferior del bloque
+		(p.rect.y + p.rect.height > b.block.y + b.block.height) && // Mario viene desde abajo
+		(p.rect.x + p.rect.width > b.block.x) &&  // Hay superposición horizontal
+		(p.rect.x < b.block.x + b.block.width);
+}
+
 
 int main()
 {
@@ -179,7 +191,7 @@ int main()
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
-	Player mario(300, 224, TILE_SIZE, TILE_SIZE, 0, 0, 5.0f, 1);
+	Player mario(300, 400, TILE_SIZE, TILE_SIZE, 0, 0, 5.0f, 1);
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
@@ -209,30 +221,77 @@ int main()
 		}
 
 		//detect collisions with the blocks in the list
-		for (int i = 0; i < blocks.size(); ++i) {
 
+		for (int i = 0; i < blocks.size(); ++i) {
 			if (CheckCollisionRecs(mario.rect, blocks[i].block)) {
 
-				if (marioCollidingBottom(mario, blocks[i])) { // if mario is on the colliding block
-
+				// COLISIÓN ABAJO (Mario está parado sobre el bloque)
+				if (marioCollidingBottom(mario, blocks[i])) {
 					mario.speed.y = 0;
-					mario.rect.y = blocks[i].block.y - TILE_SIZE;
-
+					mario.rect.y = blocks[i].block.y - mario.rect.height; // Asegurar que Mario se quede sobre el bloque
 					mario.isJumping = false;
 				}
-				else if (marioCollidingAbove(mario, blocks[i])) { //if mario is under the colliding block
 
-
-				}
-				else if(marioCollidingLeft(mario, blocks[i]) || marioCollidingRight(mario, blocks[i]))//mario is colliding with a block in its right or left
-				{
-
-					mario.movementSpeed = 0;
+				// COLISIÓN ARRIBA (Mario golpea con la cabeza)
+				if (marioCollidingAbove(mario, blocks[i])) {
+					mario.rect.y = blocks[i].block.y + blocks[i].block.height; // Lo mueve justo debajo del bloque
+					mario.speed.y = 1.0f; // Hace que caiga inmediatamente
 				}
 
-
+				// COLISIÓN IZQUIERDA
+				if (marioCollidingLeft(mario, blocks[i])) {
+					mario.rect.x = blocks[i].block.x + blocks[i].block.width; // Bloquea movimiento a la izquierda
+					mario.colliding = true;
+				}
+				// COLISIÓN DERECHA
+				else if (marioCollidingRight(mario, blocks[i])) {
+					mario.rect.x = blocks[i].block.x - mario.rect.width; // Bloquea movimiento a la derecha
+					mario.colliding = true;
+				}
+			}
+			else {
+				//mario.colliding = false;
 			}
 		}
+
+		//for (int i = 0; i < blocks.size(); ++i) {
+
+		//	if (CheckCollisionRecs(mario.rect, blocks[i].block)) {
+
+		//		//COLLIDING AT THE BOTTOM
+		//		if (marioCollidingBottom(mario, blocks[i])) { // if mario is on the colliding block
+
+		//			mario.speed.y = 0;
+		//			mario.rect.y = blocks[i].block.y - TILE_SIZE;
+
+		//			mario.isJumping = false;
+
+		//		}
+		//		
+		//		//COLLIDING AT THE TOP
+		//		if (marioCollidingAbove(mario, blocks[i])) { //if mario is under the colliding block
+
+		//			mario.rect.y = blocks[i].block.y + TILE_SIZE;
+		//			mario.rect.y += 0.5f;
+		//		}
+		//		
+		//		//COLLIDING ON THE SIDES
+		//		if(marioCollidingLeft(mario, blocks[i]))//mario is colliding with a block in its left
+		//		{
+		//			mario.rect.x = blocks[i].block.x + TILE_SIZE;
+		//			mario.colliding = true;
+		//		}
+		//		else if (marioCollidingRight(mario, blocks[i])) {
+
+		//			mario.rect.x = blocks[i].block.x - TILE_SIZE;
+		//		}
+
+		//	}
+		//	else {
+
+		//		//mario.colliding = false;
+		//	}
+		//}
 
 		if (IsKeyPressed(KEY_SPACE) && !mario.isJumping) {
 
@@ -258,9 +317,9 @@ int main()
 		//dubujar personaje
 		DrawRectangleRec(mario.rect, RED);
 
-		DrawText(TextFormat("Posición: (%.1f, %.1f)", mario.rect.x, mario.rect.y), 10, 10, 20, WHITE);
-		DrawText(TextFormat("jumping: (%d)", mario.isJumping), 10, 60, 20, WHITE);
-		DrawText(TextFormat("MS: (%f)", mario.movementSpeed), 10, 110, 20, WHITE);
+		DrawText(TextFormat("Posición: (%.1f, %.1f)", mario.rect.x, mario.rect.y), 200, 10, 20, WHITE);
+		DrawText(TextFormat("jumping: (%d)", mario.isJumping), 200, 60, 20, WHITE);
+		DrawText(TextFormat("colliding: (%d)", mario.colliding), 200, 110, 20, WHITE);
 
 		EndMode2D();
 
