@@ -18,6 +18,9 @@
 #define MARIO_BIG 2
 #define MARIO_POWER_UP 3
 
+#define GOOMBA_ALIVE 1
+#define GOOMBA_DEAD 0
+
 //#define MAP_COLS 100  // Aumentamos el tamaño del nivel en columnas
 
 //definir array 2D mapa
@@ -67,6 +70,12 @@ int map[MAP_ROWS][MAP_COLS] = {
 //	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
 //};
 
+
+// Posición de la "cámara" que controla el desplazamiento del mapa
+float cameraX = { 0 };
+float cameraY = { 0 };
+
+
 // Estructura para el personaje
 typedef struct {
 	Rectangle rect;  // Rectángulo que representa al personaje
@@ -75,21 +84,24 @@ typedef struct {
 	int state; //0 muerto, 1 little, 2 big, 3 power up
 	bool immunity;
 	float time;
-} Player;
+	int hp;
+	bool direction;
+	bool onGround;
+}Player;
 
 typedef struct {
 	Rectangle rect;  // Rectángulo que representa al personaje
 	Vector2 speed;
 	int facing;// Velocidad del personaje
-	bool alive;
+	int state;
 } Enemy;
 
 
-void HandleMarioCollisionWithGoomba(Player& mario, Enemy &goomba) {
-	if (goomba.alive && CheckCollisionRecs(mario.rect, goomba.rect)) {
+void HandleMarioCollisionWithGoomba(Player& mario, Enemy& goomba) {
+	if (goomba.state == 1 && CheckCollisionRecs(mario.rect, goomba.rect)) {
 		// Mario's feet are touching Goomba's head (stomp)
 		if (mario.rect.y + mario.rect.height - mario.speed.y <= goomba.rect.y) {
-			goomba.alive = false; // Goomba dies
+			goomba.state = 0; // Goomba dies
 		}
 		else {
 			if (mario.state > 1 && mario.immunity == false) {
@@ -99,7 +111,7 @@ void HandleMarioCollisionWithGoomba(Player& mario, Enemy &goomba) {
 			}
 			else {
 				mario.state = 0; // Mario dies
-			} 
+			}
 		}
 		if (mario.rect.x < goomba.rect.x) {
 			mario.rect.x -= 5;  // Push left
@@ -122,6 +134,48 @@ void Immunity(Player& mario) {
 
 int main()
 {
+	//right side{
+
+	Image bmarioImage1 = LoadImage("resources/bmario1.png");
+	Image bmarioImage2 = LoadImage("resources/bmario2.png");
+	Image bmarioImage3 = LoadImage("resources/bmario3.png");
+	Image bmarioImage4 = LoadImage("resources/bmario4.png");
+	Image bmarioImage5 = LoadImage("resources/bmario5.png");
+
+	//left side
+	Image LbmarioImage1 = LoadImage("resources/Lbmario1.png");
+	Image LbmarioImage2 = LoadImage("resources/Lbmario2.png");
+	Image LbmarioImage3 = LoadImage("resources/Lbmario3.png");
+	Image LbmarioImage4 = LoadImage("resources/Lbmario4.png");
+	Image LbmarioImage5 = LoadImage("resources/Lbmario5.png");
+
+	//small mario
+
+	//right side
+	Image marioImage1 = LoadImage("resources/mario1.png");
+	Image marioImage2 = LoadImage("resources/mario2.png");
+	Image marioImage3 = LoadImage("resources/mario3.png");
+	Image marioImage4 = LoadImage("resources/mario4.png");
+	Image marioImage5 = LoadImage("resources/mario5.png");
+
+	//left side
+	Image LmarioImage1 = LoadImage("resources/Lmario1.png");
+	Image LmarioImage2 = LoadImage("resources/Lmario2.png");
+	Image LmarioImage3 = LoadImage("resources/Lmario3.png");
+	Image LmarioImage4 = LoadImage("resources/Lmario4.png");
+	Image LmarioImage5 = LoadImage("resources/Lmario5.png");
+
+	//goomba sprites
+
+	Image goombaImage1 = LoadImage("resources/Goomba1.png");
+	Image goombaImage2 = LoadImage("resources/Goomba2.png");
+	Image goombaImage3 = LoadImage("resources/Goomba3.png");
+
+	SetTargetFPS(60);
+
+	const int screenWidth = 512;
+	const int screenHeight = 448;
+
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
@@ -135,8 +189,8 @@ int main()
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
-	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 2, false, 0 };
-	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, true };
+	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 2, false, 0, 3, true};
+	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, 1};
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
@@ -146,6 +200,11 @@ int main()
 	{
 		// Movimiento lateral con detección de colisión
 		// MARIO
+
+		// Movimiento del personaje y ajuste de la cámara
+		if (IsKeyDown(KEY_RIGHT)) { cameraX -= SPEED; mario.direction = 0; }
+		if (IsKeyDown(KEY_LEFT)) { cameraX += SPEED; mario.direction = 1; }
+
 		int newTileX;
 		int newTileY = (int)(mario.rect.y / TILE_SIZE);
 
@@ -174,7 +233,7 @@ int main()
 		int newTileGoombaX, nextTileGoombaX, nextTileGoombaXBack;
 		int newTileGoombaY = (int)(goomba.rect.y / TILE_SIZE);
 
-		if (goomba.alive) {
+		if (goomba.state == 1) {
 			if (goomba.facing == GOOMBA_FACING_RIGHT) {
 				newTileGoombaX = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right
 				nextTileGoombaXBack = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left for reversing
@@ -214,7 +273,7 @@ int main()
 		mario.rect.y += mario.speed.y;
 
 		//Mario mata a goomba
-		
+
 
 		// Update immunity timer
 		Immunity(mario);
@@ -259,19 +318,79 @@ int main()
 			}
 		}
 
-		//dibujar personaje
+		//Texture big mario
+		Texture2D bmarioTexture1 = LoadTextureFromImage(bmarioImage1);  // Convert Image to Texture
+		Texture2D bmarioTexture2 = LoadTextureFromImage(bmarioImage2);
+		Texture2D bmarioTexture3 = LoadTextureFromImage(bmarioImage3);
+		Texture2D bmarioTexture4 = LoadTextureFromImage(bmarioImage4);
+		Texture2D bmarioTexture5 = LoadTextureFromImage(bmarioImage5);
 
-		if (mario.state != MARIO_DEAD) {
-			if (mario.immunity) {
-				DrawRectangleRec(mario.rect, YELLOW);  // Flashing effect when immune
+		Texture2D LbmarioTexture1 = LoadTextureFromImage(LbmarioImage1);  // left side
+		Texture2D LbmarioTexture2 = LoadTextureFromImage(LbmarioImage2);
+		Texture2D LbmarioTexture3 = LoadTextureFromImage(LbmarioImage3);
+		Texture2D LbmarioTexture4 = LoadTextureFromImage(LbmarioImage4);
+		Texture2D LbmarioTexture5 = LoadTextureFromImage(LbmarioImage5);
+
+		//small mario
+		Texture2D marioTexture1 = LoadTextureFromImage(marioImage1);  // Convert Image to Texture
+		Texture2D marioTexture2 = LoadTextureFromImage(marioImage2);
+		Texture2D marioTexture3 = LoadTextureFromImage(marioImage3);
+		Texture2D marioTexture4 = LoadTextureFromImage(marioImage4);
+		Texture2D marioTexture5 = LoadTextureFromImage(marioImage5);
+
+		Texture2D LmarioTexture1 = LoadTextureFromImage(LmarioImage1);  // left side
+		Texture2D LmarioTexture2 = LoadTextureFromImage(LmarioImage2);
+		Texture2D LmarioTexture3 = LoadTextureFromImage(LmarioImage3);
+		Texture2D LmarioTexture4 = LoadTextureFromImage(LmarioImage4);
+		Texture2D LmarioTexture5 = LoadTextureFromImage(LmarioImage5);
+
+		//Texture Goomba
+
+		Texture2D goombaTexture1 = LoadTextureFromImage(goombaImage1);
+		Texture2D goombaTexture2 = LoadTextureFromImage(goombaImage2);
+		Texture2D goombaTexture3 = LoadTextureFromImage(goombaImage3);
+
+		if (mario.state == 2) {
+
+			if (mario.direction == 0) {
+
+				if (mario.onGround == true) { DrawTexture(bmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+				else { DrawTexture(bmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+
 			}
-			else {
-				DrawRectangleRec(mario.rect, RED);
+
+			if (mario.direction == 1) {
+
+				if (mario.onGround == true) { DrawTexture(LbmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+				else { DrawTexture(LbmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+
 			}
+
 		}
-		if (goomba.alive) {
-			DrawRectangleRec(goomba.rect, GREEN);
+		else if (mario.state == 1) {
+
+			if (mario.direction == 0) {
+
+				if (mario.onGround == true) { DrawTexture(marioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+				else { DrawTexture(marioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+
+			}
+
+			if (mario.direction == 1) {
+
+				if (mario.onGround == true) { DrawTexture(LmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+				else { DrawTexture(LmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+
+			}
+
 		}
+
+		if (goomba.state == 1) {
+
+			DrawTexture(goombaTexture1, goomba.rect.x - 20, goomba.rect.y - 160, WHITE);
+
+		}
+
 		DrawText(TextFormat("Timer: %f", &mario.time), 10, 10, 20, WHITE);
 
 		EndMode2D();
