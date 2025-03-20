@@ -84,6 +84,42 @@ typedef struct {
 	bool alive;
 } Enemy;
 
+
+void HandleMarioCollisionWithGoomba(Player& mario, Enemy &goomba) {
+	if (goomba.alive && CheckCollisionRecs(mario.rect, goomba.rect)) {
+		// Mario's feet are touching Goomba's head (stomp)
+		if (mario.rect.y + mario.rect.height - mario.speed.y <= goomba.rect.y) {
+			goomba.alive = false; // Goomba dies
+		}
+		else {
+			if (mario.state > 1 && mario.immunity == false) {
+				mario.state--; // Mario loses a power level
+				mario.immunity = true;
+				mario.time = 2.0f;
+			}
+			else {
+				mario.state = 0; // Mario dies
+			} 
+		}
+		if (mario.rect.x < goomba.rect.x) {
+			mario.rect.x -= 5;  // Push left
+		}
+		else {
+			mario.rect.x += 5;  // Push right
+		}
+	}
+}
+
+void Immunity(Player& mario) {
+
+	if (mario.immunity) {
+		mario.time -= GetFrameTime();
+		if (mario.time <= 0) {
+			mario.immunity = false;
+		}
+	}
+}
+
 int main()
 {
 	// Tell the window to use vsync and work on high DPI displays
@@ -99,18 +135,11 @@ int main()
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
-	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 3, false, 0};
-	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, true};
+	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 2, false, 0 };
+	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, true };
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
-
-	while (mario.immunity == true) {
-		mario.time += GetFrameTime();
-		if (mario.time == 3) {
-			mario.immunity = false;
-		}
-	}
 
 	// game loop
 	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
@@ -119,6 +148,10 @@ int main()
 		// MARIO
 		int newTileX;
 		int newTileY = (int)(mario.rect.y / TILE_SIZE);
+
+		if (!mario.immunity && CheckCollisionRecs(mario.rect, goomba.rect)) {
+			HandleMarioCollisionWithGoomba(mario, goomba);
+		}
 
 		if (IsKeyDown(KEY_RIGHT)) {
 			newTileX = (int)((mario.rect.x + SPEED + mario.rect.width) / TILE_SIZE);
@@ -181,23 +214,10 @@ int main()
 		mario.rect.y += mario.speed.y;
 
 		//Mario mata a goomba
-		if (goomba.alive && CheckCollisionRecs(mario.rect, goomba.rect)) {
-			// Mario's feet are touching Goomba's head (stomp)
-			if (mario.rect.y + mario.rect.height - mario.speed.y <= goomba.rect.y) {
-				goomba.alive = false; // Goomba dies
-			}
-			// Mario is hit from the side (dies)
-			//REVISAR
-			else {
-				if (mario.state > 1 && mario.immunity == false) {
-					mario.state--; // Mario loses a power level
-					mario.immunity = true;
-				}
-				else {
-					mario.state = 0; // Mario dies
-				}
-			}
-		}
+		
+
+		// Update immunity timer
+		Immunity(mario);
 
 		// Comprobación de colisión con el suelo usando la matriz
 		int tileX = mario.rect.x / TILE_SIZE;
@@ -240,9 +260,14 @@ int main()
 		}
 
 		//dibujar personaje
-		
+
 		if (mario.state != MARIO_DEAD) {
-			DrawRectangleRec(mario.rect, RED);
+			if (mario.immunity) {
+				DrawRectangleRec(mario.rect, YELLOW);  // Flashing effect when immune
+			}
+			else {
+				DrawRectangleRec(mario.rect, RED);
+			}
 		}
 		if (goomba.alive) {
 			DrawRectangleRec(goomba.rect, GREEN);
