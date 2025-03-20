@@ -1,10 +1,10 @@
 #include "raylib.h"
-
-class Player {
+#include "Entity.hpp"
+class Player : public Entity {
 
 public:
 
-	Rectangle rect;  // Rectángulo que representa al personaje
+	//Rectangle rect;  // Rectángulo que representa al personaje
 	Vector2 speed;   // Velocidad del personaje
 	float movementSpeed; // spped of the movement
 	bool isJumping;  // Bandera para saber si está en el aire
@@ -13,8 +13,12 @@ public:
 	int state; //0 dead, 1 little, 2 big, 3 powerUp
 
 	//constructor
-	Player(float x, float y, float width, float height, float speedX, float speedY, float movementSpeed_, int initialState)
-		: rect{ x, y, width, height }, speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
+	//Player(float x, float y, float width, float heigh, float initPoint_x, float leftPoint_x, float initPoint_y, float downPoint_y, float speedX, float speedY, float movementSpeed_, int initialState)
+	//	: Entity(x, y, width, heigh, initPoint_x, leftPoint_x, initPoint_y, downPoint_y), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
+	//}
+
+	Player(float x, float y, float width, float heigh, float speedX, float speedY, float movementSpeed_, int initialState)
+		: Entity(x, y, width, heigh), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
 	}
 
 	void jump(float jumpForce) {
@@ -30,11 +34,11 @@ public:
 
 		if (direction == 1) {
 
-			rect.x += movementSpeed;
+			hitbox.x += movementSpeed;
 		}
 		else {
 
-			rect.x -= movementSpeed;
+			hitbox.x -= movementSpeed;
 		}
 
 	}
