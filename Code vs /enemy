@@ -351,44 +351,27 @@ int main()
 		Texture2D goombaTexture3 = LoadTextureFromImage(goombaImage3);
 
 		if (mario.state == 2) {
-
 			if (mario.direction == 0) {
-
 				if (mario.onGround == true) { DrawTexture(bmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 				else { DrawTexture(bmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-
 			}
-
 			if (mario.direction == 1) {
-
 				if (mario.onGround == true) { DrawTexture(LbmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 				else { DrawTexture(LbmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-
 			}
-
 		}
 		else if (mario.state == 1) {
-
 			if (mario.direction == 0) {
-
 				if (mario.onGround == true) { DrawTexture(marioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 				else { DrawTexture(marioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-
 			}
-
 			if (mario.direction == 1) {
-
 				if (mario.onGround == true) { DrawTexture(LmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 				else { DrawTexture(LmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-
 			}
-
 		}
-
 		if (goomba.state == 1) {
-
 			DrawTexture(goombaTexture1, goomba.rect.x - 20, goomba.rect.y - 160, WHITE);
-
 		}
 
 		DrawText(TextFormat("Timer: %f", &mario.time), 10, 10, 20, WHITE);
