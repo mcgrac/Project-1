@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "Entity.hpp"
+
 class Player : public Entity {
 
 public:
@@ -13,13 +14,13 @@ public:
 	int state; //0 dead, 1 little, 2 big, 3 powerUp
 
 	//constructor
-	//Player(float x, float y, float width, float heigh, float initPoint_x, float leftPoint_x, float initPoint_y, float downPoint_y, float speedX, float speedY, float movementSpeed_, int initialState)
-	//	: Entity(x, y, width, heigh, initPoint_x, leftPoint_x, initPoint_y, downPoint_y), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
-	//}
-
 	Player(float x, float y, float width, float heigh, float speedX, float speedY, float movementSpeed_, int initialState)
 		: Entity(x, y, width, heigh), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
 	}
+
+	//Player(float x, float y, float width, float heigh, float rightPoint_x, float downPoint_y, float speedX, float speedY, float movementSpeed_, int initialState)
+	//	: Entity(x, y, width, heigh, rightPoint_x, downPoint_y), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
+	//}
 
 	void jump(float jumpForce) {
 
