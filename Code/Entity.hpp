@@ -18,17 +18,34 @@ private:
 	Vector2 rightDown = { hitbox.x + hitbox.width, hitbox.y + hitbox.height };
 	Vector2 leftDown = { hitbox.x, hitbox.y + hitbox.height };
 
+	//Vector2 initialPos;
+	//Vector2 rightUp;
+	//Vector2 rightDown;
+	//Vector2 leftDown;
+
+
+
 public:
 
 	Rectangle hitbox;
-	
-	Entity(){}
-	//Entity(float x, float y, float width, float heigh, float initPoint_x, float leftPoint_x, float initPoint_y, float downPoint_y) :
-	//	hitbox{ x, y, width, heigh }, initialPos{ initPoint_x, initPoint_y }, rightUp{ leftPoint_x, initPoint_y}, rightDown{ leftPoint_x ,downPoint_y }, leftDown{initPoint_x, downPoint_y } {
-	//}
+	//float rightPoint_x, downPoint_y;
 
+	//middle points of each side
+	Vector2 top = { hitbox.x + (hitbox.width / 2), hitbox.y };
+	Vector2 left = { hitbox.x, hitbox.y + (hitbox.height / 2) };
+	Vector2 right = { hitbox.x + hitbox.width, hitbox.y + (hitbox.height / 2) };
+	Vector2 bottom = { hitbox.x + (hitbox.width / 2), hitbox.y + hitbox.height };
+
+	Entity() {}
 	Entity(float x, float y, float width, float heigh) :
 		hitbox{ x, y, width, heigh } {}
+
+	//Entity(float x, float y, float width, float heigh, float rightPoint_x, float downPoint_y) :
+	//	hitbox{ x, y, width, heigh }, initialPos{ x, y }, rightUp{ rightPoint_x, y }, rightDown{ rightPoint_x ,downPoint_y }, leftDown{ x, downPoint_y } {
+	//}
+
+	//Entity(float x, float y, float width, float heigh) :
+	//	hitbox{ x, y, width, heigh } {}
 
 	Line line(Vector2 start, Vector2 end) {
 
@@ -37,26 +54,28 @@ public:
 		return line;
 	}
 
+	void updateRects() {
+
+		top = { hitbox.x + (hitbox.width / 2), hitbox.y };
+		left = { hitbox.x, hitbox.y + (hitbox.height / 2) };
+		right = { hitbox.x + hitbox.width, hitbox.y + (hitbox.height / 2) };
+		bottom = { hitbox.x + (hitbox.width / 2), hitbox.y + hitbox.height };
+	}
+
 	Vector2 getInitialPos() {
 
-		return initialPos = { hitbox.x, hitbox.y };
+		return initialPos;
 	}
-
 
 	Vector2 getRightUp() {
-
-		return rightUp = { hitbox.x + hitbox.width, hitbox.y };
+		return rightUp;
 	}
-
 
 	Vector2 getRightDown() {
-
-		return  rightDown = { hitbox.x + hitbox.width, hitbox.y + hitbox.height };
+		return  rightDown;
 	}
 
-
-	Vector2 getLeftDown() {
-
-		return leftDown = { hitbox.x, hitbox.y + hitbox.height };
+	Vector2 getLeftDown(){
+		return leftDown;
 	}
 };
