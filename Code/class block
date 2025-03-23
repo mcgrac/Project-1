@@ -1,9 +1,0 @@
-#include "raylib.h"
-
-class Block {
-
-public:
-
-	Rectangle block;
-	Color color;
-};
