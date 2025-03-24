@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <math.h> 
 
 class Line {
 
@@ -36,9 +37,13 @@ public:
 	Vector2 right = { hitbox.x + hitbox.width, hitbox.y + (hitbox.height / 2) };
 	Vector2 bottom = { hitbox.x + (hitbox.width / 2), hitbox.y + hitbox.height };
 
+	int state; //0 muerto, 1 little, 2 big, 3 power up (MARIO)
+	int id; //0 player, 1 enemy, 2 block
+
 	Entity() {}
-	Entity(float x, float y, float width, float heigh) :
-		hitbox{ x, y, width, heigh } {}
+	Entity(float x, float y, float width, float heigh, int state_, int id_) :
+		hitbox{ x, y, width, heigh }, state(state_), id(id_){
+	}
 
 	//Entity(float x, float y, float width, float heigh, float rightPoint_x, float downPoint_y) :
 	//	hitbox{ x, y, width, heigh }, initialPos{ x, y }, rightUp{ rightPoint_x, y }, rightDown{ rightPoint_x ,downPoint_y }, leftDown{ x, downPoint_y } {
@@ -62,6 +67,23 @@ public:
 		bottom = { hitbox.x + (hitbox.width / 2), hitbox.y + hitbox.height };
 	}
 
+	float distancePoints(Vector2 p1, Vector2 p2) {
+
+		return sqrtf(((p2.x - p1.x) * (p2.x - p1.x)) + ((p2.y - p1.y) * (p2.y - p1.y)));
+	}
+
+	void colisions(int id) {
+
+		if (id == 1) { //enemy
+
+
+		}
+		else if (id == 2) { //block
+
+
+		}
+	}
+
 	Vector2 getInitialPos() {
 
 		return initialPos;
@@ -75,7 +97,7 @@ public:
 		return  rightDown;
 	}
 
-	Vector2 getLeftDown(){
+	Vector2 getLeftDown() {
 		return leftDown;
 	}
 };
