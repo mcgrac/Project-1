@@ -182,7 +182,7 @@ int main()
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
-	Player mario(300, 100, TILE_SIZE, TILE_SIZE, 0, 0, 5.0f, 1);
+	Player mario(300, 100, TILE_SIZE, TILE_SIZE, 2, 0, 0, 0, 5.0f, 1);
 
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
@@ -194,7 +194,7 @@ int main()
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
 
 	// game loop
-	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
+	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
 		//Aplicar gravedad
 		mario.speed.y += GRAVITY;
@@ -212,12 +212,12 @@ int main()
 			mario.move(-1);
 		}
 
-		//detect collisions with the blocks in the list
 
+		//detect collisions with the blocks in the list
 		for (int i = 0; i < blocks.size(); ++i) {
 			if (CheckCollisionRecs(mario.hitbox, blocks[i].hitbox)) {
 
-				
+
 				printf("Mario.bottom: (%.2f, %.2f) | Block.top: (%.2f, %.2f)\n",
 					mario.bottom.x, mario.bottom.y, blocks[i].top.x, blocks[i].top.y);
 
@@ -232,12 +232,32 @@ int main()
 				}
 
 				// COLISIÓN ARRIBA (Mario golpea con la cabeza)
-				if (marioCollidingAbove(mario, blocks[i])) {
+				else if (marioCollidingAbove(mario, blocks[i])) {
 
 					printf("Colisión detectada TOP bloque %d\n", i);
 
 					mario.hitbox.y = blocks[i].hitbox.y + blocks[i].hitbox.height; // Lo mueve justo debajo del bloque
 					mario.speed.y = 1.0f; // Hace que caiga inmediatamente
+				}
+				else {
+
+					//printf("colision lateral detectada");
+					//
+					////colisiona derecha
+					//if (mario.distancePoints(mario.right, blocks[i].left) < (mario.distancePoints(mario.right, blocks[i].right))) {
+
+					//	printf("colision derecha");
+
+					//	mario.hitbox.x = blocks[i].hitbox.x - mario.hitbox.width; // Bloquea movimiento a la derecha
+					//	mario.colliding = true;
+					//}
+					//else if (mario.distancePoints(mario.right, blocks[i].left) > (mario.distancePoints(mario.right, blocks[i].right))) { //colisiona izquierda
+
+					//	printf("colision izquierda");
+
+					//	mario.hitbox.x = blocks[i].hitbox.x + blocks[i].hitbox.width; // Bloquea movimiento a la izquierda
+					//	mario.colliding = true;
+					//}
 				}
 
 				// COLISIÓN IZQUIERDA
