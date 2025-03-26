@@ -18,10 +18,10 @@ public:
 	bool immunity;
 	int state; //0 dead, 1 little, 2 big, 3 powerUp
 	Rectangle grid; //rectangleZonaColision
-	
+
 	//constructor
-	Player(float x, float y, float width, float heigh, int state, int id, float speedX, float speedY, float movementSpeed_, int initialState, float xG, float yG, float widthG, float heighG)
-		: Entity(x, y, width, heigh, state, id), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), immunity(false), state(initialState), grid{xG, yG, widthG, heighG} {
+	Player(float x, float y, float width, float heigh, int id, float speedX, float speedY, float movementSpeed_, int initialState, float xG, float yG, float widthG, float heighG)
+		: Entity(x, y, width, heigh, id), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), immunity(false), state(initialState), grid{ xG, yG, widthG, heighG } {
 	}
 
 	//Player(float x, float y, float width, float heigh, float rightPoint_x, float downPoint_y, float speedX, float speedY, float movementSpeed_, int initialState)
