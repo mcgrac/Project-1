@@ -1,3 +1,4 @@
+
 #include "raylib.h"
 #include <math.h> 
 
@@ -24,7 +25,10 @@ private:
 	//Vector2 rightDown;
 	//Vector2 leftDown;
 
+protected:
 
+	Vector2 leftBot = { hitbox.x + (hitbox.width - (hitbox.width - 3)), hitbox.y + hitbox.height };
+	Vector2 rightBot = { hitbox.x + (hitbox.width - 3), hitbox.y + hitbox.height };
 
 public:
 
@@ -37,12 +41,12 @@ public:
 	Vector2 right = { hitbox.x + hitbox.width, hitbox.y + (hitbox.height / 2) };
 	Vector2 bottom = { hitbox.x + (hitbox.width / 2), hitbox.y + hitbox.height };
 
-	int state; //0 muerto, 1 little, 2 big, 3 power up (MARIO)
+	
 	int id; //0 player, 1 enemy, 2 block
 
 	Entity() {}
-	Entity(float x, float y, float width, float heigh, int state_, int id_) :
-		hitbox{ x, y, width, heigh }, state(state_), id(id_){
+	Entity(float x, float y, float width, float heigh, int id_, Vector2 top_, Vector2 left_, Vector2 right_, Vector2 bottom_) :
+		hitbox{ x, y, width, heigh }, id(id_) {
 	}
 
 	//Entity(float x, float y, float width, float heigh, float rightPoint_x, float downPoint_y) :
