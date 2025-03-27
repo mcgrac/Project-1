@@ -1,15 +1,16 @@
 
 #include "raylib.h"
 
+
 class Block : public Entity {
 
 public:
 
 	//Rectangle block;
-	Color color;
+	Color color = RED;
 
 	Block() {}
-	Block(float x, float y, float width, float heigh, int id, Color color_) : Entity(x, y, width, heigh, id), color{ color_ } {}
+	Block(float x, float y, float width, float heigh, int id) : Entity(x, y, width, heigh, id){}
 
 
 };
