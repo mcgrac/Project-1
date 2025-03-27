@@ -1,3 +1,4 @@
+
 #include "raylib.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
@@ -21,30 +22,28 @@
 #define GOOMBA_ALIVE 1
 #define GOOMBA_DEAD 0
 
-#define MAP_COLS 100  // Aumentamos el tamaño del nivel en columnas
-
 //definir array 2D mapa
 //int map[MAP_ROWS][MAP_COLS] = {
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-//	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+//    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
 //};
 
 int map[MAP_ROWS][MAP_COLS] = {
@@ -69,7 +68,6 @@ int map[MAP_ROWS][MAP_COLS] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
 };
-
 
 // Posición de la "cámara" que controla el desplazamiento del mapa
 float cameraX = { 0 };
@@ -215,19 +213,15 @@ void starPowerUp(PowerUp& star, Player& mario) {
 	}
 }
 
-int main()
-{
-	SetTargetFPS(60);
+
+int main() {
 	const int screenWidth = 512;
 	const int screenHeight = 448;
 
-	// Tell the window to use vsync and work on high DPI displays
-	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-
-	// Create the window and OpenGL context
 	InitWindow(screenWidth, screenHeight, "Mapa en Movimiento");
 
 	//load image title screens
+
 	Image Title_screenImage = LoadImage("resources/Title_screen.png");
 	Image Time_upImage = LoadImage("resources/Time_up.png");
 	Image StrtImage = LoadImage("resources/strt.png");
@@ -235,11 +229,15 @@ int main()
 	Image Game_overImage = LoadImage("resources/game_over.png");
 	Image Initial_screenImage = LoadImage("resources/Initial_screen.png");
 
+
 	int titleScreen = true;
 	Texture2D Title_screenTexture = LoadTextureFromImage(Title_screenImage);
 	Texture2D Game_overTexture = LoadTextureFromImage(Game_overImage);
 	Texture2D StrtTexture = LoadTextureFromImage(StrtImage);
 	Texture2D Initial_screenTexture = LoadTextureFromImage(Initial_screenImage);
+
+
+	//right side{
 
 	Image bmarioImage1 = LoadImage("resources/bmario1.png");
 	Image bmarioImage2 = LoadImage("resources/bmario2.png");
@@ -247,6 +245,7 @@ int main()
 	Image bmarioImage4 = LoadImage("resources/bmario4.png");
 	Image bmarioImage5 = LoadImage("resources/bmario5.png");
 
+	//left side
 	Image LbmarioImage1 = LoadImage("resources/Lbmario1.png");
 	Image LbmarioImage2 = LoadImage("resources/Lbmario2.png");
 	Image LbmarioImage3 = LoadImage("resources/Lbmario3.png");
@@ -254,12 +253,15 @@ int main()
 	Image LbmarioImage5 = LoadImage("resources/Lbmario5.png");
 
 	//small mario
+
+	//right side
 	Image marioImage1 = LoadImage("resources/mario1.png");
 	Image marioImage2 = LoadImage("resources/mario2.png");
 	Image marioImage3 = LoadImage("resources/mario3.png");
 	Image marioImage4 = LoadImage("resources/mario4.png");
 	Image marioImage5 = LoadImage("resources/mario5.png");
 
+	//left side
 	Image LmarioImage1 = LoadImage("resources/Lmario1.png");
 	Image LmarioImage2 = LoadImage("resources/Lmario2.png");
 	Image LmarioImage3 = LoadImage("resources/Lmario3.png");
@@ -267,6 +269,7 @@ int main()
 	Image LmarioImage5 = LoadImage("resources/Lmario5.png");
 
 	//goomba sprites
+
 	Image goombaImage1 = LoadImage("resources/Goomba1.png");
 	Image goombaImage2 = LoadImage("resources/Goomba2.png");
 	Image goombaImage3 = LoadImage("resources/Goomba3.png");
@@ -298,30 +301,26 @@ int main()
 	Texture2D LmarioTexture5 = LoadTextureFromImage(LmarioImage5);
 
 	//Texture Goomba
+
 	Texture2D goombaTexture1 = LoadTextureFromImage(goombaImage1);
 	Texture2D goombaTexture2 = LoadTextureFromImage(goombaImage2);
 	Texture2D goombaTexture3 = LoadTextureFromImage(goombaImage3);
 
-	//camaras
-	Camera2D camera = { 0 };
-	camera.target = { 0, 0 };
-	camera.offset = { 640, 740 };
-	camera.rotation = 0.0f;
-	camera.zoom = 1.0f;
 
-	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 2, false, 0, 3, true };
-	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, 1 };
-	PowerUp star = { {300, 720, 40, 40}, {0, 0}, true };
+	SetTargetFPS(60);
 
-	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
-	SearchAndSetResourceDir("resources");
+	while (!WindowShouldClose()) {
 
-	// game loop
-	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
-	{
+
+		//initialize mario and the enemies
+
+		Enemy goomba = { { screenWidth / 2, screenHeight - TILE_SIZE * 2 }, {0, 0}, GOOMBA_FACING_RIGHT, 1 };
+		Player mario = { { screenWidth / 3, screenHeight - TILE_SIZE * 2 },{0, 0},false, 2, false, 0, 3, true };
+
 		// Movimiento del personaje y ajuste de la cámara
 		if (IsKeyDown(KEY_RIGHT)) { cameraX -= SPEED; mario.direction = 0; }
 		if (IsKeyDown(KEY_LEFT)) { cameraX += SPEED; mario.direction = 1; }
+
 		if (IsKeyDown(KEY_A)) { titleScreen = 3; }
 
 		if (!mario.immunity && CheckCollisionRecs(mario.rect, goomba.rect)) {
@@ -338,17 +337,46 @@ int main()
 		//GOOMBA MOVEMENT
 		goombaMovement(goomba);
 
-		//Aplicar gravedad
-		mario.speed.y += GRAVITY;
+		//int newTileGoombaX, nextTileGoombaX, nextTileGoombaXBack;
+		//int newTileGoombaY = (int)(goomba.rect.y / TILE_SIZE);
+
+		//if (goomba.direction == 0) {
+		//	newTileGoombaX = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right
+		//	nextTileGoombaXBack = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left for reversing
+		//}
+		//else { // Goomba is facing left
+		//	newTileGoombaX = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left
+		//	nextTileGoombaXBack = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right for reversing
+		//}
+
+		//if (map[newTileGoombaY][newTileGoombaX] == 0) {
+		//	// Goomba moves in its current direction (right or left)
+		//	if (goomba.direction == 0) {
+		//		goomba.rect.x += SPEED_ENEMY;
+		//	}
+		//	else {
+		//		goomba.rect.x -= SPEED_ENEMY;
+		//	}
+		//}
+		//else {
+		//	// If there's an obstacle in the current direction, goomba will reverse direction
+		//	if (map[newTileGoombaY][nextTileGoombaXBack] == 0) {
+		//		// Reverse movement and update facing direction
+		//		if (goomba.direction == 0) {
+		//			goomba.rect.x -= SPEED_ENEMY;  // Move left
+		//			goomba.direction = 1;  // Change direction
+		//		}
+		//		else {
+		//			goomba.rect.x += SPEED_ENEMY;  // Move right
+		//			goomba.direction = 0;  // Change direction
+		//		}
+		//	}
+		//}
+
+		//gravity simulation
 		mario.rect.y += mario.speed.y;
 
-		// Update immunity timer
-		Immunity(mario);
-
-		// Comprobación de colisión con el suelo usando la matriz
-		int tileX = mario.rect.x / TILE_SIZE;
-		int tileY = (mario.rect.y + mario.rect.height) / TILE_SIZE;
-
+		// Verificar colisión con el suelo
 		if (mario.rect.y >= screenHeight - TILE_SIZE * 2) {
 			mario.rect.y = screenHeight - TILE_SIZE * 2;
 			mario.speed.y = 0;
@@ -357,37 +385,26 @@ int main()
 		else {
 			mario.onGround = false;
 		}
-		
-		//if (tileY < MAP_ROWS && map[tileY][tileX] == 1) {
-		//	mario.rect.y = tileY * TILE_SIZE - mario.rect.height; // Colocar sobre el bloque
-		//	mario.speed.y = 0;
-		//	mario.isJumping = false;
-		//}
-		//else {
-		//	mario.isJumping = true;
-		//}
 
-		// Mover la cámara para que siga a Mario
+		// Ajustar la cámara en el eje Y para seguir al personaje
 		cameraY = -(mario.rect.y - screenHeight / 2);
-		/*camera.target.x = mario.rect.x + TILE_SIZE / 2;
-		camera.target.y = mario.rect.y + TILE_SIZE / 2;*/
 
-		// drawing
 		BeginDrawing();
-
-		BeginMode2D(camera);
-
-		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 
-		// Dibujar el mapa desde la matriz
-		for (int row = 0; row < MAP_ROWS; row++) {
-			for (int col = 0; col < MAP_COLS; col++) {
-				if (map[row][col] == 1) {
-					DrawRectangle(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, BLUE);
+		// Dibujar mapa desplazado
+		for (int y = 0; y < MAP_ROWS; y++) {
+			for (int x = 0; x < MAP_COLS; x++) {
+				if (map[y][x] == 1) {
+					DrawRectangle(x * TILE_SIZE + cameraX, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, DARKGRAY);
 				}
 			}
 		}
+		//draw title screen
+
+		BeginDrawing();
+		ClearBackground(BLACK);
+
 		if (titleScreen == 1) {
 			DrawTexture(Initial_screenTexture, 0, 0, WHITE);
 
@@ -417,44 +434,53 @@ int main()
 			}
 		}
 		else {
-			if (mario.state == 2) {
+			if (mario.hp == 2) {
+
 				if (mario.direction == 0) {
+
 					if (mario.onGround == true) { DrawTexture(bmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 					else { DrawTexture(bmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+
 				}
+
 				if (mario.direction == 1) {
+
 					if (mario.onGround == true) { DrawTexture(LbmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 					else { DrawTexture(LbmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+
 				}
+
 			}
-			else if (mario.state == 1) {
+			else if (mario.hp == 1) {
+
 				if (mario.direction == 0) {
+
 					if (mario.onGround == true) { DrawTexture(marioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 					else { DrawTexture(marioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 				}
+
 				if (mario.direction == 1) {
+
 					if (mario.onGround == true) { DrawTexture(LmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
 					else { DrawTexture(LmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+
 				}
+
 			}
+
 			if (goomba.state == 1) {
+
 				DrawTexture(goombaTexture1, goomba.rect.x - 20, goomba.rect.y - 160, WHITE);
+
 			}
 		}
 
-		//if (star.active) {
-		//	DrawRectangleRec(star.rect, GOLD);  // Star color
-		//}
+		EndDrawing();
 
 		DrawText("Usa las flechas para mover el mapa", 10, 10, 20, RAYWHITE);
 
-		EndMode2D();
-
-		// end the frame and get ready for the next one  (display frame, poll input, etc...)
-		EndDrawing();
 	}
 
-	// destroy the window and cleanup the OpenGL context
 	CloseWindow();
 	return 0;
 }
