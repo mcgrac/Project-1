@@ -75,7 +75,6 @@ int map[MAP_ROWS][MAP_COLS] = {
 float cameraX = { 0 };
 float cameraY = { 0 };
 
-
 // Estructura para el personaje
 typedef struct {
 	Rectangle rect;  // Rectángulo que representa al personaje
@@ -96,6 +95,80 @@ typedef struct {
 	int state;
 } Enemy;
 
+typedef struct {
+	Rectangle rect;
+	Vector2 speed;
+	bool active;
+}PowerUp;
+
+typedef struct {
+	Rectangle rect;
+}Block;
+
+void marioMovement(Player& mario)
+{
+	int newTileX;
+	int newTileY = (int)(mario.rect.y / TILE_SIZE);
+
+	if (IsKeyDown(KEY_RIGHT)) {
+		newTileX = (int)((mario.rect.x + SPEED + mario.rect.width) / TILE_SIZE);
+		if (map[newTileY][newTileX] == 0) {
+			mario.rect.x += SPEED;
+		}
+	}
+
+	if (IsKeyDown(KEY_LEFT)) {
+		newTileX = (int)((mario.rect.x - SPEED) / TILE_SIZE);
+		if (map[newTileY][newTileX] == 0) {
+			mario.rect.x -= SPEED;
+		}
+	}
+
+	if (IsKeyPressed(KEY_SPACE) && !mario.isJumping) {
+		mario.speed.y = -JUMP_FORCE;
+		mario.isJumping = true;
+	}
+}
+
+void goombaMovement(Enemy& goomba) {
+	int newTileGoombaX, nextTileGoombaX, nextTileGoombaXBack;
+	int newTileGoombaY = (int)(goomba.rect.y / TILE_SIZE);
+
+	if (goomba.state == 1) {
+		if (goomba.facing == GOOMBA_FACING_RIGHT) {
+			newTileGoombaX = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right
+			nextTileGoombaXBack = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left for reversing
+		}
+		else { // Goomba is facing left
+			newTileGoombaX = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left
+			nextTileGoombaXBack = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right for reversing
+		}
+
+		if (map[newTileGoombaY][newTileGoombaX] == 0) {
+			// Goomba moves in its current direction (right or left)
+			if (goomba.facing == GOOMBA_FACING_RIGHT) {
+				goomba.rect.x += SPEED_ENEMY;
+			}
+			else {
+				goomba.rect.x -= SPEED_ENEMY;
+			}
+		}
+		else {
+			// If there's an obstacle in the current direction, goomba will reverse direction
+			if (map[newTileGoombaY][nextTileGoombaXBack] == 0) {
+				// Reverse movement and update facing direction
+				if (goomba.facing == GOOMBA_FACING_RIGHT) {
+					goomba.rect.x -= SPEED_ENEMY;  // Move left
+					goomba.facing = GOOMBA_FACING_LEFT;  // Change direction
+				}
+				else {
+					goomba.rect.x += SPEED_ENEMY;  // Move right
+					goomba.facing = GOOMBA_FACING_RIGHT;  // Change direction
+				}
+			}
+		}
+	}
+}
 
 void HandleMarioCollisionWithGoomba(Player& mario, Enemy& goomba) {
 	if (goomba.state == 1 && CheckCollisionRecs(mario.rect, goomba.rect)) {
@@ -128,7 +201,17 @@ void Immunity(Player& mario) {
 		mario.time -= GetFrameTime();
 		if (mario.time <= 0) {
 			mario.immunity = false;
+			mario.time = 0;
 		}
+	}
+}
+
+void starPowerUp(PowerUp& star, Player& mario) {
+
+	if (star.active && CheckCollisionRecs(mario.rect, star.rect)) {
+		mario.immunity = true;
+		mario.time = 10.0f;  // Set immunity duration
+		star.active = false; // The star disappears after being collected
 	}
 }
 
@@ -191,6 +274,7 @@ int main()
 
 	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 2, false, 0, 3, true};
 	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, 1};
+	PowerUp star = { {300, 720, 40, 40}, {0, 0}, true };
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
@@ -198,82 +282,30 @@ int main()
 	// game loop
 	while (!WindowShouldClose())		// run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
-		// Movimiento lateral con detección de colisión
-		// MARIO
-
 		// Movimiento del personaje y ajuste de la cámara
 		if (IsKeyDown(KEY_RIGHT)) { cameraX -= SPEED; mario.direction = 0; }
 		if (IsKeyDown(KEY_LEFT)) { cameraX += SPEED; mario.direction = 1; }
 
-		int newTileX;
-		int newTileY = (int)(mario.rect.y / TILE_SIZE);
+		/*int newTileX;
+		int newTileY = (int)(mario.rect.y / TILE_SIZE);*/
 
 		if (!mario.immunity && CheckCollisionRecs(mario.rect, goomba.rect)) {
 			HandleMarioCollisionWithGoomba(mario, goomba);
 		}
 
-		if (IsKeyDown(KEY_RIGHT)) {
-			newTileX = (int)((mario.rect.x + SPEED + mario.rect.width) / TILE_SIZE);
-			if (map[newTileY][newTileX] == 0) {
-				mario.rect.x += SPEED;
-			}
-		}
+		//MARIO MOVEMENT
+		marioMovement(mario);
 
-		if (IsKeyDown(KEY_LEFT)) {
-			newTileX = (int)((mario.rect.x - SPEED) / TILE_SIZE);
-			if (map[newTileY][newTileX] == 0) {
-				mario.rect.x -= SPEED;
-			}
-		}
 		if (mario.state == MARIO_DEAD) {
 			return 0;
 		}
 
-		//ENEMY
-		int newTileGoombaX, nextTileGoombaX, nextTileGoombaXBack;
-		int newTileGoombaY = (int)(goomba.rect.y / TILE_SIZE);
-
-		if (goomba.state == 1) {
-			if (goomba.facing == GOOMBA_FACING_RIGHT) {
-				newTileGoombaX = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right
-				nextTileGoombaXBack = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left for reversing
-			}
-			else { // Goomba is facing left
-				newTileGoombaX = (int)((goomba.rect.x - SPEED_ENEMY) / TILE_SIZE); // Check left
-				nextTileGoombaXBack = (int)((goomba.rect.x + SPEED_ENEMY + goomba.rect.width) / TILE_SIZE); // Check right for reversing
-			}
-
-			if (map[newTileGoombaY][newTileGoombaX] == 0) {
-				// Goomba moves in its current direction (right or left)
-				if (goomba.facing == GOOMBA_FACING_RIGHT) {
-					goomba.rect.x += SPEED_ENEMY;
-				}
-				else {
-					goomba.rect.x -= SPEED_ENEMY;
-				}
-			}
-			else {
-				// If there's an obstacle in the current direction, goomba will reverse direction
-				if (map[newTileGoombaY][nextTileGoombaXBack] == 0) {
-					// Reverse movement and update facing direction
-					if (goomba.facing == GOOMBA_FACING_RIGHT) {
-						goomba.rect.x -= SPEED_ENEMY;  // Move left
-						goomba.facing = GOOMBA_FACING_LEFT;  // Change direction
-					}
-					else {
-						goomba.rect.x += SPEED_ENEMY;  // Move right
-						goomba.facing = GOOMBA_FACING_RIGHT;  // Change direction
-					}
-				}
-			}
-		}
+		//GOOMBA MOVEMENT
+		goombaMovement(goomba);
 
 		//Aplicar gravedad
 		mario.speed.y += GRAVITY;
 		mario.rect.y += mario.speed.y;
-
-		//Mario mata a goomba
-
 
 		// Update immunity timer
 		Immunity(mario);
@@ -288,12 +320,6 @@ int main()
 			mario.isJumping = false;
 		}
 		else {
-			mario.isJumping = true;
-		}
-
-		// Saltar
-		if (IsKeyPressed(KEY_SPACE) && !mario.isJumping) {
-			mario.speed.y = -JUMP_FORCE;
 			mario.isJumping = true;
 		}
 
@@ -372,6 +398,10 @@ int main()
 		}
 		if (goomba.state == 1) {
 			DrawTexture(goombaTexture1, goomba.rect.x - 20, goomba.rect.y - 160, WHITE);
+		}
+
+		if (star.active) {
+			DrawRectangleRec(star.rect, GOLD);  // Star color
 		}
 
 		DrawText(TextFormat("Timer: %f", &mario.time), 10, 10, 20, WHITE);
