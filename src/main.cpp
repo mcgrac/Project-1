@@ -9,25 +9,20 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 
 #include <vector>
 
-
 #include "raylib.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include "Player.hpp"
 #include "Block.hpp"
 #include "Enemy.hpp"
-#include"Goomba.hpp"
-
+#include "Goomba.hpp"
 
 using namespace std;
 
 #define GRAVITY  0.5f    // Gravedad aplicada en cada frame
 #define JUMP_FORCE 10.0f // Fuerza del salto
-//#define SPEED 5.0f       // Velocidad del personaje
-
 #define TILE_SIZE 16.0f  // Tamaño de cada bloque
 #define MAP_ROWS 28   // Filas del mapa
 #define MAP_COLS 100   // Columnas del mapa
-//#define MAP_COLS 100  // Aumentamos el tamaño del nivel en columnas
 
 //definir array 2D mapa
 //int map[MAP_ROWS][MAP_COLS] = {
@@ -84,9 +79,10 @@ int map[MAP_ROWS][MAP_COLS] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
 };
 
+
 vector<Block> blocks;
 
-vector<Entity> entities;
+//vector<Enemy> enemies;
 
 //class Camera {
 //
@@ -106,8 +102,8 @@ void initBlocks() {
 				//blocks.emplace_back(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, RED);
 				//blocks.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
 
-				entities.emplace_back(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, RED);
-				entities.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
+				blocks.emplace_back(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2);
+				blocks.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
 
 				//b.block.x = col * TILE_SIZE;
 				//b.block.y = row * TILE_SIZE;
@@ -123,40 +119,37 @@ void initBlocks() {
 	}
 }
 
-void drawBlocks (vector<Entity> list) {
+void drawBlocks (vector<Block> list) {
 
 	for (int i = 0; i < blocks.size(); ++i) {
-
-		if (list[i].id == 2) {
-
-			DrawRectangleRec(list[i].hitbox, RED);
-		}
+	
+		DrawRectangleRec(list[i].hitbox, RED);
 
 	}
 }
 
 
-bool marioCollidingRight(Player p, Block b) {
+//bool marioCollidingRight(Player p, Block b) {
+//
+//	//return (p.hitbox.x + p.hitbox.width >= b.block.x) &&
+//	//	(p.hitbox.x + p.hitbox.width <= b.block.x + b.block.width) &&
+//	//	(p.hitbox.y >= b.block.y) &&
+//	//	(p.hitbox.y <= b.block.y + b.block.height);
+//
+//	////return (CheckCollisionLines(p.getRightUp(), p.getRightDown(), b.getInitialPos(), b.getLeftDown(), NULL)); // check if the right side of mario's hitbox and left side of block's hitbox collide
+//
+//	//return (p.right.x >= b.left.x) &&  // Mario está dentro del rango horizontal del bloque
+//	//	(p.right.y >= b.top.y) &&  // Mario está dentro del rango vertical del bloque
+//	//	(p.right.y <= b.bottom.y);  // Mario está dentro del rango vertical del bloque
+//}
 
-	//return (p.hitbox.x + p.hitbox.width >= b.block.x) &&
-	//	(p.hitbox.x + p.hitbox.width <= b.block.x + b.block.width) &&
-	//	(p.hitbox.y >= b.block.y) &&
-	//	(p.hitbox.y <= b.block.y + b.block.height);
-
-	////return (CheckCollisionLines(p.getRightUp(), p.getRightDown(), b.getInitialPos(), b.getLeftDown(), NULL)); // check if the right side of mario's hitbox and left side of block's hitbox collide
-
-	return (p.right.x >= b.left.x) &&  // Mario está dentro del rango horizontal del bloque
-		(p.right.y >= b.top.y) &&  // Mario está dentro del rango vertical del bloque
-		(p.right.y <= b.bottom.y);  // Mario está dentro del rango vertical del bloque
-}
-
-bool marioCollidingLeft(Player p, Block b) {
-
-	return (p.left.x <= b.right.x) &&  // Mario está dentro del rango horizontal del bloque
-		(p.left.y >= b.top.y) &&  // Mario está dentro del rango vertical del bloque
-		(p.left.y <= b.bottom.y);  // Mario está dentro del rango vertical del bloque
-
-}
+//bool marioCollidingLeft(Player p, Block b) {
+//
+//	//return (p.left.x <= b.right.x) &&  // Mario está dentro del rango horizontal del bloque
+//	//	(p.left.y >= b.top.y) &&  // Mario está dentro del rango vertical del bloque
+//	//	(p.left.y <= b.bottom.y);  // Mario está dentro del rango vertical del bloque
+//
+//}
 
 bool marioCollidingbottom(Player p, Block b) {
 
@@ -173,11 +166,6 @@ bool marioCollidingAbove(Player p, Block b) {
 		(p.top.x <= b.right.x);  // Mario está dentro del rango horizontal derecho
 }
 
-void checkColisions(Player player) {
-
-	int id;
-
-}
 int main()
 {
 	// Tell the window to use vsync and work on high DPI displays
@@ -198,9 +186,9 @@ int main()
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
-	Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 0, 0, 5.0f, 1, 300.0f, 100.0f, 96.0f, 96.0f);
+	Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 0, 0, 5.0f, 1);
 
-	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, true);
+	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, true, 5.0f);
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
@@ -229,74 +217,80 @@ int main()
 			mario.move(-1);
 		}
 
+		goomba.moveGoomba();
 
 		//detect collisions with the blocks in the list
 		for (int i = 0; i < blocks.size(); ++i) {
 			if (CheckCollisionRecs(mario.hitbox, blocks[i].hitbox)) {
 
+				if (blocks[i].id == 2) { //COLLISION WITH BLOCKS
 
-				printf("Mario.bottom: (%.2f, %.2f) | Block.top: (%.2f, %.2f)\n",
-					mario.bottom.x, mario.bottom.y, blocks[i].top.x, blocks[i].top.y);
+					printf("Mario.bottom: (%.2f, %.2f) | Block.top: (%.2f, %.2f)\n",
+						mario.bottom.x, mario.bottom.y, blocks[i].top.x, blocks[i].top.y);
 
-				// COLISIÓN ABAJO (Mario está parado sobre el bloque)
-				if (marioCollidingbottom(mario, blocks[i])) {
+					// COLISIÓN ABAJO (Mario está parado sobre el bloque)
+					if (marioCollidingbottom(mario, blocks[i])) {
 
-					printf("Colisión detectada BOTTOM bloque %d\n", i);
+						printf("Colisión detectada BOTTOM bloque %d\n", i);
 
-					mario.speed.y = 0;
-					mario.hitbox.y = blocks[i].hitbox.y - mario.hitbox.height; // Asegurar que Mario se quede sobre el bloque
-					mario.isJumping = false;
+						mario.speed.y = 0;
+						mario.hitbox.y = blocks[i].hitbox.y - mario.hitbox.height; // Asegurar que Mario se quede sobre el bloque
+						mario.isJumping = false;
+					}
+
+					// COLISIÓN ARRIBA (Mario golpea con la cabeza)
+					if (marioCollidingAbove(mario, blocks[i])) {
+
+						printf("Colisión detectada TOP bloque %d\n", i);
+
+						mario.hitbox.y = blocks[i].hitbox.y + blocks[i].hitbox.height; // Lo mueve justo debajo del bloque
+						mario.speed.y = 1.0f; // Hace que caiga inmediatamente
+					}
+
+					//if ()
+					//{
+
+					//	//printf("colision lateral detectada");
+					//	//
+					//	////colisiona derecha
+					//	//if (mario.distancePoints(mario.right, blocks[i].left) < (mario.distancePoints(mario.right, blocks[i].right))) {
+
+					//	//	printf("colision derecha");
+
+					//	//	mario.hitbox.x = blocks[i].hitbox.x - mario.hitbox.width; // Bloquea movimiento a la derecha
+					//	//	mario.colliding = true;
+					//	//}
+					//	//else if (mario.distancePoints(mario.right, blocks[i].left) > (mario.distancePoints(mario.right, blocks[i].right))) { //colisiona izquierda
+
+					//	//	printf("colision izquierda");
+
+					//	//	mario.hitbox.x = blocks[i].hitbox.x + blocks[i].hitbox.width; // Bloquea movimiento a la izquierda
+					//	//	mario.colliding = true;
+					//	//}
+					//}
+
+					// COLISIÓN IZQUIERDA
+					//if (marioCollidingLeft(mario, blocks[i])) {
+
+					//	printf("Colisión detectada LEFT bloque %d\n", i);
+
+					//	mario.hitbox.x = blocks[i].hitbox.x + blocks[i].hitbox.width; // Bloquea movimiento a la izquierda
+					//	mario.colliding = true;
+					//}
+					//// COLISIÓN DERECHA
+					//else if (marioCollidingRight(mario, blocks[i])) {
+
+					//	printf("Colisión detectada RIGHT bloque %d\n", i);
+
+					//	mario.hitbox.x = blocks[i].hitbox.x - mario.hitbox.width; // Bloquea movimiento a la derecha
+					//	mario.colliding = true;
+					//}
 				}
 
-				// COLISIÓN ARRIBA (Mario golpea con la cabeza)
-				if (marioCollidingAbove(mario, blocks[i])) {
-
-					printf("Colisión detectada TOP bloque %d\n", i);
-
-					mario.hitbox.y = blocks[i].hitbox.y + blocks[i].hitbox.height; // Lo mueve justo debajo del bloque
-					mario.speed.y = 1.0f; // Hace que caiga inmediatamente
-				}
-
-				//if ()
-				//{
-
-				//	//printf("colision lateral detectada");
-				//	//
-				//	////colisiona derecha
-				//	//if (mario.distancePoints(mario.right, blocks[i].left) < (mario.distancePoints(mario.right, blocks[i].right))) {
-
-				//	//	printf("colision derecha");
-
-				//	//	mario.hitbox.x = blocks[i].hitbox.x - mario.hitbox.width; // Bloquea movimiento a la derecha
-				//	//	mario.colliding = true;
-				//	//}
-				//	//else if (mario.distancePoints(mario.right, blocks[i].left) > (mario.distancePoints(mario.right, blocks[i].right))) { //colisiona izquierda
-
-				//	//	printf("colision izquierda");
-
-				//	//	mario.hitbox.x = blocks[i].hitbox.x + blocks[i].hitbox.width; // Bloquea movimiento a la izquierda
-				//	//	mario.colliding = true;
-				//	//}
-				//}
-
-				// COLISIÓN IZQUIERDA
-				//if (marioCollidingLeft(mario, blocks[i])) {
-
-				//	printf("Colisión detectada LEFT bloque %d\n", i);
-
-				//	mario.hitbox.x = blocks[i].hitbox.x + blocks[i].hitbox.width; // Bloquea movimiento a la izquierda
-				//	mario.colliding = true;
-				//}
-				//// COLISIÓN DERECHA
-				//else if (marioCollidingRight(mario, blocks[i])) {
-
-				//	printf("Colisión detectada RIGHT bloque %d\n", i);
-
-				//	mario.hitbox.x = blocks[i].hitbox.x - mario.hitbox.width; // Bloquea movimiento a la derecha
-				//	mario.colliding = true;
-				//}
 			}
-			else {
+			else if(CheckCollisionRecs(goomba.hitbox, blocks[i].hitbox)){
+
+				goomba.colisionGoomba(blocks[i]);
 				//mario.colliding = false;
 			}
 		}
@@ -361,7 +355,7 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 
-		drawBlocks(entities);
+		drawBlocks(blocks);
 
 		//dubujar personaje
 		DrawRectangleRec(mario.hitbox, RED);
