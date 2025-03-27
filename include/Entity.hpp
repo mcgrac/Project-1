@@ -2,23 +2,16 @@
 #include "raylib.h"
 #include <math.h> 
 
-class Line {
-
-public:
-	Vector2 start;
-	Vector2 end;
-};
-
-
 class Entity {
 
-private:
+
+//private:
 
 	//The diferent corners of each hitbox
-	Vector2 initialPos = { hitbox.x, hitbox.y };
-	Vector2 rightUp = { hitbox.x + hitbox.width, hitbox.y };
-	Vector2 rightDown = { hitbox.x + hitbox.width, hitbox.y + hitbox.height };
-	Vector2 leftDown = { hitbox.x, hitbox.y + hitbox.height };
+	//Vector2 initialPos = { hitbox.x, hitbox.y };
+	//Vector2 rightUp = { hitbox.x + hitbox.width, hitbox.y };
+	//Vector2 rightDown = { hitbox.x + hitbox.width, hitbox.y + hitbox.height };
+	//Vector2 leftDown = { hitbox.x, hitbox.y + hitbox.height };
 
 	//Vector2 initialPos;
 	//Vector2 rightUp;
@@ -41,11 +34,11 @@ public:
 	Vector2 right = { hitbox.x + hitbox.width, hitbox.y + (hitbox.height / 2) };
 	Vector2 bottom = { hitbox.x + (hitbox.width / 2), hitbox.y + hitbox.height };
 
-	
+
 	int id; //0 player, 1 enemy, 2 block
 
 	Entity() {}
-	Entity(float x, float y, float width, float heigh, int id_, Vector2 top_, Vector2 left_, Vector2 right_, Vector2 bottom_) :
+	Entity(float x, float y, float width, float heigh, int id_) :
 		hitbox{ x, y, width, heigh }, id(id_) {
 	}
 
@@ -56,12 +49,12 @@ public:
 	//Entity(float x, float y, float width, float heigh) :
 	//	hitbox{ x, y, width, heigh } {}
 
-	Line line(Vector2 start, Vector2 end) {
+	//Line line(Vector2 start, Vector2 end) {
 
-		Line line{ start, end };
+	//	Line line{ start, end };
 
-		return line;
-	}
+	//	return line;
+	//}
 
 	void updateRects() {
 
@@ -76,19 +69,19 @@ public:
 		return sqrtf(((p2.x - p1.x) * (p2.x - p1.x)) + ((p2.y - p1.y) * (p2.y - p1.y)));
 	}
 
-	void colisions(int id) {
+	//void colisions(int id) {
 
-		if (id == 1) { //enemy
-
-
-		}
-		else if (id == 2) { //block
+	//	if (id == 1) { //enemy
 
 
-		}
-	}
+	//	}
+	//	else if (id == 2) { //block
 
-	Vector2 getInitialPos() {
+
+	//	}
+	//}
+
+	/*Vector2 getInitialPos() {
 
 		return initialPos;
 	}
@@ -103,5 +96,6 @@ public:
 
 	Vector2 getLeftDown() {
 		return leftDown;
-	}
+	}*/
 };
+
