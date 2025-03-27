@@ -6,9 +6,9 @@
 #define SPEED 5.0f       // Velocidad del personaje
 #define SPEED_ENEMY 4.0f // velocidad enemies
 
-#define TILE_SIZE 40  // Tamaño de cada bloque
-#define MAP_ROWS 20   // Filas del mapa
-#define MAP_COLS 32   // Columnas del mapa
+#define TILE_SIZE 16  // Tamaño de cada bloque
+#define MAP_ROWS 28   // Filas del mapa
+#define MAP_COLS 100   // Columnas del mapa
 
 #define GOOMBA_FACING_RIGHT 1
 #define GOOMBA_FACING_LEFT -1
@@ -21,54 +21,54 @@
 #define GOOMBA_ALIVE 1
 #define GOOMBA_DEAD 0
 
-//#define MAP_COLS 100  // Aumentamos el tamaño del nivel en columnas
+#define MAP_COLS 100  // Aumentamos el tamaño del nivel en columnas
 
 //definir array 2D mapa
-int map[MAP_ROWS][MAP_COLS] = {
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
-};
-
 //int map[MAP_ROWS][MAP_COLS] = {
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+//	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
 //};
+
+int map[MAP_ROWS][MAP_COLS] = {
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
+};
 
 
 // Posición de la "cámara" que controla el desplazamiento del mapa
@@ -217,45 +217,7 @@ void starPowerUp(PowerUp& star, Player& mario) {
 
 int main()
 {
-	//right side{
-
-	Image bmarioImage1 = LoadImage("resources/bmario1.png");
-	Image bmarioImage2 = LoadImage("resources/bmario2.png");
-	Image bmarioImage3 = LoadImage("resources/bmario3.png");
-	Image bmarioImage4 = LoadImage("resources/bmario4.png");
-	Image bmarioImage5 = LoadImage("resources/bmario5.png");
-
-	//left side
-	Image LbmarioImage1 = LoadImage("resources/Lbmario1.png");
-	Image LbmarioImage2 = LoadImage("resources/Lbmario2.png");
-	Image LbmarioImage3 = LoadImage("resources/Lbmario3.png");
-	Image LbmarioImage4 = LoadImage("resources/Lbmario4.png");
-	Image LbmarioImage5 = LoadImage("resources/Lbmario5.png");
-
-	//small mario
-
-	//right side
-	Image marioImage1 = LoadImage("resources/mario1.png");
-	Image marioImage2 = LoadImage("resources/mario2.png");
-	Image marioImage3 = LoadImage("resources/mario3.png");
-	Image marioImage4 = LoadImage("resources/mario4.png");
-	Image marioImage5 = LoadImage("resources/mario5.png");
-
-	//left side
-	Image LmarioImage1 = LoadImage("resources/Lmario1.png");
-	Image LmarioImage2 = LoadImage("resources/Lmario2.png");
-	Image LmarioImage3 = LoadImage("resources/Lmario3.png");
-	Image LmarioImage4 = LoadImage("resources/Lmario4.png");
-	Image LmarioImage5 = LoadImage("resources/Lmario5.png");
-
-	//goomba sprites
-
-	Image goombaImage1 = LoadImage("resources/Goomba1.png");
-	Image goombaImage2 = LoadImage("resources/Goomba2.png");
-	Image goombaImage3 = LoadImage("resources/Goomba3.png");
-
 	SetTargetFPS(60);
-
 	const int screenWidth = 512;
 	const int screenHeight = 448;
 
@@ -263,7 +225,82 @@ int main()
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
 	// Create the window and OpenGL context
-	InitWindow(MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE, "Super Mario - Matriz de Mapa");
+	InitWindow(screenWidth, screenHeight, "Mapa en Movimiento");
+
+	//load image title screens
+	Image Title_screenImage = LoadImage("resources/Title_screen.png");
+	Image Time_upImage = LoadImage("resources/Time_up.png");
+	Image StrtImage = LoadImage("resources/strt.png");
+	Image WinImage = LoadImage("resources/tyMario.png");
+	Image Game_overImage = LoadImage("resources/game_over.png");
+	Image Initial_screenImage = LoadImage("resources/Initial_screen.png");
+
+	int titleScreen = true;
+	Texture2D Title_screenTexture = LoadTextureFromImage(Title_screenImage);
+	Texture2D Game_overTexture = LoadTextureFromImage(Game_overImage);
+	Texture2D StrtTexture = LoadTextureFromImage(StrtImage);
+	Texture2D Initial_screenTexture = LoadTextureFromImage(Initial_screenImage);
+
+	Image bmarioImage1 = LoadImage("resources/bmario1.png");
+	Image bmarioImage2 = LoadImage("resources/bmario2.png");
+	Image bmarioImage3 = LoadImage("resources/bmario3.png");
+	Image bmarioImage4 = LoadImage("resources/bmario4.png");
+	Image bmarioImage5 = LoadImage("resources/bmario5.png");
+
+	Image LbmarioImage1 = LoadImage("resources/Lbmario1.png");
+	Image LbmarioImage2 = LoadImage("resources/Lbmario2.png");
+	Image LbmarioImage3 = LoadImage("resources/Lbmario3.png");
+	Image LbmarioImage4 = LoadImage("resources/Lbmario4.png");
+	Image LbmarioImage5 = LoadImage("resources/Lbmario5.png");
+
+	//small mario
+	Image marioImage1 = LoadImage("resources/mario1.png");
+	Image marioImage2 = LoadImage("resources/mario2.png");
+	Image marioImage3 = LoadImage("resources/mario3.png");
+	Image marioImage4 = LoadImage("resources/mario4.png");
+	Image marioImage5 = LoadImage("resources/mario5.png");
+
+	Image LmarioImage1 = LoadImage("resources/Lmario1.png");
+	Image LmarioImage2 = LoadImage("resources/Lmario2.png");
+	Image LmarioImage3 = LoadImage("resources/Lmario3.png");
+	Image LmarioImage4 = LoadImage("resources/Lmario4.png");
+	Image LmarioImage5 = LoadImage("resources/Lmario5.png");
+
+	//goomba sprites
+	Image goombaImage1 = LoadImage("resources/Goomba1.png");
+	Image goombaImage2 = LoadImage("resources/Goomba2.png");
+	Image goombaImage3 = LoadImage("resources/Goomba3.png");
+
+	//Texture big mario
+	Texture2D bmarioTexture1 = LoadTextureFromImage(bmarioImage1);  // Convert Image to Texture
+	Texture2D bmarioTexture2 = LoadTextureFromImage(bmarioImage2);
+	Texture2D bmarioTexture3 = LoadTextureFromImage(bmarioImage3);
+	Texture2D bmarioTexture4 = LoadTextureFromImage(bmarioImage4);
+	Texture2D bmarioTexture5 = LoadTextureFromImage(bmarioImage5);
+
+	Texture2D LbmarioTexture1 = LoadTextureFromImage(LbmarioImage1);  // left side
+	Texture2D LbmarioTexture2 = LoadTextureFromImage(LbmarioImage2);
+	Texture2D LbmarioTexture3 = LoadTextureFromImage(LbmarioImage3);
+	Texture2D LbmarioTexture4 = LoadTextureFromImage(LbmarioImage4);
+	Texture2D LbmarioTexture5 = LoadTextureFromImage(LbmarioImage5);
+
+	//small mario
+	Texture2D marioTexture1 = LoadTextureFromImage(marioImage1);  // Convert Image to Texture
+	Texture2D marioTexture2 = LoadTextureFromImage(marioImage2);
+	Texture2D marioTexture3 = LoadTextureFromImage(marioImage3);
+	Texture2D marioTexture4 = LoadTextureFromImage(marioImage4);
+	Texture2D marioTexture5 = LoadTextureFromImage(marioImage5);
+
+	Texture2D LmarioTexture1 = LoadTextureFromImage(LmarioImage1);  // left side
+	Texture2D LmarioTexture2 = LoadTextureFromImage(LmarioImage2);
+	Texture2D LmarioTexture3 = LoadTextureFromImage(LmarioImage3);
+	Texture2D LmarioTexture4 = LoadTextureFromImage(LmarioImage4);
+	Texture2D LmarioTexture5 = LoadTextureFromImage(LmarioImage5);
+
+	//Texture Goomba
+	Texture2D goombaTexture1 = LoadTextureFromImage(goombaImage1);
+	Texture2D goombaTexture2 = LoadTextureFromImage(goombaImage2);
+	Texture2D goombaTexture3 = LoadTextureFromImage(goombaImage3);
 
 	//camaras
 	Camera2D camera = { 0 };
@@ -272,8 +309,8 @@ int main()
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
-	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 2, false, 0, 3, true};
-	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, 1};
+	Player mario = { {640, 400, 40, 40}, {0, 0}, false, 2, false, 0, 3, true };
+	Enemy goomba = { {300, 720, 40, 40}, {0, 0}, GOOMBA_FACING_RIGHT, 1 };
 	PowerUp star = { {300, 720, 40, 40}, {0, 0}, true };
 
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
@@ -285,9 +322,7 @@ int main()
 		// Movimiento del personaje y ajuste de la cámara
 		if (IsKeyDown(KEY_RIGHT)) { cameraX -= SPEED; mario.direction = 0; }
 		if (IsKeyDown(KEY_LEFT)) { cameraX += SPEED; mario.direction = 1; }
-
-		/*int newTileX;
-		int newTileY = (int)(mario.rect.y / TILE_SIZE);*/
+		if (IsKeyDown(KEY_A)) { titleScreen = 3; }
 
 		if (!mario.immunity && CheckCollisionRecs(mario.rect, goomba.rect)) {
 			HandleMarioCollisionWithGoomba(mario, goomba);
@@ -314,18 +349,28 @@ int main()
 		int tileX = mario.rect.x / TILE_SIZE;
 		int tileY = (mario.rect.y + mario.rect.height) / TILE_SIZE;
 
-		if (tileY < MAP_ROWS && map[tileY][tileX] == 1) {
-			mario.rect.y = tileY * TILE_SIZE - mario.rect.height; // Colocar sobre el bloque
+		if (mario.rect.y >= screenHeight - TILE_SIZE * 2) {
+			mario.rect.y = screenHeight - TILE_SIZE * 2;
 			mario.speed.y = 0;
-			mario.isJumping = false;
+			mario.onGround = true;
 		}
 		else {
-			mario.isJumping = true;
+			mario.onGround = false;
 		}
+		
+		//if (tileY < MAP_ROWS && map[tileY][tileX] == 1) {
+		//	mario.rect.y = tileY * TILE_SIZE - mario.rect.height; // Colocar sobre el bloque
+		//	mario.speed.y = 0;
+		//	mario.isJumping = false;
+		//}
+		//else {
+		//	mario.isJumping = true;
+		//}
 
 		// Mover la cámara para que siga a Mario
-		camera.target.x = mario.rect.x + TILE_SIZE / 2;
-		camera.target.y = mario.rect.y + TILE_SIZE / 2;
+		cameraY = -(mario.rect.y - screenHeight / 2);
+		/*camera.target.x = mario.rect.x + TILE_SIZE / 2;
+		camera.target.y = mario.rect.y + TILE_SIZE / 2;*/
 
 		// drawing
 		BeginDrawing();
@@ -343,68 +388,65 @@ int main()
 				}
 			}
 		}
+		if (titleScreen == 1) {
+			DrawTexture(Initial_screenTexture, 0, 0, WHITE);
 
-		//Texture big mario
-		Texture2D bmarioTexture1 = LoadTextureFromImage(bmarioImage1);  // Convert Image to Texture
-		Texture2D bmarioTexture2 = LoadTextureFromImage(bmarioImage2);
-		Texture2D bmarioTexture3 = LoadTextureFromImage(bmarioImage3);
-		Texture2D bmarioTexture4 = LoadTextureFromImage(bmarioImage4);
-		Texture2D bmarioTexture5 = LoadTextureFromImage(bmarioImage5);
-
-		Texture2D LbmarioTexture1 = LoadTextureFromImage(LbmarioImage1);  // left side
-		Texture2D LbmarioTexture2 = LoadTextureFromImage(LbmarioImage2);
-		Texture2D LbmarioTexture3 = LoadTextureFromImage(LbmarioImage3);
-		Texture2D LbmarioTexture4 = LoadTextureFromImage(LbmarioImage4);
-		Texture2D LbmarioTexture5 = LoadTextureFromImage(LbmarioImage5);
-
-		//small mario
-		Texture2D marioTexture1 = LoadTextureFromImage(marioImage1);  // Convert Image to Texture
-		Texture2D marioTexture2 = LoadTextureFromImage(marioImage2);
-		Texture2D marioTexture3 = LoadTextureFromImage(marioImage3);
-		Texture2D marioTexture4 = LoadTextureFromImage(marioImage4);
-		Texture2D marioTexture5 = LoadTextureFromImage(marioImage5);
-
-		Texture2D LmarioTexture1 = LoadTextureFromImage(LmarioImage1);  // left side
-		Texture2D LmarioTexture2 = LoadTextureFromImage(LmarioImage2);
-		Texture2D LmarioTexture3 = LoadTextureFromImage(LmarioImage3);
-		Texture2D LmarioTexture4 = LoadTextureFromImage(LmarioImage4);
-		Texture2D LmarioTexture5 = LoadTextureFromImage(LmarioImage5);
-
-		//Texture Goomba
-
-		Texture2D goombaTexture1 = LoadTextureFromImage(goombaImage1);
-		Texture2D goombaTexture2 = LoadTextureFromImage(goombaImage2);
-		Texture2D goombaTexture3 = LoadTextureFromImage(goombaImage3);
-
-		if (mario.state == 2) {
-			if (mario.direction == 0) {
-				if (mario.onGround == true) { DrawTexture(bmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-				else { DrawTexture(bmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-			}
-			if (mario.direction == 1) {
-				if (mario.onGround == true) { DrawTexture(LbmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-				else { DrawTexture(LbmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+			if (IsKeyDown(KEY_SPACE)) {
+				titleScreen = 2;  // Exit the title screen when space is pressed
 			}
 		}
-		else if (mario.state == 1) {
-			if (mario.direction == 0) {
-				if (mario.onGround == true) { DrawTexture(marioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-				else { DrawTexture(marioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-			}
-			if (mario.direction == 1) {
-				if (mario.onGround == true) { DrawTexture(LmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
-				else { DrawTexture(LmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+		else if (titleScreen == 2) {
+			DrawTexture(Initial_screenTexture, 0, 0, WHITE);
+
+			if (IsKeyDown(KEY_B)) {
+				titleScreen = 3;  // Exit the title screen when space is pressed
 			}
 		}
-		if (goomba.state == 1) {
-			DrawTexture(goombaTexture1, goomba.rect.x - 20, goomba.rect.y - 160, WHITE);
+		else if (titleScreen == 3) {
+			DrawTexture(StrtTexture, 0, 0, WHITE);
+
+			if (IsKeyDown(KEY_C)) {
+				titleScreen = false;  // Exit the title screen when space is pressed
+			}
+		}
+		else if (titleScreen == 3) {
+			DrawTexture(Game_overTexture, 0, 0, WHITE);
+
+			if (IsKeyDown(KEY_B)) {
+				titleScreen = 1;  // Exit the title screen when space is pressed
+			}
+		}
+		else {
+			if (mario.state == 2) {
+				if (mario.direction == 0) {
+					if (mario.onGround == true) { DrawTexture(bmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+					else { DrawTexture(bmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+				}
+				if (mario.direction == 1) {
+					if (mario.onGround == true) { DrawTexture(LbmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+					else { DrawTexture(LbmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+				}
+			}
+			else if (mario.state == 1) {
+				if (mario.direction == 0) {
+					if (mario.onGround == true) { DrawTexture(marioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+					else { DrawTexture(marioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+				}
+				if (mario.direction == 1) {
+					if (mario.onGround == true) { DrawTexture(LmarioTexture1, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+					else { DrawTexture(LmarioTexture5, mario.rect.x - 20, mario.rect.y - 160, WHITE); }
+				}
+			}
+			if (goomba.state == 1) {
+				DrawTexture(goombaTexture1, goomba.rect.x - 20, goomba.rect.y - 160, WHITE);
+			}
 		}
 
-		if (star.active) {
-			DrawRectangleRec(star.rect, GOLD);  // Star color
-		}
+		//if (star.active) {
+		//	DrawRectangleRec(star.rect, GOLD);  // Star color
+		//}
 
-		DrawText(TextFormat("Timer: %f", &mario.time), 10, 10, 20, WHITE);
+		DrawText("Usa las flechas para mover el mapa", 10, 10, 20, RAYWHITE);
 
 		EndMode2D();
 
