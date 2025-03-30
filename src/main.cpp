@@ -19,7 +19,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 using namespace std;
 
 #define GRAVITY  0.5f    // Gravedad aplicada en cada frame
-#define JUMP_FORCE 10.0f // Fuerza del salto
+#define JUMP_FORCE 8.0f // Fuerza del salto
 #define TILE_SIZE 16.0f  // Tamaño de cada bloque
 #define MAP_ROWS 28   // Filas del mapa
 #define MAP_COLS 100   // Columnas del mapa
@@ -74,15 +74,14 @@ int map[MAP_ROWS][MAP_COLS] = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1} // Suelo
 };
 
 
-vector<Block> blocks;
+vector<Entity> entities;
 
-//vector<Enemy> enemies;
 
 //class Camera {
 //
@@ -91,40 +90,29 @@ vector<Block> blocks;
 
 void initBlocks() {
 
-	blocks.clear();
+	entities.clear();
 
 	for (int row = 0; row < MAP_ROWS; row++) {
 		for (int col = 0; col < MAP_COLS; col++) {
 			if (map[row][col] == 1) {
 
-				//Block b { col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, RED};
-
-				//blocks.emplace_back(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, RED);
-				//blocks.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
-
-				blocks.emplace_back(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2);
-				blocks.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
-
-				//b.block.x = col * TILE_SIZE;
-				//b.block.y = row * TILE_SIZE;
-				//b.block.width = TILE_SIZE;
-				//b.block.height = TILE_SIZE;
-				//b.color = RED;
-
-				//b.updateRects();
-				//
-				//blocks.push_back(b);
+				entities.emplace_back(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1);
+				entities.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
 			}
 		}
 	}
 }
 
-void drawBlocks (vector<Block> list) {
-
-	for (int i = 0; i < blocks.size(); ++i) {
+void drawBlocks (vector<Entity> list) {
 	
-		DrawRectangleRec(list[i].hitbox, RED);
+	for (int i = 0; i < entities.size(); ++i) {
 
+		if (entities[i].id == 2) {
+
+			//if it is a block, draw it
+			DrawRectangleRec(list[i].hitbox, RED);
+
+		}
 	}
 }
 
@@ -151,28 +139,10 @@ void drawBlocks (vector<Block> list) {
 //
 //}
 
-bool marioCollidingbottom(Player p, Block b) {
-
-	return (p.bottom.y >= b.top.y) &&
-		(p.bottom.x >= b.left.x) &&
-		(p.bottom.x <= b.right.x);
-}
-
-bool marioCollidingAbove(Player p, Block b) {
-
-	return (p.top.y <= b.bottom.y) &&  // Mario está por debajo del bloque
-		(p.top.y > b.top.y) &&  // Mario no está por encima del bloque
-		(p.top.x >= b.left.x) &&  // Mario está dentro del rango horizontal izquierdo
-		(p.top.x <= b.right.x);  // Mario está dentro del rango horizontal derecho
-}
-
 int main()
 {
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
-
-	// Create the window and OpenGL context
-	//InitWindow(MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE, "Super Mario - Matriz de Mapa");
 
 	const int screenWidth = 512;
 	const int screenHeight = 448;
@@ -186,22 +156,19 @@ int main()
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
 
-	Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 0, 0, 5.0f, 1);
+	Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f);
+	//entities.emplace_back(mario);
 
-	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, true, 5.0f);
-
-	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
-	SearchAndSetResourceDir("resources");
-
-	//textures
-	Image marioImage = LoadImage("resources/bmario 1.png"); // If the file is inside an 'assets' folder
+	//create goomba and add them in the list
+	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f);
+	entities.emplace_back(move(goomba));
 
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
 
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
-		//Aplicar gravedad
+		//Aplicar gravedad a MArio
 		mario.speed.y += GRAVITY;
 		mario.hitbox.y += mario.speed.y;
 
@@ -217,129 +184,54 @@ int main()
 			mario.move(-1);
 		}
 
-		goomba.moveGoomba();
+		goomba.moveGoomba(entities);
 
-		//detect collisions with the blocks in the list
-		for (int i = 0; i < blocks.size(); ++i) {
-			if (CheckCollisionRecs(mario.hitbox, blocks[i].hitbox)) {
+		mario.colisionsPlayer(entities);
 
-				if (blocks[i].id == 2) { //COLLISION WITH BLOCKS
+		//mario.colisionsPlayerEnemy(entities);
 
-					printf("Mario.bottom: (%.2f, %.2f) | Block.top: (%.2f, %.2f)\n",
-						mario.bottom.x, mario.bottom.y, blocks[i].top.x, blocks[i].top.y);
+		goomba.colisionsGoomba(entities);
 
-					// COLISIÓN ABAJO (Mario está parado sobre el bloque)
-					if (marioCollidingbottom(mario, blocks[i])) {
+		if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity && goomba.state == 1) {
 
-						printf("Colisión detectada BOTTOM bloque %d\n", i);
+			printf("COLISION CON GOOMBA\n");
 
-						mario.speed.y = 0;
-						mario.hitbox.y = blocks[i].hitbox.y - mario.hitbox.height; // Asegurar que Mario se quede sobre el bloque
-						mario.isJumping = false;
+			if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity) { //enemies
+
+				printf("COLISION CON GOOMBA\n");
+
+				if (CheckCollisionPointRec(mario.bottom, goomba.hitbox)) { //si los pies de mario colisionan con goomba
+
+					goomba.state = 0; //goomba muerto
+					mario.jump(8.0f); //REVISAR SALTO
+				}
+				else { //mario pierde una vida
+
+					mario.state--;
+
+					if (mario.state == 0) { //si es mario pequeño, mario muere
+
+						//mario muere
+
 					}
+					else {
 
-					// COLISIÓN ARRIBA (Mario golpea con la cabeza)
-					if (marioCollidingAbove(mario, blocks[i])) {
-
-						printf("Colisión detectada TOP bloque %d\n", i);
-
-						mario.hitbox.y = blocks[i].hitbox.y + blocks[i].hitbox.height; // Lo mueve justo debajo del bloque
-						mario.speed.y = 1.0f; // Hace que caiga inmediatamente
+						mario.immunity = true;
+						//mario.immunityVoid(mario);
 					}
-
-					//if ()
-					//{
-
-					//	//printf("colision lateral detectada");
-					//	//
-					//	////colisiona derecha
-					//	//if (mario.distancePoints(mario.right, blocks[i].left) < (mario.distancePoints(mario.right, blocks[i].right))) {
-
-					//	//	printf("colision derecha");
-
-					//	//	mario.hitbox.x = blocks[i].hitbox.x - mario.hitbox.width; // Bloquea movimiento a la derecha
-					//	//	mario.colliding = true;
-					//	//}
-					//	//else if (mario.distancePoints(mario.right, blocks[i].left) > (mario.distancePoints(mario.right, blocks[i].right))) { //colisiona izquierda
-
-					//	//	printf("colision izquierda");
-
-					//	//	mario.hitbox.x = blocks[i].hitbox.x + blocks[i].hitbox.width; // Bloquea movimiento a la izquierda
-					//	//	mario.colliding = true;
-					//	//}
-					//}
-
-					// COLISIÓN IZQUIERDA
-					//if (marioCollidingLeft(mario, blocks[i])) {
-
-					//	printf("Colisión detectada LEFT bloque %d\n", i);
-
-					//	mario.hitbox.x = blocks[i].hitbox.x + blocks[i].hitbox.width; // Bloquea movimiento a la izquierda
-					//	mario.colliding = true;
-					//}
-					//// COLISIÓN DERECHA
-					//else if (marioCollidingRight(mario, blocks[i])) {
-
-					//	printf("Colisión detectada RIGHT bloque %d\n", i);
-
-					//	mario.hitbox.x = blocks[i].hitbox.x - mario.hitbox.width; // Bloquea movimiento a la derecha
-					//	mario.colliding = true;
-					//}
 				}
 
 			}
-			else if(CheckCollisionRecs(goomba.hitbox, blocks[i].hitbox)){
-
-				goomba.colisionGoomba(blocks[i]);
-				//mario.colliding = false;
-			}
 		}
 
-		//for (int i = 0; i < blocks.size(); ++i) {
+		if (mario.immunity) {
 
-		//	if (CheckCollisionRecs(mario.rect, blocks[i].block)) {
-
-		//		//COLLIDING AT THE BOTTOM
-		//		if (marioCollidingBottom(mario, blocks[i])) { // if mario is on the colliding block
-
-		//			mario.speed.y = 0;
-		//			mario.rect.y = blocks[i].block.y - TILE_SIZE;
-
-		//			mario.isJumping = false;
-
-		//		}
-		//		
-		//		//COLLIDING AT THE TOP
-		//		if (marioCollidingAbove(mario, blocks[i])) { //if mario is under the colliding block
-
-		//			mario.rect.y = blocks[i].block.y + TILE_SIZE;
-		//			mario.rect.y += 0.5f;
-		//		}
-		//		
-		//		//COLLIDING ON THE SIDES
-		//		if(marioCollidingLeft(mario, blocks[i]))//mario is colliding with a block in its left
-		//		{
-		//			mario.rect.x = blocks[i].block.x + TILE_SIZE;
-		//			mario.colliding = true;
-		//		}
-		//		else if (marioCollidingRight(mario, blocks[i])) {
-
-		//			mario.rect.x = blocks[i].block.x - TILE_SIZE;
-		//		}
-
-		//	}
-		//	else {
-
-		//		//mario.colliding = false;
-		//	}
-		//}
+			mario.immunityVoid(mario);
+		}
 
 		if (IsKeyPressed(KEY_SPACE) && !mario.isJumping) {
 
-			mario.hitbox.y -= 0.5f;
-
 			mario.jump(JUMP_FORCE);
-
 
 		}
 
@@ -347,7 +239,8 @@ int main()
 		camera.target.x = mario.hitbox.x + TILE_SIZE / 2;
 		camera.target.y = mario.hitbox.y + TILE_SIZE / 2;
 
-		// drawing
+		//-------------------------------------------DRAWING-----------------------------------------------------------//
+
 		BeginDrawing();
 
 		BeginMode2D(camera);
@@ -355,18 +248,36 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 
-		drawBlocks(blocks);
+		drawBlocks(entities);
 
 		//dubujar personaje
-		DrawRectangleRec(mario.hitbox, RED);
-		DrawRectangleRec(goomba.hitbox, WHITE);
+		if (mario.immunity) {
+
+			DrawRectangleRec(mario.hitbox, BLUE);
+		}
+		else {
+
+			DrawRectangleRec(mario.hitbox, RED);
+		}
+
+
+		//dibujar enemigo
+		if (goomba.state == 1) {
+
+			DrawRectangleRec(goomba.hitbox, WHITE);
+		}
+
 
 		Vector2 textPosition = { 10 + camera.target.x - camera.offset.x, 300 + camera.target.y - camera.offset.y };
 
 		DrawText(TextFormat("Posición: (%.1f, %.1f)", mario.hitbox.x, mario.hitbox.y), 200, 10, 20, WHITE);
 		DrawText(TextFormat("jumping: (%d)", mario.isJumping), 200, 60, 20, WHITE);
 		DrawText(TextFormat("colliding: (%d)", mario.colliding), 200, 110, 20, WHITE);
-		DrawText(TextFormat("Vector Player bottom: (%f x), (%f y)", mario.bottom.x, mario.bottom.y), textPosition.x, textPosition.y, 20, WHITE);
+		DrawText(TextFormat("Vector Player bottom : (%f x), (%f y)", mario.bottom.x, mario.bottom.y), textPosition.x, textPosition.y, 20, WHITE);
+		DrawText(TextFormat("Player immunity %d", mario.immunity), 200, 160, 20, WHITE);
+		DrawText(TextFormat("Player time %f", mario.getTime()), 200, 210, 20, WHITE);
+		DrawText(TextFormat("Player state %d", mario.state), 200, 260, 20, WHITE);
+		DrawText(TextFormat("Goomba state %d", goomba.state), 200, 310, 20, WHITE);
 
 		EndMode2D();
 
