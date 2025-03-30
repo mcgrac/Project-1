@@ -10,7 +10,7 @@ public:
 	Color color = RED;
 
 	Block() {}
-	Block(float x, float y, float width, float heigh, int id) : Entity(x, y, width, heigh, id){}
+	Block(float x, float y, float width, float heigh, int id, int state) : Entity(x, y, width, heigh, id, state){}
 
 
 };
