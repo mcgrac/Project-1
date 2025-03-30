@@ -1,5 +1,5 @@
 #include "raylib.h"
-
+#include <vector>
 
 class Goomba : public Enemy {
 
@@ -10,28 +10,61 @@ protected:
 public:
 
 	Goomba(){}
-	Goomba(float x, float y, float width, float heigh, int id, bool alive_ , float movementSpeed_) : Enemy(x, y, width, heigh, id, alive_), movementSpeed(movementSpeed_){}
+	Goomba(float x, float y, float width, float heigh, int id, int state, float movementSpeed_) : Enemy(x, y, width, heigh, id, state), movementSpeed(movementSpeed_){}
 
 	float getMovementSpeed() {
 
 		return movementSpeed;
 	}
 
-	void moveGoomba() {
+	void moveGoomba(vector<Entity> entity) {
 
 		//gravity
 		hitbox.y += movementSpeed;
+
+		//lateral movement
+		int direction = 1; //1 right, -1 left
+
+		//if (direction == 1) {
+
+		//	hitbox.x += (movementSpeed - 4);
+		//}
+		//else {
+
+		//	hitbox.x -= (movementSpeed - 4);
+		//}
+
+		for (int i = 0; i < entity.size(); ++i) {
+
+			if (entity[i].id == 2 && CheckCollisionRecs(hitbox, entity[i].hitbox)) { //block
+
+				if (CheckCollisionPointRec(right, entity[i].hitbox) && direction == 1) { //right
+
+					direction = -1;
+				}
+				
+				if (CheckCollisionPointRec(left, entity[i].hitbox) && direction == -1) { //left
+
+					direction = 1;
+				}
+
+				
+			}
+		}
 	}
 
-	void colisionGoomba(Entity e) {
+	void colisionsGoomba(vector<Entity> e) {
 
-		if (e.id == 2) { //colisiona con bloque
+		for (int i = 0; i < e.size(); ++i) {
 
-			hitbox.y = e.hitbox.y - hitbox.height;
-		}
-		else if (e.id == 0) { // colisiona con player
+			if (CheckCollisionRecs(hitbox, e[i].hitbox)) {
 
+				if (e[i].id == 2) { //block
 
+					hitbox.y = e[i].hitbox.y - hitbox.height;
+
+				}
+			}
 		}
 	}
 };
