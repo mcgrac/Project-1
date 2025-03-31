@@ -50,12 +50,12 @@ public:
 
 	bool collidingRight(Entity e) {
 
-		
+		return (hitbox.x < e.hitbox.x);
 	}
 
 	bool collidingLeft(Entity e) {
 
-
+		return (hitbox.x > e.hitbox.x);
 	}
 
 	bool Collidingbottom(Entity e) {
