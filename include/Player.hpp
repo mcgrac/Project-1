@@ -111,7 +111,7 @@ public:
 				if (Collidingbottom(e[i])) {
 
 
-					printf("Colisión detectada BOTTOM bloque %d\n", i);
+					//printf("Colisión detectada BOTTOM bloque %d\n", i);
 
 					speed.y = 0;
 					hitbox.y = e[i].hitbox.y - hitbox.height; // Asegurar que Mario se quede sobre el bloque
@@ -121,11 +121,25 @@ public:
 
 				if (CollidingAbove(e[i])) {
 
-					printf("Colisión detectada TOP bloque %d\n", i);
+					//printf("Colisión detectada TOP bloque %d\n", i);
 
 					hitbox.y = e[i].hitbox.y + e[i].hitbox.height; // Lo mueve justo debajo del bloque
 					speed.y = 1.0f; // Hace que caiga inmediatamente
 
+				}
+
+				if (CheckCollisionPointRec(left, e[i].hitbox)) {
+
+					printf("Colliding left\n");
+
+					hitbox.x = e[i].hitbox.x + e[i].hitbox.width;
+				}
+
+				if (CheckCollisionPointRec(right, e[i].hitbox)) {
+
+					printf("Colliding right\n");
+
+					hitbox.x = e[i].hitbox.x - e[i].hitbox.width;
 				}
 			}
 
