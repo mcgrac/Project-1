@@ -1,0 +1,27 @@
+class GameManager {
+private:
+	int titleScreen = 1;
+	int op = 0;
+
+public:
+	GameManager(){}
+
+	void setScreen(int titleScreen) { this->titleScreen = titleScreen; }
+	void opUp() { if (op < 2) { op++; } }
+	void opDown() { if (op > 0) { op--; } }
+	void nextScreen() {
+		if (titleScreen == 1) { titleScreen = 2; }
+		else if (titleScreen == 2 && op == 0) { titleScreen = 3; }
+		else if (titleScreen == 2 && op == 1) { titleScreen = 5; }
+		else if (titleScreen == 2 && op == 2) { CloseWindow(); }
+		else if (titleScreen == 5) { titleScreen = 6; }
+		else if (titleScreen == 6) { titleScreen = 7; }
+		else if (titleScreen == 7) { titleScreen = 8; }
+		else if (titleScreen == 8) { titleScreen = 2; }
+		else if (titleScreen == 4) { titleScreen = 1; }
+	}
+	void gameOver() { titleScreen = 4; }
+
+	void drawScreen(){}
+
+};
