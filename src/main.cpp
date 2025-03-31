@@ -160,7 +160,7 @@ int main()
 	//entities.emplace_back(mario);
 
 	//create goomba and add them in the list
-	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f);
+	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f, 1);
 	entities.emplace_back(move(goomba));
 
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
@@ -173,6 +173,7 @@ int main()
 		mario.hitbox.y += mario.speed.y;
 
 		mario.updateRects();
+		goomba.updateRects();
 
 		if (IsKeyDown(KEY_RIGHT)) {
 
@@ -190,7 +191,7 @@ int main()
 
 		//mario.colisionsPlayerEnemy(entities);
 
-		goomba.colisionsGoomba(entities);
+		//goomba.colisionsGoomba(entities);
 
 		if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity && goomba.state == 1) {
 
@@ -278,6 +279,7 @@ int main()
 		DrawText(TextFormat("Player time %f", mario.getTime()), 200, 210, 20, WHITE);
 		DrawText(TextFormat("Player state %d", mario.state), 200, 260, 20, WHITE);
 		DrawText(TextFormat("Goomba state %d", goomba.state), 200, 310, 20, WHITE);
+		DrawText(TextFormat("Posición goomba: (%.1f, %.1f)", goomba.hitbox.x, goomba.hitbox.y), 200, 360, 20, WHITE);
 
 		EndMode2D();
 
