@@ -15,6 +15,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "Block.hpp"
 #include "Enemy.hpp"
 #include "Goomba.hpp"
+#include "Draw.hpp"
+#include "GameManager.hpp"
 
 using namespace std;
 
@@ -163,11 +165,18 @@ int main()
 	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f, 1);
 	entities.emplace_back(move(goomba));
 
+
+
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
 
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
+		if (IsKeyDown(KEY_N)) {
+
+			GameManager::GetInstance().nextScreen();
+		}
+
 		//Aplicar gravedad a MArio
 		mario.speed.y += GRAVITY;
 		mario.hitbox.y += mario.speed.y;
@@ -249,6 +258,10 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 
+		
+	
+		Draw::drawScreens(GameManager::GetInstance().GetScreen()); //draw scenes depending on the variable that controls the scenes
+		
 		drawBlocks(entities);
 
 		//dubujar personaje
