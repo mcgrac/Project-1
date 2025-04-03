@@ -1,0 +1,90 @@
+#include"raylib.h"
+#include <vector>
+
+class Draw {
+
+
+private:
+
+	//Screens
+	Image Title_screenImage = LoadImage("resources/Title_screen.png");
+	Image Time_upImage = LoadImage("resources/Time_up.png");
+	Image StrtImage = LoadImage("resources/strt.png");
+	Image WinImage = LoadImage("resources/tyMario.png");
+	Image Game_overImage = LoadImage("resources/game_over.png");
+	Image Initial_screenImage = LoadImage("resources/Initial_screen.png");
+	Image howToPlayImage1 = LoadImage("resources/howToPlay.png");
+	Image howToPlayImage2 = LoadImage("resources/howToPlay2.png");
+	Image background = LoadImage("resource/Background");
+
+	Texture2D backgroundTexture = LoadTextureFromImage(background);
+	Texture2D Title_screenTexture = LoadTextureFromImage(Title_screenImage);
+	Texture2D Game_overTexture = LoadTextureFromImage(Game_overImage);
+	Texture2D StrtTexture = LoadTextureFromImage(StrtImage);
+	Texture2D Initial_screenTexture = LoadTextureFromImage(Initial_screenImage);
+	Texture2D howToPlayTexture1 = LoadTextureFromImage(howToPlayImage1);
+	Texture2D howToPlayTexture2 = LoadTextureFromImage(howToPlayImage2);
+
+public:
+
+	Draw(){}
+
+	void drawMap(vector<Entity> entities) {
+
+
+	}
+
+	void drawMario(Player mario){
+
+
+	}
+
+	void drawEnemies(vector<Entity> entities) {
+
+
+
+	}
+
+	static void drawScreens(int indexScreen) {
+
+
+		if (indexScreen == 1) { //draw initial screen
+
+			DrawTexture(Initial_screenTexture, 0, 0, WHITE);
+		}
+		else if (indexScreen == 2) { //draw main menu
+
+			DrawTexture(Title_screenTexture, 0, 0, WHITE);
+		}
+		else if (indexScreen == 3) { //draw world screen
+
+			DrawTexture(StrtTexture, 0, 0, WHITE);
+		}
+		else if (indexScreen == 0) { //draw background
+
+			DrawTexture(backgroundTexture, 0, 0, WHITE);
+		}
+		else if (indexScreen == 4) { //draw die screen
+
+			
+		}
+		else if (indexScreen == 5) { //draw win screen
+
+			DrawTexture(backgroundTexture, 0, 0, WHITE);
+		}
+		else if (indexScreen == 6) { //draw how to play 1
+
+			DrawTexture(howToPlayTexture1, 0, 0, WHITE);
+
+		}
+		else if (indexScreen == 7) { // draw how to play 2
+
+			DrawTexture(howToPlayTexture2, 0, 0, WHITE);
+
+		}
+
+
+	}
+
+
+};
