@@ -83,6 +83,7 @@ int map[MAP_ROWS][MAP_COLS] = {
 
 
 vector<Entity> entities;
+vector<Enemy> enemies;
 
 
 //class Camera {
@@ -98,25 +99,27 @@ void initBlocks() {
 		for (int col = 0; col < MAP_COLS; col++) {
 			if (map[row][col] == 1) {
 
-				entities.emplace_back(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1);
+				Block b(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1);
+
+				entities.push_back(b);
 				entities.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
 			}
 		}
 	}
 }
 
-void drawBlocks (vector<Entity> list) {
-	
-	for (int i = 0; i < entities.size(); ++i) {
-
-		if (entities[i].id == 2) {
-
-			//if it is a block, draw it
-			DrawRectangleRec(list[i].hitbox, RED);
-
-		}
-	}
-}
+//void drawBlocks (vector<Entity> list) {
+//	
+//	for (int i = 0; i < entities.size(); ++i) {
+//
+//		if (entities[i].id == 2) {
+//
+//			//if it is a block, draw it
+//			DrawRectangleRec(list[i].hitbox, RED);
+//
+//		}
+//	}
+//}
 
 
 //bool marioCollidingRight(Player p, Block b) {
@@ -163,16 +166,23 @@ int main()
 
 	//create goomba and add them in the list
 	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f, 1);
-	entities.emplace_back(move(goomba));
+	enemies.push_back(goomba);
+
 
 
 
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
 
+	for (int i = 0; i < entities.size(); i++) {
+
+		printf("entity size: %d\n", entities.size());
+		printf("Is the i = %d, the id of this item is: %d\n", i, entities[i].id);
+	}
+
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
-		if (IsKeyDown(KEY_N)) {
+		if (IsKeyPressed(KEY_N)) {
 
 			GameManager::GetInstance().nextScreen();
 		}
@@ -202,37 +212,37 @@ int main()
 
 		//goomba.colisionsGoomba(entities);
 
-		if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity && goomba.state == 1) {
+		//if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity && goomba.state == 1) {
 
-			printf("COLISION CON GOOMBA\n");
+		//	printf("COLISION CON GOOMBA\n");
 
-			if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity) { //enemies
+		//	if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity) { //enemies
 
-				printf("COLISION CON GOOMBA\n");
+		//		printf("COLISION CON GOOMBA\n");
 
-				if (CheckCollisionPointRec(mario.bottom, goomba.hitbox)) { //si los pies de mario colisionan con goomba
+		//		if (CheckCollisionPointRec(mario.bottom, goomba.hitbox)) { //si los pies de mario colisionan con goomba
 
-					goomba.state = 0; //goomba muerto
-					mario.jump(8.0f); //REVISAR SALTO
-				}
-				else { //mario pierde una vida
+		//			goomba.state = 0; //goomba muerto
+		//			mario.jump(8.0f); //REVISAR SALTO
+		//		}
+		//		else { //mario pierde una vida
 
-					mario.state--;
+		//			mario.state--;
 
-					if (mario.state == 0) { //si es mario pequeño, mario muere
+		//			if (mario.state == 0) { //si es mario pequeño, mario muere
 
-						//mario muere
+		//				//mario muere
 
-					}
-					else {
+		//			}
+		//			else {
 
-						mario.immunity = true;
-						//mario.immunityVoid(mario);
-					}
-				}
+		//				mario.immunity = true;
+		//				//mario.immunityVoid(mario);
+		//			}
+		//		}
 
-			}
-		}
+		//	}
+		//}
 
 		if (mario.immunity) {
 
@@ -258,28 +268,38 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 
-		
+		mario.drawMario();
+
+		GameManager::GetInstance().drawArrow();
 	
 		Draw::drawScreens(GameManager::GetInstance().GetScreen()); //draw scenes depending on the variable that controls the scenes
 		
-		drawBlocks(entities);
+		//dibujar mapa
+		Draw::drawMap(entities);
+
+		//drawBlocks(entities);
 
 		//dubujar personaje
-		if (mario.immunity) {
+		Draw::drawMario(mario);
+
+		//dibujar enemigos
+		Draw::drawEnemies(goomba);
+
+		/*if (mario.immunity) {
 
 			DrawRectangleRec(mario.hitbox, BLUE);
 		}
 		else {
 
 			DrawRectangleRec(mario.hitbox, RED);
-		}
+		}*/
 
 
-		//dibujar enemigo
-		if (goomba.state == 1) {
+		////dibujar enemigo
+		//if (goomba.state == 1) {
 
-			DrawRectangleRec(goomba.hitbox, WHITE);
-		}
+		//	DrawRectangleRec(goomba.hitbox, WHITE);
+		//}
 
 
 		Vector2 textPosition = { 10 + camera.target.x - camera.offset.x, 300 + camera.target.y - camera.offset.y };
@@ -293,6 +313,9 @@ int main()
 		DrawText(TextFormat("Player state %d", mario.state), 200, 260, 20, WHITE);
 		DrawText(TextFormat("Goomba state %d", goomba.state), 200, 310, 20, WHITE);
 		DrawText(TextFormat("Posición goomba: (%.1f, %.1f)", goomba.hitbox.x, goomba.hitbox.y), 200, 360, 20, WHITE);
+		DrawText(TextFormat("Screen: %d", GameManager::GetInstance().GetScreen()), 200, 410, 20, WHITE);
+		DrawText(TextFormat("op: %d", GameManager::GetInstance().getOp()), 200, 460, 20, WHITE);
+
 
 		EndMode2D();
 
