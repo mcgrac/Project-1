@@ -20,15 +20,38 @@ public:
 	bool colliding;
 	bool immunity;
 	//Rectangle grid; //rectangleZonaColision
+	Texture2D bigMario1;
 
 	//constructor
 	Player(float x, float y, float width, float heigh, int id, int state, float speedX, float speedY, float movementSpeed_)
-		: Entity(x, y, width, heigh, id, state), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), immunity(false) {
+		: Entity(x, y, width, heigh, id, state), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), immunity(false){
+
+		Image bMario1Img = LoadImage("resources/bmario1.png");
+		bigMario1 = LoadTextureFromImage(bMario1Img);
 	}
 
 	//Player(float x, float y, float width, float heigh, float rightPoint_x, float downPoint_y, float speedX, float speedY, float movementSpeed_, int initialState)
 	//	: Entity(x, y, width, heigh, rightPoint_x, downPoint_y), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
 	//}
+
+
+	void drawMario() {
+
+		//dubujar personaje
+		if (immunity) {
+
+			//mario just collide with the enemy
+			DrawRectangleRec(hitbox, BLUE);
+		}
+		else {
+
+			//mario is not immune
+			DrawRectangleRec(hitbox, RED);
+			DrawTexture(bigMario1, hitbox.x, hitbox.y - hitbox.height, WHITE);
+
+			//DrawRectangleRec(mario.hitbox, RED);
+		}
+	}
 
 	void jump(float jumpForce) {
 
@@ -130,19 +153,70 @@ public:
 
 				if (CheckCollisionPointRec(left, e[i].hitbox)) {
 
-					printf("Colliding left\n");
+					//printf("Colliding left\n");
 
 					hitbox.x = e[i].hitbox.x + e[i].hitbox.width;
 				}
 
 				if (CheckCollisionPointRec(right, e[i].hitbox)) {
 
-					printf("Colliding right\n");
+					//printf("Colliding right\n");
 
 					hitbox.x = e[i].hitbox.x - e[i].hitbox.width;
 				}
 			}
 
+			if (CheckCollisionRecs(hitbox, e[i].hitbox) && !immunity && e[i].id == 1) { //enemies
+
+				printf("COLISION CON GOOMBA\n");
+
+				if (CheckCollisionPointRec(bottom, e[i].hitbox)) { //si los pies de mario colisionan con goomba
+
+					e[i].state = 0; //goomba muerto
+					jump(8.0f); //REVISAR SALTO
+				}
+				else { //mario pierde una vida
+
+					state--;
+
+					if (state == 0) { //si es mario pequeño, mario muere
+
+						//mario muere
+
+					}
+					else {
+
+						immunity = true;
+						//mario.immunityVoid(mario);
+					}
+				}
+				//if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity) { //enemies
+
+				//	printf("COLISION CON GOOMBA\n");
+
+				//	if (CheckCollisionPointRec(mario.bottom, goomba.hitbox)) { //si los pies de mario colisionan con goomba
+
+				//		goomba.state = 0; //goomba muerto
+				//		mario.jump(8.0f); //REVISAR SALTO
+				//	}
+				//	else { //mario pierde una vida
+
+				//		mario.state--;
+
+				//		if (mario.state == 0) { //si es mario pequeño, mario muere
+
+				//			//mario muere
+
+				//		}
+				//		else {
+
+				//			mario.immunity = true;
+				//			//mario.immunityVoid(mario);
+				//		}
+				//	}
+
+				//}
+			}
 
 		}
 	}
