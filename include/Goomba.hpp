@@ -27,7 +27,7 @@ public:
 
 		//lateral movement
 
-		printf("Direction: %d\n", direction);
+		//printf("Direction: %d\n", direction);
 
 		if (direction == 1) {
 
@@ -44,7 +44,7 @@ public:
 
 				if (CheckCollisionPointRec(bottom, entity[i].hitbox)) {
 
-					printf("colision bottom\n");
+					//printf("colision bottom\n");
 
 					hitbox.y = entity[i].hitbox.y - hitbox.height;
 				}
