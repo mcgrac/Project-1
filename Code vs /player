@@ -19,6 +19,7 @@ public:
 	bool onGround;
 	bool colliding;
 	bool immunity;
+	Sound jumpSmallSound;
 	//Rectangle grid; //rectangleZonaColision
 
 	//constructor
@@ -30,13 +31,23 @@ public:
 	//	: Entity(x, y, width, heigh, rightPoint_x, downPoint_y), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), state(initialState) {
 	//}
 
-	void jump(float jumpForce) {
+	void loadSound() {
+		jumpSmallSound = LoadSound("resources/jump_small.wav");
+
+		SetSoundVolume(jumpSmallSound, 1.0f); // Set proper volume (range: 0.0 to 1.0)
+	}
+
+	void Player::unloadSound() {
+		UnloadSound(jumpSmallSound);  // Correctly unloading the sound
+	}
+
+	void Player::jump(float jumpForce) {
 
 		if (!isJumping) { // Solo permitir el salto si no está en el aire
 			speed.y = -jumpForce;
 			isJumping = true;
 		}
-
+		PlaySound(jumpSmallSound);
 	}
 
 	float getTime() { //only necessary for testing
@@ -143,16 +154,16 @@ public:
 		}
 	}
 
-	void collisionMario(Player &mario, PowerUp &mushroom) {
+	//void collisionMario(Player &mario, PowerUp &mushroom) {
 
-		if (mushroom.state != 0 && CheckCollisionRecs(hitbox, mushroom.hitbox)) {
-			if (mushroom.id == 3 && !immunity) { // Ensure it's a mushroom and Mario isn't invincible
-				if (mario.state == 1) {  // Small Mario
-					mario.state = 2;     // Become Big Mario
-				}
-				mushroom.state = 0;
-			}
-		}
-	}
+	//	if (mushroom.state != 0 && CheckCollisionRecs(hitbox, mushroom.hitbox)) {
+	//		if (mushroom.id == 3 && !immunity) { // Ensure it's a mushroom and Mario isn't invincible
+	//			if (mario.state == 1) {  // Small Mario
+	//				mario.state = 2;     // Become Big Mario
+	//			}
+	//			mushroom.state = 0;
+	//		}
+	//	}
+	//}
 
 };
