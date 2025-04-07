@@ -10,6 +10,7 @@ public:
 
 	//GameManager(){}
 
+
 	static GameManager& GetInstance() {
 		static GameManager instance;
 		return instance;
@@ -17,11 +18,67 @@ public:
 
 	int GetScreen() { return titleScreen; }  // Getter público
 
+	int getOp() {
+
+		return op;
+	}
+
 	void setScreen(int titleScreen) { this->titleScreen = titleScreen; } //not used yet
 
-	void opUp() { if (op < 2) { op++; } }
+	void drawArrow() {
 
-	void opDown() { if (op > 0) { op--; } }
+		Image arrow = LoadImage("resources/arrow.png");
+		Texture2D arrowTexture = LoadTextureFromImage(arrow);
+
+		if (op == 0) {
+
+			DrawTexture(arrowTexture, 100, 257, WHITE);
+		}
+		else if (op == 1) {
+
+			DrawTexture(arrowTexture, 100, 295, WHITE);
+
+		}
+		else if (op == 2) {
+
+			DrawTexture(arrowTexture, 100, 335, WHITE);
+
+		}
+		
+	}
+
+	void opUp() { 
+		
+		if (op > 0) {
+
+			op--; 
+		
+		} 
+	
+	}
+
+	void opDown() { 
+
+		if (op < 2) {
+
+			op++; 
+		} 
+	}
+
+	void op() {
+
+		if (titleScreen == 2) {
+
+			if (IsKeyPressed(KEY_DOWN)) {
+
+				opDown();
+			}
+			else if (IsKeyPressed(KEY_UP)) {
+
+				opUp();
+			}
+		}
+	}
 
 	// title screen -> credits [1]
 	// main menu -> [2]
