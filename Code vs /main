@@ -159,6 +159,8 @@ int main()
 
 
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
+	InitAudioDevice();
+	mario.loadSound();
 
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
@@ -278,11 +280,15 @@ int main()
 		DrawText(TextFormat("Player state %d", mario.state), 200, 260, 20, WHITE);
 		DrawText(TextFormat("Goomba state %d", goomba.state), 200, 310, 20, WHITE);
 
+
 		EndMode2D();
 
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
 	}
+
+	mario.unloadSound();
+	CloseAudioDevice();
 
 	// destroy the window and cleanup the OpenGL context
 	CloseWindow();
