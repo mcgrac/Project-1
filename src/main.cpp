@@ -12,11 +12,12 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "raylib.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include "Player.hpp"
-#include "Block.hpp"
-#include "Enemy.hpp"
+//#include "Block.hpp"
 #include "Goomba.hpp"
-#include "Draw.hpp"
+//#include "Draw.hpp"
 #include "GameManager.hpp"
+#include "BreakBlock.hpp"
+#include "SurpriseBlock.hpp"
 
 using namespace std;
 
@@ -83,7 +84,8 @@ int map[MAP_ROWS][MAP_COLS] = {
 
 
 vector<Entity> entities;
-vector<Enemy> enemies;
+
+
 
 
 //class Camera {
@@ -93,19 +95,21 @@ vector<Enemy> enemies;
 
 void initBlocks() {
 
-	entities.clear();
-
 	for (int row = 0; row < MAP_ROWS; row++) {
 		for (int col = 0; col < MAP_COLS; col++) {
 			if (map[row][col] == 1) {
 
-				Block b(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1);
+				Block b(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
 
 				entities.push_back(b);
 				entities.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
+
+				b.drawBlock();
 			}
 		}
 	}
+
+	
 }
 
 //void drawBlocks (vector<Entity> list) {
@@ -122,28 +126,6 @@ void initBlocks() {
 //}
 
 
-//bool marioCollidingRight(Player p, Block b) {
-//
-//	//return (p.hitbox.x + p.hitbox.width >= b.block.x) &&
-//	//	(p.hitbox.x + p.hitbox.width <= b.block.x + b.block.width) &&
-//	//	(p.hitbox.y >= b.block.y) &&
-//	//	(p.hitbox.y <= b.block.y + b.block.height);
-//
-//	////return (CheckCollisionLines(p.getRightUp(), p.getRightDown(), b.getInitialPos(), b.getLeftDown(), NULL)); // check if the right side of mario's hitbox and left side of block's hitbox collide
-//
-//	//return (p.right.x >= b.left.x) &&  // Mario está dentro del rango horizontal del bloque
-//	//	(p.right.y >= b.top.y) &&  // Mario está dentro del rango vertical del bloque
-//	//	(p.right.y <= b.bottom.y);  // Mario está dentro del rango vertical del bloque
-//}
-
-//bool marioCollidingLeft(Player p, Block b) {
-//
-//	//return (p.left.x <= b.right.x) &&  // Mario está dentro del rango horizontal del bloque
-//	//	(p.left.y >= b.top.y) &&  // Mario está dentro del rango vertical del bloque
-//	//	(p.left.y <= b.bottom.y);  // Mario está dentro del rango vertical del bloque
-//
-//}
-
 int main()
 {
 	// Tell the window to use vsync and work on high DPI displays
@@ -154,22 +136,21 @@ int main()
 
 	InitWindow(screenWidth, screenHeight, "Mapa en Movimiento");
 
+	GameManager gm(1, 0, false);
+
 	//camaras
-	Camera2D camera = { 0 };
+	/*Camera2D camera = { 0 };
 	camera.target = { 0, 0 };
 	camera.offset = { 200, 416 };
 	camera.rotation = 0.0f;
-	camera.zoom = 1.0f;
+	camera.zoom = 1.0f;*/
 
 	Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f);
 	//entities.emplace_back(mario);
 
 	//create goomba and add them in the list
 	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f, 1);
-	enemies.push_back(goomba);
-
-
-
+	entities.push_back(goomba);
 
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
 
@@ -184,115 +165,139 @@ int main()
 	{
 		if (IsKeyPressed(KEY_N)) {
 
-			GameManager::GetInstance().nextScreen();
-		}
-
-		//Aplicar gravedad a MArio
-		mario.speed.y += GRAVITY;
-		mario.hitbox.y += mario.speed.y;
-
-		mario.updateRects();
-		goomba.updateRects();
-
-		if (IsKeyDown(KEY_RIGHT)) {
-
-			mario.move(1);
-		}
-
-		if (IsKeyDown(KEY_LEFT)) {
-
-			mario.move(-1);
-		}
-
-		goomba.moveGoomba(entities);
-
-		mario.colisionsPlayer(entities);
-
-		//mario.colisionsPlayerEnemy(entities);
-
-		//goomba.colisionsGoomba(entities);
-
-		//if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity && goomba.state == 1) {
-
-		//	printf("COLISION CON GOOMBA\n");
-
-		//	if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity) { //enemies
-
-		//		printf("COLISION CON GOOMBA\n");
-
-		//		if (CheckCollisionPointRec(mario.bottom, goomba.hitbox)) { //si los pies de mario colisionan con goomba
-
-		//			goomba.state = 0; //goomba muerto
-		//			mario.jump(8.0f); //REVISAR SALTO
-		//		}
-		//		else { //mario pierde una vida
-
-		//			mario.state--;
-
-		//			if (mario.state == 0) { //si es mario pequeño, mario muere
-
-		//				//mario muere
-
-		//			}
-		//			else {
-
-		//				mario.immunity = true;
-		//				//mario.immunityVoid(mario);
-		//			}
-		//		}
-
-		//	}
-		//}
-
-		if (mario.immunity) {
-
-			mario.immunityVoid(mario);
-		}
-
-		if (IsKeyPressed(KEY_SPACE) && !mario.isJumping) {
-
-			mario.jump(JUMP_FORCE);
+			gm.nextScreen();
 
 		}
 
-		// Mover la cámara para que siga a Mario
-		camera.target.x = mario.hitbox.x + TILE_SIZE / 2;
-		camera.target.y = mario.hitbox.y + TILE_SIZE / 2;
+		if (gm.GetScreen() == 2) { // if we are in the main menu are we press up/down keys
+
+			gm.opSelector();
+		}
+
+		//Game logic. Apply only when we are in the game screen [0]
+		
+		if (gm.GetScreen() == 0) {
+
+			//Aplicar gravedad a MArio
+			mario.speed.y += GRAVITY;
+			mario.hitbox.y += mario.speed.y;
+
+			mario.updateRects();
+			goomba.updateRects();
+
+			if (IsKeyDown(KEY_RIGHT)) {
+
+				mario.move(1);
+			}
+
+			if (IsKeyDown(KEY_LEFT)) {
+
+				mario.move(-1);
+			}
+
+			mario.colisionsPlayer(entities);
+
+			goomba.moveGoomba(entities);
+
+
+
+			//mario.colisionsPlayerEnemy(entities);
+
+			//goomba.colisionsGoomba(entities);
+
+			//if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity && goomba.state == 1) {
+
+			//	printf("COLISION CON GOOMBA\n");
+
+			//	if (CheckCollisionRecs(mario.hitbox, goomba.hitbox) && !mario.immunity) { //enemies
+
+			//		printf("COLISION CON GOOMBA\n");
+
+			//		if (CheckCollisionPointRec(mario.bottom, goomba.hitbox)) { //si los pies de mario colisionan con goomba
+
+			//			goomba.state = 0; //goomba muerto
+			//			mario.jump(8.0f); //REVISAR SALTO
+			//		}
+			//		else { //mario pierde una vida
+
+			//			mario.state--;
+
+			//			if (mario.state == 0) { //si es mario pequeño, mario muere
+
+			//				//mario muere
+
+			//			}
+			//			else {
+
+			//				mario.immunity = true;
+			//				//mario.immunityVoid(mario);
+			//			}
+			//		}
+
+			//	}
+			//}
+
+			if (mario.immunity) {
+
+				mario.immunityVoid(mario);
+			}
+
+			if (IsKeyPressed(KEY_SPACE) && !mario.isJumping) {
+
+				mario.jump(JUMP_FORCE);
+
+			}
+
+			// Mover la cámara para que siga a Mario
+			//camera.target.x = mario.hitbox.x + TILE_SIZE / 2;
+			//camera.target.y = mario.hitbox.y + TILE_SIZE / 2;
+		}
+		
 
 		//-------------------------------------------DRAWING-----------------------------------------------------------//
 
 		BeginDrawing();
 
-		BeginMode2D(camera);
+		//BeginMode2D(camera);
 
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 
-		mario.drawMario();
+		gm.drawScreen();
 
-		GameManager::GetInstance().drawArrow();
-	
-		Draw::drawScreens(GameManager::GetInstance().GetScreen()); //draw scenes depending on the variable that controls the scenes
+		if (gm.GetScreen() == 2) {
+
+			gm.drawArrow();
+		}
+
+		if (gm.GetScreen() == 0) {
+
+			mario.drawMario();
+			goomba.drawGoomba();
+
+			if (!gm.getMapCreated()) {
+
+				initBlocks();
+
+				gm.mapCreated();
+			}
+
+		}
+		
+
+		
+
 		
 		//dibujar mapa
-		Draw::drawMap(entities);
+		//Draw::drawMap(entities);
 
 		//drawBlocks(entities);
 
 		//dubujar personaje
-		Draw::drawMario(mario);
+		//Draw::drawMario(mario);
 
 		//dibujar enemigos
-		Draw::drawEnemies(goomba);
-
-		/*if (mario.immunity) {
-
-			DrawRectangleRec(mario.hitbox, BLUE);
-		}
-		else {
-
-			DrawRectangleRec(mario.hitbox, RED);
-		}*/
+		//Draw::drawEnemies(goomba);
 
 
 		////dibujar enemigo
@@ -302,19 +307,18 @@ int main()
 		//}
 
 
-		Vector2 textPosition = { 10 + camera.target.x - camera.offset.x, 300 + camera.target.y - camera.offset.y };
+		//Vector2 textPosition = { 10 + camera.target.x - camera.offset.x, 300 + camera.target.y - camera.offset.y };
 
 		DrawText(TextFormat("Posición: (%.1f, %.1f)", mario.hitbox.x, mario.hitbox.y), 200, 10, 20, WHITE);
 		DrawText(TextFormat("jumping: (%d)", mario.isJumping), 200, 60, 20, WHITE);
-		DrawText(TextFormat("colliding: (%d)", mario.colliding), 200, 110, 20, WHITE);
-		DrawText(TextFormat("Vector Player bottom : (%f x), (%f y)", mario.bottom.x, mario.bottom.y), textPosition.x, textPosition.y, 20, WHITE);
+		//DrawText(TextFormat("Vector Player bottom : (%f x), (%f y)", mario.bottom.x, mario.bottom.y), textPosition.x, textPosition.y, 20, WHITE);
 		DrawText(TextFormat("Player immunity %d", mario.immunity), 200, 160, 20, WHITE);
 		DrawText(TextFormat("Player time %f", mario.getTime()), 200, 210, 20, WHITE);
 		DrawText(TextFormat("Player state %d", mario.state), 200, 260, 20, WHITE);
 		DrawText(TextFormat("Goomba state %d", goomba.state), 200, 310, 20, WHITE);
 		DrawText(TextFormat("Posición goomba: (%.1f, %.1f)", goomba.hitbox.x, goomba.hitbox.y), 200, 360, 20, WHITE);
-		DrawText(TextFormat("Screen: %d", GameManager::GetInstance().GetScreen()), 200, 410, 20, WHITE);
-		DrawText(TextFormat("op: %d", GameManager::GetInstance().getOp()), 200, 460, 20, WHITE);
+		DrawText(TextFormat("Screen: %d", gm.GetScreen()), 200, 410, 20, WHITE);
+		DrawText(TextFormat("op: %d", gm.getOp()), 200, 110, 20, WHITE);
 
 
 		EndMode2D();
