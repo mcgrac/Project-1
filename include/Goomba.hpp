@@ -1,7 +1,12 @@
 #include "raylib.h"
 #include <vector>
+#include "Enemy.hpp"
 
 class Goomba : public Enemy {
+
+private:
+
+	Texture2D goomba1;
 
 protected:
 
@@ -11,11 +16,21 @@ protected:
 public:
 
 	Goomba(){}
-	Goomba(float x, float y, float width, float heigh, int id, int state, float movementSpeed_, int direction_) : Enemy(x, y, width, heigh, id, state), movementSpeed(movementSpeed_), direction(direction_){}
+	Goomba(float x, float y, float width, float heigh, int id, int state, float movementSpeed_, int direction_) : Enemy(x, y, width, heigh, id, state), movementSpeed(movementSpeed_), direction(direction_){
+
+		goomba1 = LoadTexture("resources/Goomba1.png");
+	
+	}
 
 	float getMovementSpeed() {
 
 		return movementSpeed;
+	}
+
+	void drawGoomba() {
+
+		DrawTexture(goomba1, hitbox.x, hitbox.y, WHITE);
+
 	}
 
 	void moveGoomba(vector<Entity> entity) {
