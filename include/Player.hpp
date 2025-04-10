@@ -20,14 +20,14 @@ public:
 	bool colliding;
 	bool immunity;
 	//Rectangle grid; //rectangleZonaColision
-	Texture2D bigMario1;
+	//Texture2D bigMario1;
 
 	//constructor
 	Player(float x, float y, float width, float heigh, int id, int state, float speedX, float speedY, float movementSpeed_)
 		: Entity(x, y, width, heigh, id, state), speed{ speedX, speedY }, movementSpeed(movementSpeed_), isJumping(false), onGround(false), colliding(false), immunity(false){
 
-		Image bMario1Img = LoadImage("resources/bmario1.png");
-		bigMario1 = LoadTextureFromImage(bMario1Img);
+		/*Image bMario1Img = LoadImage("resources/bmario1.png");
+		bigMario1 = LoadTextureFromImage(bMario1Img);*/
 	}
 
 	//Player(float x, float y, float width, float heigh, float rightPoint_x, float downPoint_y, float speedX, float speedY, float movementSpeed_, int initialState)
@@ -47,7 +47,7 @@ public:
 
 			//mario is not immune
 			DrawRectangleRec(hitbox, RED);
-			DrawTexture(bigMario1, hitbox.x, hitbox.y - hitbox.height, WHITE);
+			//DrawTexture(bigMario1, hitbox.x, hitbox.y - hitbox.height, WHITE);
 
 			//DrawRectangleRec(mario.hitbox, RED);
 		}
@@ -130,6 +130,8 @@ public:
 		for (int i = 0; i < e.size(); ++i) {
 
 			if (e[i].id == 2 && CheckCollisionRecs(hitbox, e[i].hitbox)) { //block
+
+				printf("colision con bloque\n");
 
 				if (Collidingbottom(e[i])) {
 
