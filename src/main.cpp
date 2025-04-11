@@ -12,12 +12,12 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "raylib.h"
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 #include "Player.hpp"
-//#include "Block.hpp"
+#include "Block.hpp"
 #include "Goomba.hpp"
 //#include "Draw.hpp"
 #include "GameManager.hpp"
-#include "BreakBlock.hpp"
-#include "SurpriseBlock.hpp"
+//#include "BreakBlock.hpp"
+//#include "SurpriseBlock.hpp"
 
 using namespace std;
 
@@ -83,7 +83,7 @@ int map[MAP_ROWS][MAP_COLS] = {
 };
 
 
-vector<Entity> entities;
+vector<Entity*> entities;
 
 
 
@@ -99,12 +99,14 @@ void initBlocks() {
 		for (int col = 0; col < MAP_COLS; col++) {
 			if (map[row][col] == 1) {
 
-				Block b(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
+				printf("Creando bloque en: x = %f, y = %f\n", col * TILE_SIZE, row * TILE_SIZE);
+
+				Block* b = new Block(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
 
 				entities.push_back(b);
-				entities.back().updateRects();  // Llamamos a updateRects() en el objeto recién creado
+				b->draw();
 
-				b.drawBlock();
+				//b.drawBlock();
 			}
 		}
 	}
@@ -124,7 +126,14 @@ void initBlocks() {
 //		}
 //	}
 //}
+void moveCamera(Camera2D& c, Player& p) {
 
+	printf("MOVING CAMERA\n");
+
+	// Mover la cámara para que siga a Mario
+	c.target.x = p.getHitbox().x;
+	//camera.target.y = mario.getHitbox().y + TILE_SIZE / 2;
+}
 
 int main()
 {
@@ -138,18 +147,11 @@ int main()
 
 	GameManager gm(1, 0, false);
 
-	//camaras
-	/*Camera2D camera = { 0 };
-	camera.target = { 0, 0 };
-	camera.offset = { 200, 416 };
-	camera.rotation = 0.0f;
-	camera.zoom = 1.0f;*/
-
-	Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f);
+	Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f, 1);
 	//entities.emplace_back(mario);
 
 	//create goomba and add them in the list
-	Goomba goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f, 1);
+	Goomba* goomba = new Goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f, 1);
 	entities.push_back(goomba);
 
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
@@ -157,8 +159,15 @@ int main()
 	for (int i = 0; i < entities.size(); i++) {
 
 		printf("entity size: %d\n", entities.size());
-		printf("Is the i = %d, the id of this item is: %d\n", i, entities[i].id);
+		printf("Is the i = %d, the id of this item is: %d\n and x:%d and y:%d ", i, entities[i]->id, entities[i]->getHitbox().x, entities[i]->getHitbox().y);
 	}
+
+	//camaras
+	Camera2D camera = { 0 };
+	camera.target = { mario.getHitbox().x, 0};
+	camera.offset = { screenWidth / 2.0f, 0};
+	camera.rotation = 0.0f;
+	camera.zoom = 1.0f;
 
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
@@ -178,26 +187,46 @@ int main()
 		
 		if (gm.GetScreen() == 0) {
 
-			//Aplicar gravedad a MArio
-			mario.speed.y += GRAVITY;
-			mario.hitbox.y += mario.speed.y;
+			mario.applyGravity(GRAVITY);
 
 			mario.updateRects();
-			goomba.updateRects();
+			goomba->updateRects();
 
 			if (IsKeyDown(KEY_RIGHT)) {
 
-				mario.move(1);
+				if (mario.getDir() != 1) {
+
+					printf("chage direction to right");
+
+					mario.changeDirection();
+				}
+
+				if (mario.getDir() == 1) { // if I am going right
+
+					mario.move(1); //move to the right
+				}
+
 			}
 
 			if (IsKeyDown(KEY_LEFT)) {
 
-				mario.move(-1);
+				if (mario.getDir() == 1) {
+
+					printf("chage direction to left");
+
+					mario.changeDirection();
+				}
+
+				if (mario.getDir() != 1) { // if I am going left
+
+					mario.move(-1); //move to the left
+				}
+
 			}
 
 			mario.colisionsPlayer(entities);
 
-			goomba.moveGoomba(entities);
+			goomba->moveGoomba(entities);
 
 
 
@@ -245,20 +274,13 @@ int main()
 			if (IsKeyPressed(KEY_SPACE) && !mario.isJumping) {
 
 				mario.jump(JUMP_FORCE);
-
 			}
-
-			// Mover la cámara para que siga a Mario
-			//camera.target.x = mario.hitbox.x + TILE_SIZE / 2;
-			//camera.target.y = mario.hitbox.y + TILE_SIZE / 2;
 		}
 		
 
 		//-------------------------------------------DRAWING-----------------------------------------------------------//
 
 		BeginDrawing();
-
-		//BeginMode2D(camera);
 
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
@@ -272,14 +294,41 @@ int main()
 
 		if (gm.GetScreen() == 0) {
 
-			mario.drawMario();
-			goomba.drawGoomba();
+			BeginMode2D(camera);
+			moveCamera(camera, mario);
+
+			mario.draw();
+
+			if (goomba->state != 0) {
+
+				goomba->draw();
+
+				//entities.erase(goomba)
+			}
 
 			if (!gm.getMapCreated()) {
 
-				initBlocks();
+				//initBlocks();
+
+				for (int row = 0; row < MAP_ROWS; row++) {
+					for (int col = 0; col < MAP_COLS; col++) {
+						if (map[row][col] == 1) {
+
+							printf("Creando bloque en: x = %f, y = %f\n", col * TILE_SIZE, row * TILE_SIZE);
+
+							Block* b = new Block(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
+
+							entities.push_back(b);
+							b->draw();
+
+							//b.drawBlock();
+						}
+					}
+				}
 
 				gm.mapCreated();
+
+				printf("All BLOCKS PRINTED\n");
 			}
 
 		}
@@ -309,16 +358,16 @@ int main()
 
 		//Vector2 textPosition = { 10 + camera.target.x - camera.offset.x, 300 + camera.target.y - camera.offset.y };
 
-		DrawText(TextFormat("Posición: (%.1f, %.1f)", mario.hitbox.x, mario.hitbox.y), 200, 10, 20, WHITE);
-		DrawText(TextFormat("jumping: (%d)", mario.isJumping), 200, 60, 20, WHITE);
-		//DrawText(TextFormat("Vector Player bottom : (%f x), (%f y)", mario.bottom.x, mario.bottom.y), textPosition.x, textPosition.y, 20, WHITE);
+		//DrawText(TextFormat("Posición: (%.1f, %.1f)", mario.hitbox.x, mario.hitbox.y), 200, 10, 20, WHITE);
+		DrawText(TextFormat("jumping: (%d)", mario.getDir()), 200, 60, 20, WHITE);
+		DrawText(TextFormat("Vector Camera Pos : (%f x), (%f y)", camera.target.x, camera.target.y), 200, 110, 20, WHITE);
 		DrawText(TextFormat("Player immunity %d", mario.immunity), 200, 160, 20, WHITE);
 		DrawText(TextFormat("Player time %f", mario.getTime()), 200, 210, 20, WHITE);
 		DrawText(TextFormat("Player state %d", mario.state), 200, 260, 20, WHITE);
-		DrawText(TextFormat("Goomba state %d", goomba.state), 200, 310, 20, WHITE);
-		DrawText(TextFormat("Posición goomba: (%.1f, %.1f)", goomba.hitbox.x, goomba.hitbox.y), 200, 360, 20, WHITE);
+		DrawText(TextFormat("Goomba state %d", goomba->state), 200, 310, 20, WHITE);
+		DrawText(TextFormat("Posición goomba: (%.1f, %.1f)", goomba->getHitbox().x, goomba->getHitbox().y), 200, 360, 20, WHITE);
 		DrawText(TextFormat("Screen: %d", gm.GetScreen()), 200, 410, 20, WHITE);
-		DrawText(TextFormat("op: %d", gm.getOp()), 200, 110, 20, WHITE);
+		//DrawText(TextFormat("op: %d", gm.getOp()), 200, 110, 20, WHITE);
 
 
 		EndMode2D();
