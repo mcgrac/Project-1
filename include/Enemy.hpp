@@ -1,26 +1,10 @@
 
-#include "raylib.h"
+#pragma once
 
+#include "Entity.hpp"
 
 class Enemy : public Entity {
-
-
-protected:
-
-
-
 public:
-
-	Enemy(){}
-	Enemy(float x, float y, float width, float heigh, int id, int state):Entity(x, y, width, heigh, id, state){}
-
-	//void die() {
-
-	//	alive = false;
-	//}
-
-	//bool getAlive() {
-
-	//	return alive;
-	//}
+    Enemy(float x, float y, float width, float height, int id, int state);
 };
+
