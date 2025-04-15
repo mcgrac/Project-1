@@ -3,6 +3,7 @@
 #define ENTITY_HPP
 
 #include "raylib.h"
+#include<vector>
 using namespace std;
 
 class Entity {
@@ -14,7 +15,9 @@ protected:
 	Vector2 bottom;
 	Vector2 leftBot;
 	Vector2 rightBot;
-
+	static vector<Entity*> allEntities;
+	bool toDelate = false;
+	
 public:
 	int id;     // 0 player, 1 enemy, 2 block
 	int state;  // 0 dead, 1 little mario, 2 big mario, 3 power up mario
@@ -30,12 +33,17 @@ public:
 	bool collidingBottom( Entity* e);
 	bool collidingAbove( Entity* e);
 
-	// Getters (opcionalmente)
+	// Getters
 	Rectangle getHitbox() const { return hitbox; }
 	Vector2 getTop() const { return top; }
 	Vector2 getLeft() const { return left; }
 	Vector2 getRight() const { return right; }
 	Vector2 getBottom() const { return bottom; }
+	static vector<Entity*>& getAllEntities() {
+		return allEntities;
+	}
+	bool changeToDelate() { return !toDelate; }
+	bool retToDelate() { return toDelate; }
 };
 
 #endif
