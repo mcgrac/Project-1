@@ -83,7 +83,7 @@ int map[MAP_ROWS][MAP_COLS] = {
 };
 
 
-vector<Entity*> entities;
+//vector<Entity*> entities;
 
 
 
@@ -103,8 +103,8 @@ void initBlocks() {
 
 				Block* b = new Block(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
 
-				entities.push_back(b);
-				b->draw();
+				//entities.push_back(b);
+				//b->draw();
 
 				//b.drawBlock();
 			}
@@ -126,12 +126,12 @@ void initBlocks() {
 //		}
 //	}
 //}
-void moveCamera(Camera2D& c, Player& p) {
+void moveCamera(Camera2D& c, Player*& p) {
 
 	printf("MOVING CAMERA\n");
 
 	// Mover la cámara para que siga a Mario
-	c.target.x = p.getHitbox().x;
+	c.target.x = p->getHitbox().x;
 	//camera.target.y = mario.getHitbox().y + TILE_SIZE / 2;
 }
 
@@ -144,27 +144,30 @@ int main()
 	const int screenHeight = 448;
 
 	InitWindow(screenWidth, screenHeight, "Mapa en Movimiento");
+	InitAudioDevice();
 
 	GameManager gm(1, 0, false);
 
-	Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f, 1);
+	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f, 1);
+
+	//Player mario(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f, 1);
 	//entities.emplace_back(mario);
 
 	//create goomba and add them in the list
 	Goomba* goomba = new Goomba(400.0f, 200.0f, TILE_SIZE, TILE_SIZE, 1, 1, 5.0f, 1);
-	entities.push_back(goomba);
+	//entities.push_back(goomba);
 
 	initBlocks(); //poner en la lista de vector los bloques con colisiones
+	
+	for (int i = 0; i < Entity::getAllEntities().size(); i++) {
 
-	for (int i = 0; i < entities.size(); i++) {
-
-		printf("entity size: %d\n", entities.size());
-		printf("Is the i = %d, the id of this item is: %d\n and x:%d and y:%d ", i, entities[i]->id, entities[i]->getHitbox().x, entities[i]->getHitbox().y);
+		printf("entity size: %d\n", Entity::getAllEntities().size());
+		printf("Is the i = %d, the id of this item is: %d\n and x:%f and y:%f ", i, Entity::getAllEntities()[i]->id, Entity::getAllEntities()[i]->getHitbox().x, Entity::getAllEntities()[i]->getHitbox().y);
 	}
 
 	//camaras
 	Camera2D camera = { 0 };
-	camera.target = { mario.getHitbox().x, 0};
+	camera.target = { mario->getHitbox().x, 0};
 	camera.offset = { screenWidth / 2.0f, 0};
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
@@ -172,6 +175,24 @@ int main()
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
+		gm.playSounds();
+
+		if (mario->getHitbox().x >= 1500) {
+
+			gm.win();
+
+			delete mario;
+			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f, 1);
+		}
+
+		if (mario->state == 0) {
+
+			gm.gameOver();
+
+			delete mario;
+			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f, 1);
+		}
+
 		if (IsKeyPressed(KEY_N)) {
 
 			gm.nextScreen();
@@ -187,46 +208,46 @@ int main()
 		
 		if (gm.GetScreen() == 0) {
 
-			mario.applyGravity(GRAVITY);
+			mario->applyGravity(GRAVITY);
 
-			mario.updateRects();
+			mario->updateRects();
 			goomba->updateRects();
 
 			if (IsKeyDown(KEY_RIGHT)) {
 
-				if (mario.getDir() != 1) {
+				if (mario->getDir() != 1) {
 
 					printf("chage direction to right");
 
-					mario.changeDirection();
+					mario->changeDirection();
 				}
 
-				if (mario.getDir() == 1) { // if I am going right
+				if (mario->getDir() == 1) { // if I am going right
 
-					mario.move(1); //move to the right
+					mario->move(1); //move to the right
 				}
 
 			}
 
 			if (IsKeyDown(KEY_LEFT)) {
 
-				if (mario.getDir() == 1) {
+				if (mario->getDir() == 1) {
 
 					printf("chage direction to left");
 
-					mario.changeDirection();
+					mario->changeDirection();
 				}
 
-				if (mario.getDir() != 1) { // if I am going left
+				if (mario->getDir() != 1) { // if I am going left
 
-					mario.move(-1); //move to the left
+					mario->move(-1); //move to the left
 				}
 
 			}
 
-			mario.colisionsPlayer(entities);
+			mario->colisionsPlayer(Entity::getAllEntities());
 
-			goomba->moveGoomba(entities);
+			goomba->moveGoomba(Entity::getAllEntities());
 
 
 
@@ -266,17 +287,33 @@ int main()
 			//	}
 			//}
 
-			if (mario.immunity) {
+			if (mario->retImmunity()) {
 
-				mario.immunityVoid(mario);
+				mario->immunityVoid();
 			}
 
-			if (IsKeyPressed(KEY_SPACE) && !mario.isJumping) {
+			if (IsKeyPressed(KEY_SPACE) && !mario->retJumping()) {
 
-				mario.jump(JUMP_FORCE);
+				mario->jump(JUMP_FORCE);
 			}
+
+
 		}
 		
+		//CHECK TO DELATE THE MARKED ELEMENTS IN THE VECTOR
+		//for (auto it = Entity::getAllEntities().begin(); it != Entity::getAllEntities().end();) {
+		//	if ((*it)->retToDelate()) {
+
+		//		//free memory
+		//		delete* it;
+
+		//		// delate entoty from the vector and advance to the next one
+		//		it = Entity::getAllEntities().erase(it);
+		//	}
+		//	else {
+		//		++it;
+		//	}
+		//}
 
 		//-------------------------------------------DRAWING-----------------------------------------------------------//
 
@@ -297,34 +334,52 @@ int main()
 			BeginMode2D(camera);
 			moveCamera(camera, mario);
 
-			mario.draw();
+			mario->draw();
 
-			if (goomba->state != 0) {
+			//if (goomba->state != 0) {
 
-				goomba->draw();
+			//	goomba->draw();
 
-				//entities.erase(goomba)
+			//	//entities.erase(goomba)
+			//}
+
+
+			for (int i = 0; i < Entity::getAllEntities().size(); ++i) { 
+
+				//-------DRAW BLOCKS--------
+				if (Entity::getAllEntities()[i]->id == 2) {
+
+					Entity::getAllEntities()[i]->draw();
+				}
+
+				//-------DRAW ENEMIES--------
+				if (Entity::getAllEntities()[i]->id == 1 && Entity::getAllEntities()[i]->state != 0) {
+
+					Entity::getAllEntities()[i]->draw();
+				}
 			}
+			//for (int row = 0; row < MAP_ROWS; row++) {
+			//	for (int col = 0; col < MAP_COLS; col++) {
+			//		if (map[row][col] == 1) {
+
+			//			printf("Creando bloque en: x = %f, y = %f\n", col * TILE_SIZE, row * TILE_SIZE);
+
+
+			//			Block* b = new Block(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
+
+			//			//entities.push_back(b);
+			//			b->draw();
+
+			//			//b.drawBlock();
+			//		}
+			//	}
+			//}
 
 			if (!gm.getMapCreated()) {
 
 				//initBlocks();
 
-				for (int row = 0; row < MAP_ROWS; row++) {
-					for (int col = 0; col < MAP_COLS; col++) {
-						if (map[row][col] == 1) {
 
-							printf("Creando bloque en: x = %f, y = %f\n", col * TILE_SIZE, row * TILE_SIZE);
-
-							Block* b = new Block(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
-
-							entities.push_back(b);
-							b->draw();
-
-							//b.drawBlock();
-						}
-					}
-				}
 
 				gm.mapCreated();
 
@@ -359,11 +414,11 @@ int main()
 		//Vector2 textPosition = { 10 + camera.target.x - camera.offset.x, 300 + camera.target.y - camera.offset.y };
 
 		//DrawText(TextFormat("Posición: (%.1f, %.1f)", mario.hitbox.x, mario.hitbox.y), 200, 10, 20, WHITE);
-		DrawText(TextFormat("jumping: (%d)", mario.getDir()), 200, 60, 20, WHITE);
+		DrawText(TextFormat("colliding: (%d)", mario->getDir()), 200, 60, 20, WHITE);
 		DrawText(TextFormat("Vector Camera Pos : (%f x), (%f y)", camera.target.x, camera.target.y), 200, 110, 20, WHITE);
-		DrawText(TextFormat("Player immunity %d", mario.immunity), 200, 160, 20, WHITE);
-		DrawText(TextFormat("Player time %f", mario.getTime()), 200, 210, 20, WHITE);
-		DrawText(TextFormat("Player state %d", mario.state), 200, 260, 20, WHITE);
+		DrawText(TextFormat("Player immunity %d", mario->retImmunity()), 200, 160, 20, WHITE);
+		DrawText(TextFormat("Player time %f", mario->getTime()), 200, 210, 20, WHITE);
+		DrawText(TextFormat("Player state %d", mario->state), 200, 260, 20, WHITE);
 		DrawText(TextFormat("Goomba state %d", goomba->state), 200, 310, 20, WHITE);
 		DrawText(TextFormat("Posición goomba: (%.1f, %.1f)", goomba->getHitbox().x, goomba->getHitbox().y), 200, 360, 20, WHITE);
 		DrawText(TextFormat("Screen: %d", gm.GetScreen()), 200, 410, 20, WHITE);
@@ -376,6 +431,7 @@ int main()
 		EndDrawing();
 	}
 
+	CloseAudioDevice();
 	// destroy the window and cleanup the OpenGL context
 	CloseWindow();
 	return 0;
