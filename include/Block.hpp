@@ -16,6 +16,7 @@ protected:
 public:
 	Block(float x, float y, float width, float heigh, int id, int state, int type_);
 	~Block();
+	
 	void draw() override;
 };
 
