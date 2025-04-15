@@ -8,6 +8,8 @@ Block::Block(float x, float y, float width, float heigh, int id, int state, int 
     block = LoadTexture("resources/Block3.png");
     //goomba1 = LoadTexture("resources/Goomba1.png");
 
+    allEntities.push_back(this);
+
     printf("Constructor Block: x = %f, y = %f\n", x, y);
 }
 
@@ -19,10 +21,14 @@ Block::~Block() {
 }
 
 void Block::draw() {
+
     if (type == 1) {
 
-        printf("DrawBreakBlock in x: %f and y: %f\n", hitbox.x, hitbox.y);
-        DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, WHITE);
+        //printf("DrawBreakBlock in x: %f and y: %f\n", hitbox.x, hitbox.y);
+
+        DrawTexture(block, hitbox.x, hitbox.y, WHITE);
+
+        //DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, WHITE);
         printf("\n");
     }
     else if (type == 2) {
