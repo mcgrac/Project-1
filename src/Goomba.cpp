@@ -5,12 +5,20 @@ Goomba::Goomba(float x, float y, float width, float height, int id, int state, f
     : Enemy(x, y, width, height, id, state), movementSpeed(movementSpeed_), direction(direction_) {
 
     goomba1 = LoadTexture("resources/Goomba1.png");
+    goomba2 = LoadTexture("resources/Goomba2.png");
+    goombaDeadT = LoadTexture("resources/Goomba3.png");
+
+    //sounds
+    goombaDieS = LoadSound("resources/audio/smb_stomp.wav");
+
+    allEntities.push_back(this);
 }
 
 Goomba::~Goomba() {
 
     UnloadTexture(goomba1);
-
+    UnloadTexture(goomba2);
+    UnloadTexture(goombaDeadT);
 }
 
 
@@ -18,8 +26,44 @@ float Goomba::getMovementSpeed() {
     return movementSpeed;
 }
 
+void Goomba::die(Entity*& e, vector<Entity*>& list, int index) {
+
+    delete e; 
+    // liberar memoria
+
+    //index = list.erase(index);    // borrar del vector y continuar
+    //state = 0;
+    PlaySound(goombaDieS);
+}
+
 void Goomba::draw() {
-    DrawTexture(goomba1, hitbox.x, hitbox.y, WHITE);
+
+    frameCounter++;
+
+    //animation
+    if (frameCounter >= (60 / frameSpeed) && state !=0) {
+        frameCounter = 0;
+        currentFrame++;
+        if (currentFrame > 1) currentFrame = 0;
+    }
+
+    if (state == 0) { //gomba is dead
+
+        DrawTexture(goombaDeadT, hitbox.x, hitbox.y, WHITE);
+        //die();
+    }
+    else {
+
+        if (currentFrame == 0) {
+            DrawTexture(goomba1, hitbox.x, hitbox.y, WHITE);
+        }
+        else {
+            DrawTexture(goomba2, hitbox.x, hitbox.y, WHITE);
+        }
+    }
+
+
+    //DrawTexture(goomba1, hitbox.x, hitbox.y, WHITE);
 }
 
 
