@@ -78,7 +78,7 @@ void Goomba::moveGoomba(std::vector<Entity*> entity) {
     else {
         hitbox.x -= (movementSpeed - 4);
     }
-
+    
     for (int i = 0; i < entity.size(); ++i) {
         if (entity[i]->id == 2 && CheckCollisionRecs(hitbox, entity[i]->getHitbox())) { // block
             if (CheckCollisionPointRec(bottom, entity[i]->getHitbox())) {
