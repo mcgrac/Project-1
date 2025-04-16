@@ -15,11 +15,13 @@ protected:
 	Vector2 bottom;
 	Vector2 leftBot;
 	Vector2 rightBot;
+
 	static vector<Entity*> allEntities;
+
 	bool toDelate = false;
 	
 public:
-	int id;     // 0 player, 1 enemy, 2 block
+	int id;     // 0 player, 1 enemy, 2 block, 3 powerUp
 	int state;  // 0 dead, 1 little mario, 2 big mario, 3 power up mario
 
 	Entity(float x, float y, float width, float height, int id_, int state_);
@@ -45,6 +47,5 @@ public:
 	bool changeToDelate() { return !toDelate; }
 	bool retToDelate() { return toDelate; }
 };
-
 #endif
 
