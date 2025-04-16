@@ -186,10 +186,18 @@ void GameManager::playSounds() {
 
 }
 
-void GameManager::drawScreen() {
+void GameManager::drawScreen(Camera2D c, int width, int heigh) {
     switch (titleScreen) {
     case 0: //in-game screen
-        DrawTexture(backgroundTexture, 0, -32, WHITE);
+        //DrawTexture(backgroundTexture, 0, -32, WHITE);
+        //DrawTextureRec(backgroundTexture, (Rectangle) { cameraX, 0, screenWidth, screenHeight }, (Vector2) { 0, -32 }, WHITE);
+
+        DrawTextureRec(
+            backgroundTexture,
+            Rectangle{ c.target.x, 0.0f, (float)width, (float)heigh },
+            Vector2{ 0.0f, -32.0f },
+            WHITE
+        );
         break;
     case 1: //title screen
         DrawTexture(Initial_screenTexture, 0, 0, WHITE);
