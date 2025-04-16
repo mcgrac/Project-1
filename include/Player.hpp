@@ -44,7 +44,7 @@ public:
     void draw() override;
     void jump(float jumpForce);
     float getTime();
-    void move(int direction);
+    void move(int direction, float cameraX);
     void immunityVoid();
     void colisionsPlayer(std::vector<Entity*>& e);
     void changeDirection();
