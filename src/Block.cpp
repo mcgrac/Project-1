@@ -20,19 +20,19 @@ Block::~Block() {
     UnloadTexture(breakBlock);
 }
 
-void Block::draw() {
-
-    if (type == 1) {
-
-        //printf("DrawBreakBlock in x: %f and y: %f\n", hitbox.x, hitbox.y);
-
-        DrawTexture(block, hitbox.x, hitbox.y, WHITE);
-
-        //DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, WHITE);
-        printf("\n");
-    }
-    else if (type == 2) {
-        // Aquí iría el dibujo del bloque sorpresa si se activa
-        // Ej: DrawTexture(surprise, hitbox.x, hitbox.y, WHITE);
-    }
-}
+//void Block::draw() {
+//
+//    if (type == 1) {
+//
+//        //printf("DrawBreakBlock in x: %f and y: %f\n", hitbox.x, hitbox.y);
+//
+//        DrawTexture(block, hitbox.x, hitbox.y, WHITE);
+//
+//        //DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, WHITE);
+//        printf("\n");
+//    }
+//    else if (type == 2) {
+//        // Aquí iría el dibujo del bloque sorpresa si se activa
+//        // Ej: DrawTexture(surprise, hitbox.x, hitbox.y, WHITE);
+//    }
+//}
