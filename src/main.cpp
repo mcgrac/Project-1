@@ -17,7 +17,10 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 //#include "Draw.hpp"
 #include "GameManager.hpp"
 //#include "BreakBlock.hpp"
-//#include "SurpriseBlock.hpp"
+#include "SurpriseBlock.hpp"
+#include"NormalBlock.hpp"
+#include "PowerUp.hpp"
+#include"GameCamera.hpp"
 
 using namespace std;
 
@@ -75,7 +78,7 @@ int map[MAP_ROWS][MAP_COLS] = {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -101,7 +104,21 @@ void initBlocks() {
 
 				printf("Creando bloque en: x = %f, y = %f\n", col * TILE_SIZE, row * TILE_SIZE);
 
-				Block* b = new Block(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
+				NormalBlock* b = new NormalBlock(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1); //createNormalBlock
+
+				//entities.push_back(b);
+				//b->draw();
+
+				//b.drawBlock();
+			}
+			if (map[row][col] == 2) {
+
+				printf("Creando bloque sorpresa en: x = %f, y = %f\n", col * TILE_SIZE, row * TILE_SIZE);
+
+				SurpriseBlock* s = new SurpriseBlock(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 2); // create surpirse Block
+				//PowerUp* p = new PowerUp(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1)
+
+				//Block* b = new Block(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE, 2, 1, 1);
 
 				//entities.push_back(b);
 				//b->draw();
@@ -112,6 +129,164 @@ void initBlocks() {
 	}
 
 	
+}
+
+//void Player::colisionsPlayer(vector<Entity*>& e) {
+//
+//	for (auto it = e.begin(); it != e.end(); ) {
+//		Entity* ent = *it;
+//
+//		// Colisiones con bloques (id == 2)
+//		if (ent->id == 2 && CheckCollisionRecs(hitbox, ent->getHitbox())) {
+//			printf("colision con bloque\n");
+//
+//			if (collidingBottom(ent)) {
+//				speed.y = 0;
+//				hitbox.y = ent->getHitbox().y - hitbox.height;
+//				isJumping = false;
+//				onGround = true;
+//			}
+//
+//			if (collidingAbove(ent)) {
+//				hitbox.y = ent->getHitbox().y + ent->getHitbox().height;
+//				speed.y = 1.0f;
+//			}
+//
+//			if (CheckCollisionPointRec(left, ent->getHitbox())) {
+//				hitbox.x = ent->getHitbox().x + ent->getHitbox().width;
+//			}
+//
+//			if (CheckCollisionPointRec(right, ent->getHitbox())) {
+//				hitbox.x = ent->getHitbox().x - hitbox.width;
+//			}
+//
+//			colliding = true;
+//
+//			++it;
+//			continue;
+//		}
+//		else {
+//
+//			colliding = false;
+//			onGround = false;
+//		}
+//
+//		// Colisiones con Goomba (id == 1)
+//		if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->id == 1) {
+//			if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->state == 1) {
+//				printf("COLLISION GOOMBA CON LOS PIES\n");
+//
+//				PlaySound(jumpGoombaS);
+//
+//				ent->state = 0;
+//
+//				jump(8.0f);
+//
+//				delete ent;          // liberar memoria
+//				it = e.erase(it);    // borrar del vector y continuar
+//				continue;
+//			}
+//			else {
+//				printf("COLISION CON GOOMBA\n");
+//
+//				state--;
+//				if (state == 0) {
+//					// Mario muere
+//				}
+//				else {
+//					immunity = true;
+//				}
+//			}
+//		}
+//		else {
+//
+//			colliding = false;
+//		}
+//
+//		++it;
+//	}
+//}
+
+
+void Player::colisionsPlayer(vector<Entity*>& e) {
+
+	for (auto it = e.begin(); it != e.end(); ) {
+		Entity* ent = *it;
+
+		// Colisiones con bloques (id == 2)
+		if (ent->id == 2 && CheckCollisionRecs(hitbox, ent->getHitbox())) {
+			printf("colision con bloque\n");
+
+			if (collidingBottom(ent)) {
+				speed.y = 0;
+				hitbox.y = ent->getHitbox().y - hitbox.height;
+				isJumping = false;
+				onGround = true;
+			}
+
+			if (collidingAbove(ent)) {
+				hitbox.y = ent->getHitbox().y + ent->getHitbox().height;
+				speed.y = 1.0f;
+
+				if (SurpriseBlock* surprise = dynamic_cast<SurpriseBlock*>(ent)) {
+
+					surprise->state = 0;
+				}
+			}
+
+			if (CheckCollisionPointRec(left, ent->getHitbox())) {
+				hitbox.x = ent->getHitbox().x + ent->getHitbox().width;
+			}
+
+			if (CheckCollisionPointRec(right, ent->getHitbox())) {
+				hitbox.x = ent->getHitbox().x - hitbox.width;
+			}
+
+			colliding = true;
+
+			++it;
+			continue;
+		}
+		else {
+
+			colliding = false;
+			onGround = false;
+		}
+
+		// Colisiones con Goomba (id == 1)
+		if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->id == 1) {
+			if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->state == 1) {
+				printf("COLLISION GOOMBA CON LOS PIES\n");
+
+				PlaySound(jumpGoombaS);
+
+				ent->state = 0;
+
+				jump(8.0f);
+
+				delete ent;          // liberar memoria
+				it = e.erase(it);    // borrar del vector y continuar
+				continue;
+			}
+			else {
+				printf("COLISION CON GOOMBA\n");
+
+				state--;
+				if (state == 0) {
+					// Mario muere
+				}
+				else {
+					immunity = true;
+				}
+			}
+		}
+		else {
+
+			colliding = false;
+		}
+
+		++it;
+	}
 }
 
 //void drawBlocks (vector<Entity> list) {
@@ -165,12 +340,14 @@ int main()
 		printf("Is the i = %d, the id of this item is: %d\n and x:%f and y:%f ", i, Entity::getAllEntities()[i]->id, Entity::getAllEntities()[i]->getHitbox().x, Entity::getAllEntities()[i]->getHitbox().y);
 	}
 
-	//camaras
-	Camera2D camera = { 0 };
-	camera.target = { mario->getHitbox().x, 0};
-	camera.offset = { screenWidth / 2.0f, 0};
-	camera.rotation = 0.0f;
-	camera.zoom = 1.0f;
+	GameCamera camera(screenWidth, 0, 1952); // fondo de 1952 px
+
+	////camaras
+	//Camera2D camera = { 0 };
+	//camera.target = { mario->getHitbox().x, 0};
+	//camera.offset = { screenWidth / 2.0f, 0};
+	//camera.rotation = 0.0f;
+	//camera.zoom = 1.0f;
 
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
@@ -183,6 +360,8 @@ int main()
 
 			delete mario;
 			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f, 1);
+
+			camera.reset();
 		}
 
 		if (mario->state == 0) {
@@ -191,6 +370,8 @@ int main()
 
 			delete mario;
 			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 2, 0, 0, 5.0f, 1);
+
+			camera.reset();
 		}
 
 		if (IsKeyPressed(KEY_N)) {
@@ -224,7 +405,7 @@ int main()
 
 				if (mario->getDir() == 1) { // if I am going right
 
-					mario->move(1); //move to the right
+					mario->move(1, camera.getRawCamera().target.x); //move to the right
 				}
 
 			}
@@ -240,7 +421,7 @@ int main()
 
 				if (mario->getDir() != 1) { // if I am going left
 
-					mario->move(-1); //move to the left
+					mario->move(-1, camera.getRawCamera().target.x); //move to the left
 				}
 
 			}
@@ -300,6 +481,8 @@ int main()
 
 		}
 		
+		camera.update(mario->getHitbox());
+
 		//CHECK TO DELATE THE MARKED ELEMENTS IN THE VECTOR
 		//for (auto it = Entity::getAllEntities().begin(); it != Entity::getAllEntities().end();) {
 		//	if ((*it)->retToDelate()) {
@@ -322,7 +505,7 @@ int main()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 
-		gm.drawScreen();
+		gm.drawScreen(camera.getRawCamera(), screenWidth, screenHeight);
 
 		if (gm.GetScreen() == 2) {
 
@@ -331,8 +514,9 @@ int main()
 
 		if (gm.GetScreen() == 0) {
 
-			BeginMode2D(camera);
-			moveCamera(camera, mario);
+			camera.begin();
+			//BeginMode2D(camera);
+			//moveCamera(camera, mario);
 
 			mario->draw();
 
@@ -346,17 +530,19 @@ int main()
 
 			for (int i = 0; i < Entity::getAllEntities().size(); ++i) { 
 
-				//-------DRAW BLOCKS--------
-				if (Entity::getAllEntities()[i]->id == 2) {
+				Entity::getAllEntities()[i]->draw();
+					
+				////-------DRAW BLOCKS--------
+				//if (Entity::getAllEntities()[i]->id == 2) {
 
-					Entity::getAllEntities()[i]->draw();
-				}
+				//	Entity::getAllEntities()[i]->draw();
+				//}
 
-				//-------DRAW ENEMIES--------
-				if (Entity::getAllEntities()[i]->id == 1 && Entity::getAllEntities()[i]->state != 0) {
+				////-------DRAW ENEMIES--------
+				//if (Entity::getAllEntities()[i]->id == 1 && Entity::getAllEntities()[i]->state != 0) {
 
-					Entity::getAllEntities()[i]->draw();
-				}
+				//	Entity::getAllEntities()[i]->draw();
+				//}
 			}
 			//for (int row = 0; row < MAP_ROWS; row++) {
 			//	for (int col = 0; col < MAP_COLS; col++) {
@@ -415,7 +601,7 @@ int main()
 
 		//DrawText(TextFormat("Posición: (%.1f, %.1f)", mario.hitbox.x, mario.hitbox.y), 200, 10, 20, WHITE);
 		DrawText(TextFormat("colliding: (%d)", mario->getDir()), 200, 60, 20, WHITE);
-		DrawText(TextFormat("Vector Camera Pos : (%f x), (%f y)", camera.target.x, camera.target.y), 200, 110, 20, WHITE);
+		//DrawText(TextFormat("Vector Camera Pos : (%f x), (%f y)", camera.target.x, camera.target.y), 200, 110, 20, WHITE);
 		DrawText(TextFormat("Player immunity %d", mario->retImmunity()), 200, 160, 20, WHITE);
 		DrawText(TextFormat("Player time %f", mario->getTime()), 200, 210, 20, WHITE);
 		DrawText(TextFormat("Player state %d", mario->state), 200, 260, 20, WHITE);
@@ -424,8 +610,8 @@ int main()
 		DrawText(TextFormat("Screen: %d", gm.GetScreen()), 200, 410, 20, WHITE);
 		//DrawText(TextFormat("op: %d", gm.getOp()), 200, 110, 20, WHITE);
 
-
-		EndMode2D();
+		camera.end();
+		//EndMode2D();
 
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
