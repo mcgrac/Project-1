@@ -45,7 +45,7 @@ public:
     void opSelector();
     void nextScreen();
     void gameOver();
-    void drawScreen();
+    void drawScreen(Camera2D c, int width, int heigh);
     void playSounds();
 };
 
