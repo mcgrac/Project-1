@@ -186,14 +186,23 @@ void Player::applyGravity(float gravity) {
     speed.y += gravity;
     hitbox.y += speed.y;
 }
-void Player::move(int direction) {
-
+void Player::move(int direction, float cameraX) {
+    float nextX = hitbox.x;
 
     if (direction == 1) {
-        hitbox.x += movementSpeed;
+        nextX += movementSpeed;
     }
     else {
-        hitbox.x -= movementSpeed;
+        nextX -= movementSpeed;
+    }
+
+    float leftLimit = cameraX - 512.0f / 2.0f; // borde izquierdo visible
+
+    if (nextX >= leftLimit) {
+        hitbox.x = nextX;
+    }
+    else {
+        hitbox.x = leftLimit; // lo deja justo al borde visible
     }
 }
 
@@ -207,78 +216,78 @@ void Player::immunityVoid() {
     }
 }
 
-void Player::colisionsPlayer(vector<Entity*>& e) {
-
-    for (auto it = e.begin(); it != e.end(); ) {
-        Entity* ent = *it;
-
-        // Colisiones con bloques (id == 2)
-        if (ent->id == 2 && CheckCollisionRecs(hitbox, ent->getHitbox())) {
-            printf("colision con bloque\n");
-
-            if (collidingBottom(ent)) {
-                speed.y = 0;
-                hitbox.y = ent->getHitbox().y - hitbox.height;
-                isJumping = false;
-                onGround = true;
-            }
-
-            if (collidingAbove(ent)) {
-                hitbox.y = ent->getHitbox().y + ent->getHitbox().height;
-                speed.y = 1.0f;
-            }
-
-            if (CheckCollisionPointRec(left, ent->getHitbox())) {
-                hitbox.x = ent->getHitbox().x + ent->getHitbox().width;
-            }
-
-            if (CheckCollisionPointRec(right, ent->getHitbox())) {
-                hitbox.x = ent->getHitbox().x - hitbox.width;
-            }
-
-            colliding = true;
-
-            ++it;
-            continue;
-        }
-        else {
-
-            colliding = false;
-            onGround = false;
-        }
-
-        // Colisiones con Goomba (id == 1)
-        if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->id == 1) {
-            if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->state == 1) {
-                printf("COLLISION GOOMBA CON LOS PIES\n");
-
-                PlaySound(jumpGoombaS);
-
-                ent->state = 0;
-
-                jump(8.0f);
-
-                delete ent;          // liberar memoria
-                it = e.erase(it);    // borrar del vector y continuar
-                continue;
-            }
-            else {
-                printf("COLISION CON GOOMBA\n");
-
-                state--;
-                if (state == 0) {
-                    // Mario muere
-                }
-                else {
-                    immunity = true;
-                }
-            }
-        }
-        else {
-
-            colliding = false;
-        }
-
-        ++it;
-    }
-}
+//void Player::colisionsPlayer(vector<Entity*>& e) {
+//
+//    for (auto it = e.begin(); it != e.end(); ) {
+//        Entity* ent = *it;
+//
+//        // Colisiones con bloques (id == 2)
+//        if (ent->id == 2 && CheckCollisionRecs(hitbox, ent->getHitbox())) {
+//            printf("colision con bloque\n");
+//
+//            if (collidingBottom(ent)) {
+//                speed.y = 0;
+//                hitbox.y = ent->getHitbox().y - hitbox.height;
+//                isJumping = false;
+//                onGround = true;
+//            }
+//
+//            if (collidingAbove(ent)) {
+//                hitbox.y = ent->getHitbox().y + ent->getHitbox().height;
+//                speed.y = 1.0f;
+//            }
+//
+//            if (CheckCollisionPointRec(left, ent->getHitbox())) {
+//                hitbox.x = ent->getHitbox().x + ent->getHitbox().width;
+//            }
+//
+//            if (CheckCollisionPointRec(right, ent->getHitbox())) {
+//                hitbox.x = ent->getHitbox().x - hitbox.width;
+//            }
+//
+//            colliding = true;
+//
+//            ++it;
+//            continue;
+//        }
+//        else {
+//
+//            colliding = false;
+//            onGround = false;
+//        }
+//
+//        // Colisiones con Goomba (id == 1)
+//        if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->id == 1) {
+//            if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->state == 1) {
+//                printf("COLLISION GOOMBA CON LOS PIES\n");
+//
+//                PlaySound(jumpGoombaS);
+//
+//                ent->state = 0;
+//
+//                jump(8.0f);
+//
+//                delete ent;          // liberar memoria
+//                it = e.erase(it);    // borrar del vector y continuar
+//                continue;
+//            }
+//            else {
+//                printf("COLISION CON GOOMBA\n");
+//
+//                state--;
+//                if (state == 0) {
+//                    // Mario muere
+//                }
+//                else {
+//                    immunity = true;
+//                }
+//            }
+//        }
+//        else {
+//
+//            colliding = false;
+//        }
+//
+//        ++it;
+//    }
+//}
