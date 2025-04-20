@@ -21,11 +21,6 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     frameSpeed(0.1f),
     direction(direction_){
 
-    //textures
-    //littleMarioR = LoadTexture("resources/mario1.png");
-    //littleMarioL = LoadTexture("resources/Lmario1.png");
-    //bMarioWalkLeft = LoadTexture("resources/walking_animation0.png");
-    //bMarioWalkRight = LoadTexture("resources/walking_animation1.png");
 #pragma region TEXTURES
 #pragma region LITTLE MARIO
 
@@ -34,58 +29,46 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     walkRight[2] = LoadTexture("resources/textures/mario3.png");
     walkRight[3] = LoadTexture("resources/textures/mario4.png");
 
-    //lMarioR1 = LoadTexture("resources/mario1.png");
-    //lMarioR2 = LoadTexture("resources/mario2.png");
-    //lMarioR3 = LoadTexture("resources/mario3.png");
-    //lMarioR4 = LoadTexture("resources/mario4.png");
-
     walkLeft[0] = LoadTexture("resources/textures/Lmario1.png");
     walkLeft[1] = LoadTexture("resources/textures/Lmario2.png");
     walkLeft[2] = LoadTexture("resources/textures/Lmario3.png");
     walkLeft[3] = LoadTexture("resources/textures/Lmario4.png");
 
-    //lMarioL1 = LoadTexture("resources/Lmario1.png");
-    //lMarioL2 = LoadTexture("resources/Lmario2.png");
-    //lMarioL3 = LoadTexture("resources/Lmario3.png");
-    //lMarioL4 = LoadTexture("resources/Lmario4.png");
 
     jumplMarioL = LoadTexture("resources/textures/Lmario5.png");
     jumplMarioR = LoadTexture("resources/textures/mario5.png");
 #pragma endregion
 
 #pragma region BIG MARIO
-    bMarioR1 = LoadTexture("resources/textures/bmario1.png");
-    bMarioR2 = LoadTexture("resources/textures/bmario2.png");
-    bMarioR3 = LoadTexture("resources/textures/bmario3.png");
-    bMarioR4 = LoadTexture("resources/textures/bmario4.png");
 
-    bMarioL1 = LoadTexture("resources/textures/Lbmario1.png");
-    bMarioL2 = LoadTexture("resources/textures/Lbmario2.png");
-    bMarioL3 = LoadTexture("resources/textures/Lbmario3.png");
-    bMarioL4 = LoadTexture("resources/textures/Lbmario4.png");
+    walkRightBig[0] = LoadTexture("resources/textures/bmario1.png");
+    walkRightBig[1] = LoadTexture("resources/textures/bmario2.png");
+    walkRightBig[2] = LoadTexture("resources/textures/bmario3.png");
+    walkRightBig[3] = LoadTexture("resources/textures/bmario4.png");
 
-    jumpbMarioL = LoadTexture("resources/textures/Lbmario5.png");
-    jumpbMarioR = LoadTexture("resources/textures/bmario5.png");
+    //bMarioR1 = LoadTexture("resources/textures/bmario1.png");
+    //bMarioR2 = LoadTexture("resources/textures/bmario2.png");
+    //bMarioR3 = LoadTexture("resources/textures/bmario3.png");
+    //bMarioR4 = LoadTexture("resources/textures/bmario4.png");
+
+    walkLeftBig[0] = LoadTexture("resources/textures/Lbmario1.png");
+    walkLeftBig[1] = LoadTexture("resources/textures/Lbmario2.png");
+    walkLeftBig[2] = LoadTexture("resources/textures/Lbmario3.png");
+    walkLeftBig[3] = LoadTexture("resources/textures/Lbmario4.png");
+
+    //bMarioL1 = LoadTexture("resources/textures/Lbmario1.png");
+    //bMarioL2 = LoadTexture("resources/textures/Lbmario2.png");
+    //bMarioL3 = LoadTexture("resources/textures/Lbmario3.png");
+    //bMarioL4 = LoadTexture("resources/textures/Lbmario4.png");
+
+    jumpbMarioL = LoadTexture("resources/textures/bMarioJumpL.png");
+    jumpbMarioR = LoadTexture("resources/textures/bMarioJumpR.png");
 #pragma endregion
 #pragma endregion
 
-
-    //bMarioR1 = LoadTexture("resources/bmario1.png");
-    //bMarioR2 = LoadTexture("resources/bmario2.png");
-    //bMarioR3 = LoadTexture("resources/bmario3.png");
-    //bMarioR4 = LoadTexture("resources/bmario4.png");
-
-    //bMarioL1 = LoadTexture("resources/Lbmario1.png");
-    //bMarioL2 = LoadTexture("resources/Lbmario2.png");
-    //bMarioL3 = LoadTexture("resources/Lbmario3.png");
-    //bMarioL4 = LoadTexture("resources/Lbmario4.png");
-
-    //jumpbMarioL = LoadTexture("resources/Lbmario5.png");
-    //jumpbMarioR = LoadTexture("resources/bmario5.png");
 
     //sounds
     jumpSound = LoadSound("resources/audio/jumpSmall.wav");
-    //SetSoundVolume(jumpSound, 1.0f); // Set proper volume
     jumpGoombaS = LoadSound("resources/audio/smb_stomp.wav");
 
     updateRects();
@@ -93,91 +76,168 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
 
 Player::~Player() {
 
-    UnloadTexture(lMarioR1);
-    UnloadTexture(lMarioR2);
-    UnloadTexture(lMarioR3);
-    UnloadTexture(lMarioR4);
+    UnloadTexture(walkRight[0]);
+    UnloadTexture(walkRight[1]);
+    UnloadTexture(walkRight[2]);
+    UnloadTexture(walkRight[3]);
 
-    UnloadTexture(lMarioL1);
-    UnloadTexture(lMarioL2);
-    UnloadTexture(lMarioL3);
-    UnloadTexture(lMarioL4);
+    UnloadTexture(walkLeft[0]);
+    UnloadTexture(walkLeft[1]);
+    UnloadTexture(walkLeft[2]);
+    UnloadTexture(walkLeft[3]);
 
     UnloadTexture(jumplMarioL);
     UnloadTexture(jumplMarioR);
 
-    UnloadTexture(bMarioR1);
-    UnloadTexture(bMarioR2);
-    UnloadTexture(bMarioR3);
-    UnloadTexture(bMarioR4);
+    UnloadTexture(walkRightBig[0]);
+    UnloadTexture(walkRightBig[1]);
+    UnloadTexture(walkRightBig[2]);
+    UnloadTexture(walkRightBig[3]);
 
-    UnloadTexture(bMarioL1);
-    UnloadTexture(bMarioL2);
-    UnloadTexture(bMarioL3);
-    UnloadTexture(bMarioL4);
+    UnloadTexture(walkLeftBig[0]);
+    UnloadTexture(walkLeftBig[1]);
+    UnloadTexture(walkLeftBig[2]);
+    UnloadTexture(walkLeftBig[3]);
 
     UnloadTexture(jumpbMarioL);
     UnloadTexture(jumpbMarioR);
-    //UnloadTexture(littleMarioR);
-    //UnloadTexture(littleMarioL);
 
     UnloadSound(jumpSound);
     UnloadSound(jumpGoombaS);
 }
 
+void Player::modifyHitbox() {
+
+    switch (state) {
+
+    case 1: //little mario
+
+        hitbox.width = walkLeft[0].width;
+        hitbox.height = walkLeft[0].height;
+        break;
+
+    case 2: //big mario
+
+        hitbox.width = walkLeftBig[0].width;
+        hitbox.height = walkLeftBig[0].height;
+        break;
+
+    default:
+        break;
+    }
+}
 void Player::isWalkingTrue() {
     isWalking = true;
 }
 void Player::isWalkingFalse() {
     isWalking = false;
 }
+
+bool Player::shouldDrawMario(bool immunity) {
+    if (!immunity) return true;
+    return ((int)(GetTime() * 10) % 2) == 0;
+}
+
 void Player::draw() {
 
-    if (isWalking) {
+    
+    if (isWalking) { //only run timer if mario is walking
         timer += GetFrameTime();
     }
 
 
     if (timer >= frameSpeed) {
         timer = 0.0f;
-        currentFrame = (currentFrame + 1) % 4; // Avanza entre 0 y 3
+        currentFrame = (currentFrame + 1) % 4; // between 0 and 3
     }
 
     Vector2 position = { hitbox.x, hitbox.y };
-    if (state == 1) {
 
+    switch (state) {
+    case 1: // Big mario
         if (!isJumping) {
-            if (direction == 1) {
-
+            if (direction == 1) { // right
                 if (isWalking) {
-                    // Derecha
-                    DrawTexture(walkRight[currentFrame], position.x, position.y, WHITE);
+                    if (shouldDrawMario(immunity)) {
+                        DrawTexture(walkRight[currentFrame], position.x, position.y, WHITE);
+                    }
                 }
                 else {
-                    DrawTexture(walkRight[0], position.x, position.y, WHITE);
+                    if (shouldDrawMario(immunity)) {
+                        DrawTexture(walkRight[0], position.x, position.y, WHITE);
+                    }
                 }
-
             }
-            else {
+            else { // left
                 if (isWalking) {
-                    // Izquierda
-                    DrawTexture(walkLeft[currentFrame], position.x, position.y, WHITE);
+                    if (shouldDrawMario(immunity)) {
+                        DrawTexture(walkLeft[currentFrame], position.x, position.y, WHITE);
+                    }
                 }
                 else {
-                    DrawTexture(walkLeft[0], position.x, position.y, WHITE);
+                    if (shouldDrawMario(immunity)) {
+                        DrawTexture(walkLeft[0], position.x, position.y, WHITE);
+                    }
                 }
-
             }
         }
-        else {
-            // Saltando: usar sprite estático de salto
+        else { // jumping
             if (direction == 1) {
-                DrawTexture(jumplMarioR, position.x, position.y, WHITE);
+                if (shouldDrawMario(immunity)) {
+                    DrawTexture(jumplMarioR, position.x, position.y, WHITE);
+                }
             }
             else {
-                DrawTexture(jumplMarioL, position.x, position.y, WHITE);
+                if (shouldDrawMario(immunity)) {
+                    DrawTexture(jumplMarioL, position.x, position.y, WHITE);
+                }
             }
         }
+        break;
+
+    case 2: // Big mario
+        if (!isJumping) {
+            if (direction == 1) { // right
+                if (isWalking) {
+                    if (shouldDrawMario(immunity)) {
+                        DrawTexture(walkRightBig[currentFrame], position.x, position.y, WHITE);
+                    }
+                }
+                else {
+                    if (shouldDrawMario(immunity)) {
+                        DrawTexture(walkRightBig[0], position.x, position.y, WHITE);
+                    }
+                }
+            }
+            else { // left
+                if (isWalking) {
+                    if (shouldDrawMario(immunity)) {
+                        DrawTexture(walkLeftBig[currentFrame], position.x, position.y, WHITE);
+                    }
+                }
+                else {
+                    if (shouldDrawMario(immunity)) {
+                        DrawTexture(walkLeftBig[0], position.x, position.y, WHITE);
+                    }
+                }
+            }
+        }
+        else { // jumping
+            if (direction == 1) {
+                if (shouldDrawMario(immunity)) {
+                    DrawTexture(jumpbMarioR, position.x, position.y, WHITE);
+                }
+            }
+            else {
+                if (shouldDrawMario(immunity)) {
+                    DrawTexture(jumpbMarioL, position.x, position.y, WHITE);
+                }
+            }
+        }
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -328,6 +388,7 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                     // Mario muere
                 }
                 else {
+                    modifyHitbox(); //modify its hitbox
                     immunity = true;
                 }
             }
