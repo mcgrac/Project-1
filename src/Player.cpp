@@ -46,20 +46,10 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     walkRightBig[2] = LoadTexture("resources/textures/bmario3.png");
     walkRightBig[3] = LoadTexture("resources/textures/bmario4.png");
 
-    //bMarioR1 = LoadTexture("resources/textures/bmario1.png");
-    //bMarioR2 = LoadTexture("resources/textures/bmario2.png");
-    //bMarioR3 = LoadTexture("resources/textures/bmario3.png");
-    //bMarioR4 = LoadTexture("resources/textures/bmario4.png");
-
     walkLeftBig[0] = LoadTexture("resources/textures/Lbmario1.png");
     walkLeftBig[1] = LoadTexture("resources/textures/Lbmario2.png");
     walkLeftBig[2] = LoadTexture("resources/textures/Lbmario3.png");
     walkLeftBig[3] = LoadTexture("resources/textures/Lbmario4.png");
-
-    //bMarioL1 = LoadTexture("resources/textures/Lbmario1.png");
-    //bMarioL2 = LoadTexture("resources/textures/Lbmario2.png");
-    //bMarioL3 = LoadTexture("resources/textures/Lbmario3.png");
-    //bMarioL4 = LoadTexture("resources/textures/Lbmario4.png");
 
     jumpbMarioL = LoadTexture("resources/textures/bMarioJumpL.png");
     jumpbMarioR = LoadTexture("resources/textures/bMarioJumpR.png");
