@@ -205,6 +205,7 @@ void GameManager::nextScreen() {
     }
     else if (titleScreen == 5) {
         titleScreen = 2;
+        soundPlayedOnce = false;
     }
 }
 
