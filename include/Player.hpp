@@ -13,22 +13,17 @@ private:
 
 
     Texture2D walkRight[4];
-    Texture2D lMarioR1;
-    Texture2D lMarioR2;
-    Texture2D lMarioR3;
-    Texture2D lMarioR4;
-
     Texture2D walkLeft[4];
-    Texture2D lMarioL1;
-    Texture2D lMarioL2;
-    Texture2D lMarioL3;
-    Texture2D lMarioL4;
 
     Texture2D jumplMarioL;
     Texture2D jumplMarioR;
 #pragma endregion
 
 #pragma region BIG MARIO
+
+    Texture2D walkRightBig[4];
+    Texture2D walkLeftBig[4];
+
     Texture2D bMarioR1;
     Texture2D bMarioR2;
     Texture2D bMarioR3;
@@ -42,14 +37,6 @@ private:
     Texture2D jumpbMarioL;
     Texture2D jumpbMarioR;
 #pragma endregion
-
-
-    //Texture2D littleMarioR;
-    //Texture2D littleMarioL;
-    //Texture2D bMarioWalkRight;
-    //Texture2D bMarioWalkLeft;
-    //Texture2D jumpMarioL;
-    //Texture2D jumpMarioR;
 #pragma endregion
 
 #pragma region SOUNDS
@@ -82,6 +69,7 @@ public:
 
     void applyGravity(float gravity);
     void draw() override;
+    bool shouldDrawMario(bool immunity);
     void jump(float jumpForce);
     float getTime();
     void move(int direction, float cameraX);
@@ -90,6 +78,7 @@ public:
     void changeDirection();
     void isWalkingTrue();
     void isWalkingFalse();
+    void modifyHitbox();
 
     //getter
     int getDir() { return direction; }
