@@ -70,5 +70,6 @@ public:
     void createGoomba(vector<Entity*>& entities);
 
     bool getlevelStarted() { return levelStarted; }
+    bool retSound() { return soundPlayedOnce; }
 };
 #endif
