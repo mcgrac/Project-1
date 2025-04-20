@@ -39,7 +39,7 @@ int main()
 	InitAudioDevice(); //Initialize audio device for the sounds
 
 	GameManager gm(1, 0, false); //create a game manager for controlling the game flow
-	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 1, 0, 0, 5.0f, 1); //create Mario
+	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 5.0f, 1); //create Mario
 	GameCamera camera(screenWidth, 0, 1952); //create the camera
 
 	// game loop
@@ -53,7 +53,7 @@ int main()
 
 			//this will delete mario and liberate it's memory and replace it with another mario with the values reseted
 			delete mario;
-			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 1, 0, 0, 5.0f, 1);
+			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 5.0f, 1);
 
 			gm.die(); //for the game manager to know that the level has ended and another new level could be started
 			camera.reset(); //reset camera position
@@ -65,7 +65,7 @@ int main()
 
 			//this will delete mario and liberate it's memory and replace it with another mario with the values reseted
 			delete mario;
-			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE, 0, 1, 0, 0, 5.0f, 1);
+			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 5.0f, 1);
 
 			gm.die(); //for the game manager to know that the level has ended and another new level could be started
 			camera.reset(); //reset camera position
@@ -195,7 +195,8 @@ int main()
 
 		}
 
-		DrawText(TextFormat("Is walking = %d", mario->retIsWalking()), 100, 100, 20, BLACK);
+		DrawText(TextFormat("Is walking = %d", mario->retIsWalking()), 10, 10, 20, BLACK);
+		DrawText(TextFormat("Souns played = %d", gm.retSound()), 10, 30, 20, BLACK);
 
 		//end camera mode
 		camera.end();
