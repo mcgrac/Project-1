@@ -26,28 +26,26 @@ public:
 
 
 	Entity(float x, float y, float width, float height, int id_, int state_);
-	virtual void draw() {};
+	~Entity();
+
+	virtual void draw() {}; //this will be overwritten in every class of every object to draw it's sprites
 
 	void updateRects(); //update position of the hitbox
 	void decreaseState(); //used when a block is hitted, a goomba is hitted or mario is damaged
 
-	bool collidingRight( Entity* e);
-	bool collidingLeft( Entity* e);
-	bool collidingBottom( Entity* e);
-	bool collidingAbove( Entity* e);
 
+#pragma region GETTERS
 	// Getters
 	Rectangle getHitbox() const { return hitbox; }
 	Vector2 getTop() const { return top; }
 	Vector2 getLeft() const { return left; }
 	Vector2 getRight() const { return right; }
 	Vector2 getBottom() const { return bottom; }
-
 	int getId() { return id; }
 	int getState() { return state; }
-
 	static vector<Entity*>& getAllEntities() {
 		return allEntities;
 	}
+#pragma endregion
 };
 #endif
