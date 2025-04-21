@@ -1,8 +1,8 @@
 #include "GameManager.hpp"
 
 
-GameManager::GameManager(int screen, int op_, bool drawed_)
-    : titleScreen(screen), op(op_), mapDrawed(drawed_) {
+GameManager::GameManager(int screen, int op_)
+    : titleScreen(screen), op(op_) {
 
 #pragma region TEXTURES
     backgroundTexture = LoadTexture("resources/textures/Background.png");
@@ -123,10 +123,6 @@ void GameManager::mapCreated() {
 void GameManager::die() {
 
     levelStarted = false;
-}
-
-bool GameManager::getMapCreated() {
-    return mapDrawed;
 }
 
 int GameManager::GetScreen() {
