@@ -8,8 +8,6 @@ PowerUp::PowerUp(float x, float y, float width, float heigh, int id, int state, 
 	throwFireballS = LoadSound("resources/audio/ThrowFireball.wav");
 }
 
-void PowerUp::draw() {
+PowerUp::~PowerUp() {};
 
-
-}
 
