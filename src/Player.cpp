@@ -10,7 +10,6 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     speed{ speedX, speedY },
     movementSpeed(movementSpeed_),
     isJumping(false),
-    onGround(false),
     colliding(false),
     immunity(false),
     isWalking(false),
@@ -56,7 +55,7 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
 #pragma endregion
 #pragma endregion
 
-
+#pragma region SOUNDS
     //sounds
     jumpSmallS = LoadSound("resources/audio/JumpSmall.wav");
     SetSoundVolume(jumpSmallS, 0.4f);
@@ -66,12 +65,15 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     invisibilityS = LoadSound("resources/audio/InvisibilityTheme.wav");
     lostLife = LoadSound("resources/audio/LostLife.wav");
     jumpGoombaS = LoadSound("resources/audio/smb_stomp.wav");
-
+#pragma endregion
     updateRects();
 }
 
-Player::~Player() {
+Player::~Player() { //destructor -> unload everithing from memory
 
+#pragma region TEXTURES
+
+#pragma region SMALL MARIO
     UnloadTexture(walkRight[0]);
     UnloadTexture(walkRight[1]);
     UnloadTexture(walkRight[2]);
@@ -84,7 +86,8 @@ Player::~Player() {
 
     UnloadTexture(jumplMarioL);
     UnloadTexture(jumplMarioR);
-
+#pragma endregion
+#pragma region BIG MARIO
     UnloadTexture(walkRightBig[0]);
     UnloadTexture(walkRightBig[1]);
     UnloadTexture(walkRightBig[2]);
@@ -97,14 +100,21 @@ Player::~Player() {
 
     UnloadTexture(jumpbMarioL);
     UnloadTexture(jumpbMarioR);
+#pragma endregion
 
+#pragma endregion
+
+#pragma region SOUNDS
     UnloadSound(jumpSmallS);
     UnloadSound(jumpBigS);
     UnloadSound(marioDieS);
     UnloadSound(invisibilityS);
+#pragma endregion
+
+
 }
 
-void Player::modifyHitbox() {
+void Player::modifyHitbox() { //this is used for mofifyng the hitbox when mario goes from big to little
 
     switch (state) {
 
@@ -124,16 +134,20 @@ void Player::modifyHitbox() {
         break;
     }
 }
-void Player::isWalkingTrue() {
+void Player::isWalkingTrue() { //called while the key arrows are pressed
     isWalking = true;
 }
-void Player::isWalkingFalse() {
+void Player::isWalkingFalse() { //called when the move keys are unpressed
     isWalking = false;
 }
 
 bool Player::shouldDrawMario(bool immunity) {
-    if (!immunity) return true;
-    return ((int)(GetTime() * 10) % 2) == 0;
+    if (!immunity) return true; //if immunity is false it will return true -> it should draw mario
+    return ((int)(GetTime() * 10) % 2) == 0;//return true and false continiouslt for making the blinking effect
+}
+
+float Player::getTime() { //get the time in game
+    return time;
 }
 
 void Player::draw() {
@@ -149,43 +163,43 @@ void Player::draw() {
         currentFrame = (currentFrame + 1) % 4; // between 0 and 3
     }
 
-    Vector2 position = { hitbox.x, hitbox.y };
+    Vector2 position = { hitbox.x, hitbox.y }; //get the position of mario
 
     switch (state) {
-    case 1: // Big mario
-        if (!isJumping) {
+    case 1: // small mario
+        if (!isJumping) { //not jumping
             if (direction == 1) { // right
-                if (isWalking) {
-                    if (shouldDrawMario(immunity)) {
+                if (isWalking) {//if is walking show animation
+                    if (shouldDrawMario(immunity)) {//Do the blinking effect
                         DrawTexture(walkRight[currentFrame], position.x, position.y, WHITE);
                     }
                 }
                 else {
-                    if (shouldDrawMario(immunity)) {
+                    if (shouldDrawMario(immunity)) {//Do the blinking effect
                         DrawTexture(walkRight[0], position.x, position.y, WHITE);
                     }
                 }
             }
             else { // left
-                if (isWalking) {
-                    if (shouldDrawMario(immunity)) {
+                if (isWalking) {//if is walking show animation
+                    if (shouldDrawMario(immunity)) {//Do the blinking effect
                         DrawTexture(walkLeft[currentFrame], position.x, position.y, WHITE);
                     }
                 }
                 else {
-                    if (shouldDrawMario(immunity)) {
+                    if (shouldDrawMario(immunity)) {//Do the blinking effect
                         DrawTexture(walkLeft[0], position.x, position.y, WHITE);
                     }
                 }
             }
         }
         else { // jumping
-            if (direction == 1) {
+            if (direction == 1) {// right
                 if (shouldDrawMario(immunity)) {
                     DrawTexture(jumplMarioR, position.x, position.y, WHITE);
                 }
             }
-            else {
+            else {// left
                 if (shouldDrawMario(immunity)) {
                     DrawTexture(jumplMarioL, position.x, position.y, WHITE);
                 }
@@ -194,40 +208,40 @@ void Player::draw() {
         break;
 
     case 2: // Big mario
-        if (!isJumping) {
+        if (!isJumping) {//not jumping
             if (direction == 1) { // right
-                if (isWalking) {
-                    if (shouldDrawMario(immunity)) {
+                if (isWalking) { //if is walking show animation
+                    if (shouldDrawMario(immunity)) {//Do the blinking effect
                         DrawTexture(walkRightBig[currentFrame], position.x, position.y, WHITE);
                     }
                 }
-                else {
-                    if (shouldDrawMario(immunity)) {
+                else { //if not show idle sprite
+                    if (shouldDrawMario(immunity)) { //Do the blinking effect
                         DrawTexture(walkRightBig[0], position.x, position.y, WHITE);
                     }
                 }
             }
             else { // left
-                if (isWalking) {
-                    if (shouldDrawMario(immunity)) {
+                if (isWalking) {//if is walking show animation
+                    if (shouldDrawMario(immunity)) {//Do the blinking effect
                         DrawTexture(walkLeftBig[currentFrame], position.x, position.y, WHITE);
                     }
                 }
                 else {
-                    if (shouldDrawMario(immunity)) {
+                    if (shouldDrawMario(immunity)) {//Do the blinking effect
                         DrawTexture(walkLeftBig[0], position.x, position.y, WHITE);
                     }
                 }
             }
         }
         else { // jumping
-            if (direction == 1) {
-                if (shouldDrawMario(immunity)) {
+            if (direction == 1) {// right
+                if (shouldDrawMario(immunity)) {//Do the blinking effect
                     DrawTexture(jumpbMarioR, position.x, position.y, WHITE);
                 }
             }
-            else {
-                if (shouldDrawMario(immunity)) {
+            else {// left
+                if (shouldDrawMario(immunity)) {//Do the blinking effect
                     DrawTexture(jumpbMarioL, position.x, position.y, WHITE);
                 }
             }
@@ -240,21 +254,16 @@ void Player::draw() {
 }
 
 void Player::jump(float jumpForce) {
-    if (!isJumping || !colliding) {
+    if (!isJumping || !colliding) { //jump if it's not jumping or it has hitted a goomba(colliding will only be true when colliding blocks)
         speed.y = -jumpForce;
-        isJumping = true;
+        isJumping = true; //avoids jumping continiously
     }
 
-    //InitAudioDevice();
-    if (!IsSoundPlaying(jumpSmallS) && !IsSoundPlaying(jumpGoombaS)) {
+    if (!IsSoundPlaying(jumpSmallS) && !IsSoundPlaying(jumpGoombaS)) { // do the normal jump sound
 
         PlaySound(jumpSmallS);
     }
 
-}
-
-float Player::getTime() {
-    return time;
 }
 
 void Player::changeDirection() {
@@ -297,8 +306,8 @@ void Player::move(int direction, float cameraX) {
 
 void Player::immunityVoid() {
     if (immunity) {
-        time -= GetFrameTime();
-        if (time <= 0) {
+        time -= GetFrameTime(); //counts back from 3 to 0
+        if (time <= 0) { //counts until three, which is the time of immunity
             immunity = false;
             time = 3;
         }
@@ -307,63 +316,66 @@ void Player::immunityVoid() {
 
 void Player::colisionsPlayer(vector<Entity*>& e) {
 
-    for (auto it = e.begin(); it != e.end(); ) {
+    //we use an itarator here because we don't want to make acces to deleted memory
+    //we traverse the vector of entities until the end of the list, not having in account the size, because it might change when deleting something
+
+    for (auto it = e.begin(); it != e.end(); ) { 
         Entity* ent = *it;
 
-        // Colisiones con bloques (id == 2)
+        // Collision with blocks (id == 2)
         if (ent->getId() == 2 && CheckCollisionRecs(hitbox, ent->getHitbox())) {
             printf("colision con bloque\n");
 
-            if (!ent) {
-                ++it;
+            if (!ent) { //if the pointer is null
+                ++it; //next iteration
                 continue;
             }
 
-            if (collidingBottom(ent)) {
+            //for checking collisions we use the middle pints of each side and define a different behaviour for each one of them
+
+            if (CheckCollisionPointRec(bottom, ent->getHitbox())) { //collision bottom (floor)
                 speed.y = 0;
                 hitbox.y = ent->getHitbox().y - hitbox.height;
                 isJumping = false;
-                onGround = true;
             }
 
-            if (collidingAbove(ent)) {
+            if (CheckCollisionPointRec(top, ent->getHitbox())) { //collision above (head)
                 hitbox.y = ent->getHitbox().y + ent->getHitbox().height;
                 speed.y = 1.0f;
 
-                if (SurpriseBlock* surprise = dynamic_cast<SurpriseBlock*>(ent)) {
+                if (SurpriseBlock* surprise = dynamic_cast<SurpriseBlock*>(ent)) { //do a dynamyc cast to know if that pointer has a surpirseBlock element to acces to it
 
                     surprise->decreaseState();
                 }
             }
 
-            if (CheckCollisionPointRec(left, ent->getHitbox())) {
+            if (CheckCollisionPointRec(left, ent->getHitbox())) { //collision left side
                 printf("collision left");
                 hitbox.x = ent->getHitbox().x + ent->getHitbox().width;
             }
 
-            if (CheckCollisionPointRec(right, ent->getHitbox())) {
+            if (CheckCollisionPointRec(right, ent->getHitbox())) { //collision right side
                 printf("collision right");
                 hitbox.x = ent->getHitbox().x - hitbox.width;
             }
 
             colliding = true;
 
-            ++it;
-            continue;
+            ++it; //next iteration
+            continue; //use continuo for going outside and to the next iteration
         }
         else {
 
             colliding = false;
-            onGround = false;
         }
 
-        // Colisiones con Goomba (id == 1)
+        // Collisions with goomba (id == 1)
         if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 1) {
-            if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->getState() == 1) {
+            if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->getState() == 1) { //collision with mario's feet
 
                 if (!ent) {
-                    ++it;
-                    continue;
+                    ++it; //next iteration
+                    continue; //use continuo for going outside and to the next iteration
                 }
 
                 printf("COLLISION GOOMBA CON LOS PIES\n");
@@ -374,19 +386,19 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                 jump(8.0f);
 
-                delete ent;          // liberar memoria
-                it = e.erase(it);    // borrar del vector y continuar
-                continue;
+                delete ent;          // feee memory
+                it = e.erase(it);    // delete from the vector and continue
+                continue; //use continuo for going outside and to the next iteration
             }
-            else {
+            else { //collision with the rest of the body
                 printf("COLISION CON GOOMBA\n");
 
                 state--;
                 if (state == 0) {
-                    // Mario muere
+                    // Mario die
                 }
                 else {
-                    modifyHitbox(); //modify its hitbox
+                    modifyHitbox(); //modify its hitbox when its hitted
                     immunity = true;
                 }
             }
@@ -396,6 +408,6 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
             colliding = false;
         }
 
-        ++it;
+        ++it; //next iteration
     }
 }
