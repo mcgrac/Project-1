@@ -24,16 +24,6 @@ private:
     Texture2D walkRightBig[4];
     Texture2D walkLeftBig[4];
 
-    Texture2D bMarioR1;
-    Texture2D bMarioR2;
-    Texture2D bMarioR3;
-    Texture2D bMarioR4;
-
-    Texture2D bMarioL1;
-    Texture2D bMarioL2;
-    Texture2D bMarioL3;
-    Texture2D bMarioL4;
-
     Texture2D jumpbMarioL;
     Texture2D jumpbMarioR;
 #pragma endregion
@@ -49,17 +39,16 @@ private:
 #pragma endregion
 
     int direction; //1 right / 0 left
-    float time;
+    float time; //3.0f
 
     Vector2 speed;
     float movementSpeed;
     bool isJumping;
-    bool onGround;
     bool colliding;
     bool immunity;
     bool isWalking;
 
-    //For spritesheet animation
+    //For spritesheet animation (NOT USED FOR NOW)
     Rectangle frameRec;
     int frameCounter;
     int currentFrame;
@@ -85,10 +74,13 @@ public:
     void isWalkingFalse();
     void modifyHitbox();
 
-    //getter
+   
+#pragma region GETTERS
+    //getterS
     int getDir() { return direction; }
     bool retImmunity() { return immunity; }
     bool retJumping() { return isJumping; }
     bool retColliding() { return colliding; }
     bool retIsWalking() { return isWalking; };
+#pragma endregion
 };
