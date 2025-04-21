@@ -17,14 +17,24 @@ using namespace std;
 class GameManager {
 private:
 
-    int map[28][100];
+    int map[28][100]; //array of numbers of the map (loaded in game)
 
-    int titleScreen;
-    int op;
-    bool mapDrawed;
-    bool soundPlayedOnce = false;
-    bool levelStarted = false;
+    int titleScreen; //in which screen we are
 
+    //screen 0 -> game
+    //screen 1 -> initial screen (credits)
+    //screen 2 -> main menu
+    //screen 3 -> start level screen
+    //screen 4 -> loose screen
+    //screen 5 -> win screen
+    //screen 6 -> how to play 1
+    //screen 7 -> how to play 2
+
+    int op; //arrow selection main menu
+    bool soundPlayedOnce = false; //for playing just once some sounds (ex: game over/win sounds)
+    bool levelStarted = false; //for restarting the level
+
+#pragma region TEXTURES
     Texture2D backgroundTexture;
     Texture2D Title_screenTexture;
     Texture2D Game_overTexture;
@@ -35,19 +45,22 @@ private:
     Texture2D winTexture;
     Texture2D looseTexture;
     Texture2D arrowTexture;
+#pragma endregion
 
-    //sounds
+#pragma region SOUNDS
     Sound levelS;
     Sound gameOverS;
     Sound winS;
+#pragma endregion
+
+
 
 public:
-    GameManager(int screen, int op_, bool drawed_);
+    GameManager(int screen, int op_);
     ~GameManager();
 
     void mapCreated();
     void die();
-    bool getMapCreated();
     void LoadMapFromFile(const string& filename, int rows, int columns);
 
     void buildLevel(vector<Entity*>& entities, int tileSize_, int rows_, int col_);
@@ -69,7 +82,9 @@ public:
 
     void createGoomba(vector<Entity*>& entities);
 
+#pragma region GETTERS
     bool getlevelStarted() { return levelStarted; }
     bool retSound() { return soundPlayedOnce; }
+#pragma endregion
 };
 #endif
