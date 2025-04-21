@@ -4,7 +4,7 @@
 [https://github.com/mcgrac/Project-1/tree/main](https://github.com/mcgrac/Project-1/tree/main)
 
 ## 🎥 Demo Video
-(https://vimeo.com/1077320127/e47689f195?share=copy)
+[https://vimeo.com/1077320127/e47689f195?share=copy]
 
 ## 👥 Team Members
 - **Marc Sierra** - [@mcgrac](https://github.com/mcgrac)
