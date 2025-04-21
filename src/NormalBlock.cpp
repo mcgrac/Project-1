@@ -8,6 +8,8 @@ NormalBlock::NormalBlock(float x, float y, float width, float heigh, int id, int
 	updateRects();
 }
 
+NormalBlock::~NormalBlock() {};
+
 void NormalBlock::draw() {
 
 	//printf("NORMAL BLOCK DRAW. state: %d\n", state);
