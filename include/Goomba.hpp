@@ -6,14 +6,19 @@
 class Goomba : public Enemy {
 
 private:
+
+#pragma region TEXTURES
     Texture2D goomba1;
     Texture2D goomba2;
     Texture2D goombaDeadT;
+#pragma endregion
 
+#pragma region SOUNDS
     //sounds
     Sound goombaDieS;
+#pragma endregion
 
-    //Rectangle frameRec;
+    //Rectangle frameRec (ANIMATION)
     int frameCounter = 0;
     int currentFrame = 0;
     int frameSpeed = 10;
@@ -30,9 +35,6 @@ public:
 
     void draw() override;
 
-    void moveGoomba(std::vector<Entity*> entity);
-
-    void colisionsGoomba(std::vector<Entity> e);
-
-    void die(Entity*& e, vector<Entity*>& list, int index);
+    void moveGoomba(vector<Entity*>& entity);
+    void collisionGoomba(vector<Entity*>& entity);
 };
