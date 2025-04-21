@@ -58,7 +58,13 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
 
 
     //sounds
-    jumpSound = LoadSound("resources/audio/jumpSmall.wav");
+    jumpSmallS = LoadSound("resources/audio/JumpSmall.wav");
+    SetSoundVolume(jumpSmallS, 0.4f);
+    jumpBigS = LoadSound("resources/audio/JumpBig.wav");
+    SetSoundVolume(jumpBigS, 0.4f);
+    marioDieS = LoadSound("resources/audio/MarioDie.wav");
+    invisibilityS = LoadSound("resources/audio/InvisibilityTheme.wav");
+    lostLife = LoadSound("resources/audio/LostLife.wav");
     jumpGoombaS = LoadSound("resources/audio/smb_stomp.wav");
 
     updateRects();
@@ -92,8 +98,10 @@ Player::~Player() {
     UnloadTexture(jumpbMarioL);
     UnloadTexture(jumpbMarioR);
 
-    UnloadSound(jumpSound);
-    UnloadSound(jumpGoombaS);
+    UnloadSound(jumpSmallS);
+    UnloadSound(jumpBigS);
+    UnloadSound(marioDieS);
+    UnloadSound(invisibilityS);
 }
 
 void Player::modifyHitbox() {
@@ -238,9 +246,9 @@ void Player::jump(float jumpForce) {
     }
 
     //InitAudioDevice();
-    if (!IsSoundPlaying(jumpSound) && !IsSoundPlaying(jumpGoombaS)) {
+    if (!IsSoundPlaying(jumpSmallS) && !IsSoundPlaying(jumpGoombaS)) {
 
-        PlaySound(jumpSound);
+        PlaySound(jumpSmallS);
     }
 
 }
