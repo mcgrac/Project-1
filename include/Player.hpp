@@ -45,6 +45,7 @@ private:
     Sound marioDieS;
     Sound invisibilityS;
     Sound lostLife;
+    Sound jumpGoombaS;
 #pragma endregion
 
     int direction; //1 right / 0 left
