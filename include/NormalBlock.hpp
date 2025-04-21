@@ -11,6 +11,7 @@ private:
 public:
 
 	NormalBlock(float x, float y, float width, float heigh, int id, int state, int type_);
+	~NormalBlock();
 
 	void draw() override;
 };
