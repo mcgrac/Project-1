@@ -20,8 +20,6 @@ public:
 
 	PowerUp(float x, float y, float width, float heigh, int id, int state, int typePower_);
 	~PowerUp();
-
-	void draw() override;
 	
 };
 
