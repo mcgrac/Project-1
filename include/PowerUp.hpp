@@ -8,6 +8,9 @@ private:
 
 	Texture2D mushroom;
 
+	Sound powerUpS;
+	Sound throwFireballS;
+
 	int typePowerUp; //0->mushroom , 1->flower, 2->star
 
 protected:
