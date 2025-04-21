@@ -40,7 +40,11 @@ private:
 #pragma endregion
 
 #pragma region SOUNDS
-    Sound jumpSound, jumpGoombaS;
+    Sound jumpSmallS;
+    Sound jumpBigS;
+    Sound marioDieS;
+    Sound invisibilityS;
+    Sound lostLife;
 #pragma endregion
 
     int direction; //1 right / 0 left
