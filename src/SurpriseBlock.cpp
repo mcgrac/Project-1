@@ -9,6 +9,8 @@ SurpriseBlock::SurpriseBlock(float x, float y, float width, float heigh, int id,
 	updateRects();
 }
 
+SurpriseBlock::~SurpriseBlock() {};
+
 void SurpriseBlock::givePowerUp() {
 
 
