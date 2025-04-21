@@ -38,7 +38,7 @@ int main()
 	InitWindow(screenWidth, screenHeight, "Super MarioBros"); //Initialize the screen
 	InitAudioDevice(); //Initialize audio device for the sounds
 
-	GameManager gm(1, 0, false); //create a game manager for controlling the game flow
+	GameManager gm(1, 0); //create a game manager for controlling the game flow
 	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 5.0f, 1); //create Mario
 	GameCamera camera(screenWidth, 0, 1952); //create the camera
 
@@ -96,7 +96,7 @@ int main()
 
 			//-----MARIO CONTROLS--------//
 			mario->applyGravity(GRAVITY);
-			mario->updateRects();
+			mario->updateRects(); //updating the middle points of the hitbox at every moment when it move
 
 			if (IsKeyDown(KEY_RIGHT)) {
 
