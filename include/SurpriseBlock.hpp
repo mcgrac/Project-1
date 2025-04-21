@@ -17,6 +17,7 @@ private:
 public:
 
 	SurpriseBlock(float x, float y, float width, float heigh, int id, int state, int type_);
+	~SurpriseBlock();
 
 	void givePowerUp();
 
