@@ -1,4 +1,4 @@
-# Super Mario Bros 1 (Clone)
+# Super Mario Bros
 
 ## 🔗 GitHub Repository
 [https://github.com/mcgrac/Project-1/tree/main](https://github.com/mcgrac/Project-1/tree/main)
