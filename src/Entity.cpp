@@ -6,8 +6,6 @@ Entity::Entity(float x, float y, float width, float height, int id_, int state_)
 }
 Entity::~Entity() {};
 
-vector<Entity*> Entity::allEntities;
-
 void Entity::updateRects() { //update the middle points of each side in the hitbox
     top = { hitbox.x + (hitbox.width / 2), hitbox.y };
     left = { hitbox.x, hitbox.y + (hitbox.height / 2) };
