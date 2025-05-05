@@ -19,11 +19,12 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include"NormalBlock.hpp"
 #include "PowerUp.hpp"
 #include"GameCamera.hpp"
+#include"Star.hpp"
 
 using namespace std;
 
-#define GRAVITY  0.5f    // GRAVITY IN EACH FRAME
-#define JUMP_FORCE 8.0f // JUMP FORCE
+#define GRAVITY  20.0f    // GRAVITY IN EACH FRAME
+#define JUMP_FORCE 350.0f // JUMP FORCE
 #define TILE_SIZE 16.0f  // MINIMUM TILE SIZE
 
 int main()
@@ -39,7 +40,7 @@ int main()
 	InitAudioDevice(); //Initialize audio device for the sounds
 
 	GameManager gm(1, 0); //create a game manager for controlling the game flow
-	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 5.0f, 1); //create Mario
+	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0); //create Mario
 	GameCamera camera(screenWidth, 0, 1952); //create the camera
 
 	// game loop
@@ -53,7 +54,7 @@ int main()
 
 			//this will delete mario and liberate it's memory and replace it with another mario with the values reseted
 			delete mario;
-			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 5.0f, 1);
+			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0);
 
 			gm.die(); //for the game manager to know that the level has ended and another new level could be started
 			camera.reset(); //reset camera position
@@ -65,7 +66,7 @@ int main()
 
 			//this will delete mario and liberate it's memory and replace it with another mario with the values reseted
 			delete mario;
-			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 5.0f, 1);
+			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0);
 
 			gm.die(); //for the game manager to know that the level has ended and another new level could be started
 			camera.reset(); //reset camera position
@@ -90,7 +91,7 @@ int main()
 			//restart the level and build again all the blocks and the enemies
 			if (!gm.getlevelStarted()) {
 
-				gm.startLevel(Entity::getAllEntities());
+				gm.startLevel(gm.getAllEntities());
 				gm.mapCreated();
 			}
 
@@ -137,7 +138,7 @@ int main()
 				mario->isWalkingFalse();
 			}
 
-			mario->colisionsPlayer(Entity::getAllEntities());
+			mario->colisionsPlayer(gm.getAllEntities());
 
 			if (mario->retImmunity()) {
 
@@ -149,14 +150,19 @@ int main()
 				mario->jump(JUMP_FORCE);
 			}
 
-			//------GOOMBA CONTROLS------//
-			for (Entity* e : Entity::getAllEntities()) {
+			//------IA CONTROLS------//
+			for (Entity* e : gm.getAllEntities()) {
 
 				//do a dynamic cast and getting only the entities that are goombas and access to their functions/also check if it's null for avoiding invalid access in memory
 				Goomba* g = dynamic_cast<Goomba*>(e);
 				if (g != nullptr) {
 					g->updateRects();
-					g->moveGoomba(Entity::getAllEntities());
+					g->moveGoomba(gm.getAllEntities(), GRAVITY);
+				}
+
+				Star* s = dynamic_cast<Star*>(e);
+				if ( s != nullptr) { //if it is a power up not null
+					s->update(GRAVITY);
 				}
 			}
 
@@ -187,9 +193,9 @@ int main()
 			mario->draw();
 
 			//draw all the entities
-			for (int i = 0; i < Entity::getAllEntities().size(); ++i) { 
+			for (int i = 0; i < gm.getAllEntities().size(); ++i) { 
 
-				Entity::getAllEntities()[i]->draw();
+				gm.getAllEntities()[i]->draw();
 
 			}
 
