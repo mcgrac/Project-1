@@ -16,8 +16,8 @@ protected:
 	Vector2 right;
 	Vector2 bottom;
 
-	//create a vector that will contain all the entities
-	static vector<Entity*> allEntities;
+	////create a vector that will contain all the entities
+	//static vector<Entity*> allEntities;
 
 	int id;     // 0 player, 1 enemy, 2 block, 3 powerUp
 	int state;  // 0 dead, 1 little mario, 2 big mario, 3 power up mario
@@ -43,9 +43,9 @@ public:
 	Vector2 getBottom() const { return bottom; }
 	int getId() { return id; }
 	int getState() { return state; }
-	static vector<Entity*>& getAllEntities() {
-		return allEntities;
-	}
+	//static vector<Entity*>& getAllEntities() {
+	//	return allEntities;
+	//}
 #pragma endregion
 };
 #endif
