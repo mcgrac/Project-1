@@ -35,6 +35,6 @@ public:
 
     void draw() override;
 
-    void moveGoomba(vector<Entity*>& entity);
+    void moveGoomba(vector<Entity*>& entity, float gravity);
     void collisionGoomba(vector<Entity*>& entity);
 };
