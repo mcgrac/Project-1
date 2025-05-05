@@ -1,0 +1,25 @@
+#include "BaseObject.hpp"
+#include <vector>
+
+class Mushroom : public BaseObject{
+
+private:
+
+	float movementSpeed_;
+	int direction;
+
+public:
+
+	Mushroom(float x, float y, float width, float height, int id, int state, float movementSpeed_, int direction_);
+	~Mushroom();
+
+	void draw() override;
+	void throwPower() override;
+
+	void moveMushroom(vector<Entity*>& entity);
+	void collisionMushroom(vector<Entity*>& entity);
+
+};
+
+
+
