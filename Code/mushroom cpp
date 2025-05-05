@@ -1,0 +1,57 @@
+#include "Mushroom.hpp"
+#include "raylib.h"
+
+/*void Mushroom::moveMushroom(vector<Entity*>& entity) {
+    // gravity
+    hitbox.y += movementSpeed;
+
+    // lateral movement
+    if (direction == 1) {
+        hitbox.x += (movementSpeed - 4);
+    }
+    else {
+        hitbox.x -= (movementSpeed - 4);
+    }
+
+    collisionMushroom(entity);
+}
+
+void Mushroom::collisionMushroom(vector<Entity*>& entity) {
+
+    for (int i = 0; i < entity.size(); ++i) {
+        if (entity[i]->getId() == 2 && CheckCollisionRecs(hitbox, entity[i]->getHitbox())) { // block
+            if (CheckCollisionPointRec(bottom, entity[i]->getHitbox())) { //collision with the floor
+                hitbox.y = entity[i]->getHitbox().y - hitbox.height;
+            }
+
+            if (CheckCollisionPointRec(right, entity[i]->getHitbox()) && direction == 1) { //collision right side
+                direction = -1;
+            }
+
+            if (CheckCollisionPointRec(left, entity[i]->getHitbox()) && direction == -1) { //collision left side
+                direction = 1;
+            }
+        }
+    }
+}
+
+if (CheckCollisionRecs(hitbox, ent->getHitbox()) && ent->getId() == 0) {
+   
+        if (!ent) {
+            ++it; //next iteration
+            continue; //use continuo for going outside and to the next iteration
+        }
+
+        printf("COLLISION GOOMBA CON LOS PIES\n");
+
+        PlaySound(jumpGoombaS);
+
+        ent->decreaseState();
+
+        jump(8.0f);
+
+        delete ent;          // feee memory
+        it = e.erase(it);    // delete from the vector and continue
+        continue; //use continuo for going outside and to the next iteration
+    }
+    */
