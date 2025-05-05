@@ -19,7 +19,7 @@ void SurpriseBlock::givePowerUp() {
 
 void SurpriseBlock::draw() {
 
-	printf("SURPRISE BLOCK DRAW.  state: %d\n", state);
+	//printf("SURPRISE BLOCK DRAW.  state: %d\n", state);
 
 	if (state == 1) { //if it has not been hitted
 
