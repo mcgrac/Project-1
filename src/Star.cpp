@@ -1,1 +1,146 @@
+#include"Star.hpp"
+#include"GameManager.hpp"
+
+Star::Star(float x, float y, float width, float height, int id, int state, int typePower_) : BaseObject(x, y, width, height, id, state, typePower_){
+
+	star = LoadTexture("resources/textures/coin.png");
+}
+
+Star::~Star() {
+
+	UnloadTexture(star);
+}
+
+void Star::throwPower() {
+
+	// Esto se llama al momento de "activar" el power-up
+	emerging = true;
+	emergedSoFar = 0.0f;
+	// Puedes resetear valores si quieres reutilizar objetos
+}
+
+void Star::update(float gravity) {
+
+    float delta = GetFrameTime();
+
+    if (emerging) {
+
+        float delta = GetFrameTime();
+        float move = emergeSpeed * delta * 60;
+        hitbox.y -= move;
+        emergedSoFar += move;
+        if (emergedSoFar >= maxEmerge) {
+            emerging = false;
+
+        }
+    }
+    else {
+        
+        updateRects(); //necesary for updating the mid points of the hitbox
+
+        //movement x-axis
+        hitbox.x += velocity.x * delta;
+ 
+        //gravity //movement y-axis
+        velocity.y += gravity;
+        if (velocity.y > terminalVelocityY) { velocity.y = terminalVelocityY; } //prevents the gravity to be too much high
+
+        hitbox.y += velocity.y;
+        //handleCollisionY();
+
+        handleCollision();
+    }
+}
+
+void Star::handleCollision() {
+
+    const float push = 0.1f;
+    for (Entity* ent : GameManager::getAllEntities()) {
+
+        if (ent->getId() != 2) {
+            continue;
+        }
+
+        Rectangle block = ent->getHitbox();
+        if (CheckCollisionRecs(getHitbox(), block)) {
+
+            printf("handling collisions star");
+
+            // Colisión con el suelo (cayendo)
+            if (velocity.y > 0 && CheckCollisionPointRec(bottom, block)) {
+                hitbox.y = block.y - hitbox.height;
+                velocity.y = -50.0f; // Rebote hacia arriba (puedes ajustar la fuerza)
+            }
+
+            // Colisión con el techo (subiendo)
+            else if (velocity.y < 0 && CheckCollisionPointRec(top, block)) {
+                hitbox.y = block.y + block.height;
+                velocity.y = 0.0f;
+            }
+
+            // Colisión por la izquierda (está yendo hacia la izquierda)
+            if (velocity.x < 0 && CheckCollisionPointRec(left, block)) {
+                hitbox.x = block.x + block.width + push;
+                velocity.x *= -1;
+            }
+
+            // Colisión por la derecha (está yendo hacia la derecha)
+            else if (velocity.x > 0 && CheckCollisionPointRec(right, block)) {
+                hitbox.x = block.x - hitbox.width - push;
+                velocity.x *= -1;
+            }
+        }
+    }
+}
+
+void Star::handleCollisionX() {
+    const float push = 0.1f;
+
+    for (Entity* ent : GameManager::getAllEntities()) {
+        if (ent->getId() != 2) continue;
+
+        Rectangle block = ent->getHitbox();
+        if (CheckCollisionRecs(getHitbox(), block)) {
+
+            // Colisión por la izquierda (está yendo hacia la izquierda)
+            if (velocity.x < 0 && CheckCollisionPointRec(left, block)) {
+                hitbox.x = block.x + block.width + push;
+                velocity.x *= -1;
+            }
+
+            // Colisión por la derecha (está yendo hacia la derecha)
+            else if (velocity.x > 0 && CheckCollisionPointRec(right, block)) {
+                hitbox.x = block.x - hitbox.width - push;
+                velocity.x *= -1;
+            }
+        }
+    }
+}
+
+void Star::handleCollisionY() {
+    for (Entity* ent : GameManager::getAllEntities()) {
+        if (ent->getId() != 2) continue;
+
+        Rectangle block = ent->getHitbox();
+        if (CheckCollisionRecs(getHitbox(), block)) {
+
+            // Colisión con el suelo (cayendo)
+            if (velocity.y > 0 && CheckCollisionPointRec(bottom, block)) {
+                hitbox.y = block.y - hitbox.height;
+                //velocity.y = -6.0f; // Rebote hacia arriba (puedes ajustar la fuerza)
+            }
+
+            // Colisión con el techo (subiendo)
+            else if (velocity.y < 0 && CheckCollisionPointRec(top, block)) {
+                hitbox.y = block.y + block.height;
+                velocity.y = 0.0f;
+            }
+        }
+    }
+}
+
+void Star::draw() {
+
+    DrawTexture(star, hitbox.x, hitbox.y, WHITE);
+}
 
