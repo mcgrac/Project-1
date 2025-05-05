@@ -46,6 +46,8 @@ GameManager::~GameManager() {
 #pragma endregion
 }
 
+vector<Entity*> GameManager::allEntities;
+
 void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_, int col_) {
     const int TILE_SIZE = tileSize_;
     int row = rows_;
@@ -95,10 +97,10 @@ void GameManager:: LoadMapFromFile(const string& filename, int rows, int columns
 
 void GameManager::createGoomba(vector<Entity*>& entities) {
 
-    Goomba* goomba = new Goomba(400.0f, 200.0f, 16, 16, 1, 1, 5.0f, 1);
+    Goomba* goomba = new Goomba(400.0f, 312.0f, 16, 16, 1, 1, 100.0f, 1);
     entities.push_back(goomba);
 
-    Goomba* goomba2 = new Goomba(500.0f, 200.0f, 16, 16, 1, 1, 5.0f, -1);
+    Goomba* goomba2 = new Goomba(500.0f, 312.0f, 16, 16, 1, 1, 100.0f, -1);
     entities.push_back(goomba2); 
 }
 
