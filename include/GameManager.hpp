@@ -18,6 +18,11 @@ class GameManager {
 private:
 
     int map[28][100]; //array of numbers of the map (loaded in game)
+    /* 0-> no collision
+    1->floorBlock
+    2->breakBlock
+    3->surpriseBlock
+    4->finalStaires */
 
     int titleScreen; //in which screen we are
 
@@ -33,6 +38,9 @@ private:
     int op; //arrow selection main menu
     bool soundPlayedOnce = false; //for playing just once some sounds (ex: game over/win sounds)
     bool levelStarted = false; //for restarting the level
+
+    //create a vector that will contain all the entities
+    static vector<Entity*> allEntities;
 
 #pragma region TEXTURES
     Texture2D backgroundTexture;
@@ -85,6 +93,9 @@ public:
 #pragma region GETTERS
     bool getlevelStarted() { return levelStarted; }
     bool retSound() { return soundPlayedOnce; }
+    static vector<Entity*>& getAllEntities() {
+        return allEntities;
+    }
 #pragma endregion
 };
 #endif
