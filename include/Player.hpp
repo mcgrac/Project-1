@@ -48,6 +48,8 @@ private:
     bool immunity;
     bool isWalking;
 
+    int hasPowerUp; // 0 is for nothing, 1 -> flower, 2 -> star
+
     //For spritesheet animation (NOT USED FOR NOW)
     Rectangle frameRec;
     int frameCounter;
@@ -58,7 +60,7 @@ private:
 public:
 
 
-    Player(float x, float y, float width, float height, int id, int state, float speedX, float speedY, float movementSpeed_, int direction_);
+    Player(float x, float y, float width, float height, int id, int state, float speedX, float speedY, float movementSpeed_, int direction_, int hasPowerUp_);
     ~Player();
 
     void applyGravity(float gravity);
@@ -73,6 +75,8 @@ public:
     void isWalkingTrue();
     void isWalkingFalse();
     void modifyHitbox();
+    void increaseState();
+    void starPowerUpTimer();
 
    
 #pragma region GETTERS
