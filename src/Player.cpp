@@ -2,10 +2,11 @@
 #include <cstdio>
 #include<vector>
 #include "SurpriseBlock.hpp"
+#include "Star.hpp"
 
 using namespace std;
 
-Player::Player(float x, float y, float width, float height, int id, int state, float speedX, float speedY, float movementSpeed_, int direction_)
+Player::Player(float x, float y, float width, float height, int id, int state, float speedX, float speedY, float movementSpeed_, int direction_, int hasPowerUp_)
     : Entity(x, y, width, height, id, state),
     speed{ speedX, speedY },
     movementSpeed(movementSpeed_),
@@ -13,12 +14,15 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     colliding(false),
     immunity(false),
     isWalking(false),
-    time(3.0f),
+    time(0),
     frameCounter(0),
     currentFrame(0),
     timer(0),
     frameSpeed(0.1f),
-    direction(direction_){
+    direction(direction_),
+    hasPowerUp(hasPowerUp_)
+
+{
 
 #pragma region TEXTURES
 #pragma region LITTLE MARIO
@@ -110,8 +114,6 @@ Player::~Player() { //destructor -> unload everithing from memory
     UnloadSound(marioDieS);
     UnloadSound(invisibilityS);
 #pragma endregion
-
-
 }
 
 void Player::modifyHitbox() { //this is used for mofifyng the hitbox when mario goes from big to little
@@ -125,6 +127,12 @@ void Player::modifyHitbox() { //this is used for mofifyng the hitbox when mario 
         break;
 
     case 2: //big mario
+
+        hitbox.width = walkLeftBig[0].width;
+        hitbox.height = walkLeftBig[0].height;
+        break;
+
+    case 3: //power mario
 
         hitbox.width = walkLeftBig[0].width;
         hitbox.height = walkLeftBig[0].height;
@@ -248,6 +256,26 @@ void Player::draw() {
         }
         break;
 
+    case 3: //powerUp
+
+        switch (hasPowerUp)
+        {
+        case 1: //drawFlower Mario
+
+            break;
+
+        case 2: //draw star mario
+
+            DrawRectangleRec(hitbox, BLUE);
+            starPowerUpTimer();
+
+            break;
+
+        default:
+            break;
+        }
+        break;
+
     default:
         break;
     }
@@ -282,16 +310,18 @@ void Player::applyGravity(float gravity) {
 
     //Apply gravity
     speed.y += gravity;
-    hitbox.y += speed.y;
+    hitbox.y += speed.y * GetFrameTime();
 }
 void Player::move(int direction, float cameraX) {
+
+    float delta = GetFrameTime(); // time between frames
     float nextX = hitbox.x;
 
     if (direction == 1) {
-        nextX += movementSpeed;
+        nextX += movementSpeed * delta;
     }
     else {
-        nextX -= movementSpeed;
+        nextX -= movementSpeed * delta;
     }
 
     float leftLimit = cameraX - 512.0f / 2.0f; // left side visible of the screen
@@ -306,15 +336,17 @@ void Player::move(int direction, float cameraX) {
 
 void Player::immunityVoid() {
     if (immunity) {
-        time -= GetFrameTime(); //counts back from 3 to 0
-        if (time <= 0) { //counts until three, which is the time of immunity
+        time += GetFrameTime(); //counts back from 3 to 0
+        if (time >= 3) { //counts until three, which is the time of immunity
             immunity = false;
-            time = 3;
+            time = 0;
         }
     }
 }
 
 void Player::colisionsPlayer(vector<Entity*>& e) {
+
+    vector<Entity*> toAdd; // Temporal list
 
     //we use an itarator here because we don't want to make acces to deleted memory
     //we traverse the vector of entities until the end of the list, not having in account the size, because it might change when deleting something
@@ -324,7 +356,7 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
         // Collision with blocks (id == 2)
         if (ent->getId() == 2 && CheckCollisionRecs(hitbox, ent->getHitbox())) {
-            printf("colision con bloque\n");
+            //printf("colision con bloque\n");
 
             if (!ent) { //if the pointer is null
                 ++it; //next iteration
@@ -332,7 +364,6 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
             }
 
             //for checking collisions we use the middle pints of each side and define a different behaviour for each one of them
-
             if (CheckCollisionPointRec(bottom, ent->getHitbox())) { //collision bottom (floor)
                 speed.y = 0;
                 hitbox.y = ent->getHitbox().y - hitbox.height;
@@ -345,7 +376,15 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                 if (SurpriseBlock* surprise = dynamic_cast<SurpriseBlock*>(ent)) { //do a dynamyc cast to know if that pointer has a surpirseBlock element to acces to it
 
-                    surprise->decreaseState();
+                    if (surprise->getState() == 1) { //only create the power up and interact with the block if it has not been hitted (state 1)
+                        Star* star = new Star(ent->getHitbox().x, ent->getHitbox().y, 16, 16, 3, 1, 2);
+                        star->throwPower();
+                        toAdd.push_back(star);
+                        printf("Star created: positionX: %f position Y:%f State: %d Id %d\n", star->getHitbox().x, star->getHitbox().y, star->getState(), star->getId());
+
+                        surprise->decreaseState();
+                    }
+
                 }
             }
 
@@ -371,7 +410,7 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
         // Collisions with goomba (id == 1)
         if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 1) {
-            if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->getState() == 1) { //collision with mario's feet
+            if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->getState() == 1 || hasPowerUp == 2) { //collision with mario's feet or mario has a star powerUp
 
                 if (!ent) {
                     ++it; //next iteration
@@ -384,13 +423,16 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                 ent->decreaseState();
 
-                jump(8.0f);
+                if (hasPowerUp != 2) {
+                    jump(8.0f);
+                }
 
                 delete ent;          // feee memory
                 it = e.erase(it);    // delete from the vector and continue
                 continue; //use continuo for going outside and to the next iteration
             }
             else { //collision with the rest of the body
+
                 printf("COLISION CON GOOMBA\n");
 
                 state--;
@@ -408,6 +450,71 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
             colliding = false;
         }
 
+        // Collisions with powerUp (id == 3)
+        if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 3) {
+
+            if (state == 1) {
+                hitbox.y -= 16; //elevate mario before its hitbox change
+            }
+            state = 3;
+
+            modifyHitbox(); //modify hitbox in case mario gets the power up when he is little
+
+            BaseObject* base = dynamic_cast<BaseObject*>(ent);
+
+            switch (base->getTypePowerUp())
+            {
+            case 0: //mushroom
+
+                break;
+
+            case 1: //flower
+
+                break;
+
+
+            case 2: //star
+
+                hasPowerUp = 2; //has a star powerUp
+                
+                //delete powerUp
+                delete ent;          // feee memory
+                it = e.erase(it);    // delete from the vector and continue
+                continue;  //use continuo for going outside and to the next iteration
+                break;
+
+            default:
+                break;
+            }
+
+        }
+        else {
+
+            colliding = false;
+        }
+
         ++it; //next iteration
+    }
+
+    //add the elements created during the loop before starting the next one
+    for (Entity* newEntity : toAdd) {
+        e.push_back(newEntity);
+    }
+}
+
+void Player::increaseState() {
+
+    state++;
+}
+
+void Player::starPowerUpTimer() {
+
+    if (hasPowerUp == 2) {
+        time += GetFrameTime(); //counts back from 10 to 0
+        if(time >= 10.0f){
+            hasPowerUp = 0; //eliminate PowerUp
+            state = 2; //change to normal big mario
+            time = 0;
+        }
     }
 }
