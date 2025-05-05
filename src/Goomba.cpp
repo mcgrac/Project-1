@@ -32,15 +32,6 @@ float Goomba::getMovementSpeed() {
     return movementSpeed;
 }
 
-//void Goomba::die(Entity*& e, vector<Entity*>& list, int index) {
-//
-//    delete e; 
-//    // liberar memoria
-//
-//    //index = list.erase(index);    // borrar del vector y continuar
-//    //state = 0;
-//    PlaySound(goombaDieS);
-//}
 
 void Goomba::draw() {
 
@@ -70,16 +61,19 @@ void Goomba::draw() {
 }
 
 
-void Goomba::moveGoomba(vector<Entity*>& entity) {
+void Goomba::moveGoomba(vector<Entity*>& entity, float gravity) {
+
+    float delta = GetFrameTime();
+
     // gravity
-    hitbox.y += movementSpeed;
+    hitbox.y += gravity * delta * 15;
 
     // lateral movement
     if (direction == 1) {
-        hitbox.x += (movementSpeed - 4);
+        hitbox.x += (movementSpeed - 4) * delta;
     }
     else {
-        hitbox.x -= (movementSpeed - 4);
+        hitbox.x -= (movementSpeed - 4) * delta;
     }
     
     collisionGoomba(entity);
