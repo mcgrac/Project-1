@@ -68,7 +68,7 @@ void Goomba::moveGoomba(vector<Entity*>& entity, float gravity) {
     float delta = GetFrameTime();
 
     // gravity
-    hitbox.y += gravity * delta * 15;
+    hitbox.y += gravity * delta * 5;
 
     // lateral movement
     if (direction == 1) {
