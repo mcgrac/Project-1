@@ -57,7 +57,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
 
     //traverse all the array
     for (int row = 0; row < 28; ++row) {
-        for (int col = 0; col < 100; ++col) {
+        for (int col = 0; col < 224; ++col) {
             int tile = map[row][col];
             float x = col * TILE_SIZE;
             float y = row * TILE_SIZE;
@@ -97,10 +97,12 @@ void GameManager:: LoadMapFromFile(const string& filename, int rows, int columns
 
 void GameManager::createGoomba(vector<Entity*>& entities) {
 
-    Goomba* goomba = new Goomba(400.0f, 312.0f, 16, 16, 1, 1, 100.0f, 1);
+    printf("goombas created\n");
+
+    Goomba* goomba = new Goomba(400.0f, 300.0f, 16, 16, 1, 1, 100.0f, 1);
     entities.push_back(goomba);
 
-    Goomba* goomba2 = new Goomba(500.0f, 312.0f, 16, 16, 1, 1, 100.0f, -1);
+    Goomba* goomba2 = new Goomba(500.0f, 300.0f, 16, 16, 1, 1, 100.0f, -1);
     entities.push_back(goomba2); 
 }
 
@@ -113,7 +115,7 @@ void GameManager::startLevel(vector<Entity*>& entities) {
         entities.clear(); // clean el vector
     }
 
-    buildLevel(entities, 16, 28, 100); //build level will create all the landscape (blocks and other elements of the map)
+    buildLevel(entities, 16, 28, 224); //build level will create all the landscape (blocks and other elements of the map)
     createGoomba(entities); //create all the enemies (only goombas for the moment)
 }
 
