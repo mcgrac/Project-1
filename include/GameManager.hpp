@@ -24,6 +24,11 @@ private:
     3->surpriseBlock
     4->finalStaires */
 
+    int mapPowerUps[28][224];
+    /* 1->mushroom
+       2->flower
+       3->star*/
+
     int titleScreen; //in which screen we are
 
     //screen 0 -> game
@@ -73,6 +78,7 @@ public:
 
     void buildLevel(vector<Entity*>& entities, int tileSize_, int rows_, int col_);
     void startLevel(vector<Entity*>& entities);
+    void buildPowerUps(const string& filename, int rows, int columns);
 
     int GetScreen();
     int getOp();
