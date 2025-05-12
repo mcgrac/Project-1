@@ -35,6 +35,8 @@ float Goomba::getMovementSpeed() {
 
 void Goomba::draw() {
 
+    printf("Drawing goomba. Position x: %f|position y: %f\n", hitbox.x, hitbox.y);
+
     frameCounter++;
 
     //animation
