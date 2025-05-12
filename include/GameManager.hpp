@@ -17,7 +17,7 @@ using namespace std;
 class GameManager {
 private:
 
-    int map[28][100]; //array of numbers of the map (loaded in game)
+    int map[28][224]; //array of numbers of the map (loaded in game)
     /* 0-> no collision
     1->floorBlock
     2->breakBlock
