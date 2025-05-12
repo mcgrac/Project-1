@@ -47,6 +47,27 @@ GameManager::~GameManager() {
 }
 
 vector<Entity*> GameManager::allEntities;
+void GameManager::buildPowerUps(const string& filename, int rows, int columns) {
+
+    ifstream file(filename);
+
+    if (!file.is_open()) {
+        std::cerr << "No se pudo abrir el archivo de mapa: " << filename << std::endl;
+        return;
+    }
+    else {
+
+        printf("fileOpnened\n");
+    }
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < columns; col++) {
+            file >> mapPowerUps[row][col];
+        }
+    }
+
+    file.close();
+}
 
 void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_, int col_) {
     const int TILE_SIZE = tileSize_;
@@ -54,6 +75,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
     int col = col_;
 
     LoadMapFromFile("resources/assets/map.txt", rows_, col_);
+    buildPowerUps("resources/assets/powerUpsPosition.txt", rows_, col_);
 
     //traverse all the array
     for (int row = 0; row < 28; ++row) {
@@ -69,6 +91,28 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
                 break;
             case 2:
                 entities.push_back(new SurpriseBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 2));
+
+                int tilePower = mapPowerUps[row][col];
+
+                switch (tilePower) {
+
+                case 1: //mushroom
+                    //create mushroom
+                    break;
+
+                case 2: //flower
+                    //create flower
+                    break;
+
+                case 3: //star
+
+                    break;
+
+                default:
+                    break;
+                }
+                //SurpriseBlock* block = new SurpriseBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 2);
+                //BaseObject* powerUp = nullptr;
                 break;
             default:
                 break;
