@@ -17,6 +17,8 @@ private:
 
     Texture2D jumplMarioL;
     Texture2D jumplMarioR;
+
+    Texture2D deadMario;
 #pragma endregion
 
 #pragma region BIG MARIO
@@ -26,6 +28,15 @@ private:
 
     Texture2D jumpbMarioL;
     Texture2D jumpbMarioR;
+#pragma endregion
+
+#pragma region STAR MARIO
+
+    Texture2D walkRightStar[4];
+    Texture2D walkLeftStar[4];
+
+    Texture2D jumpStarLeft;
+    Texture2D jumpStarRight;
 #pragma endregion
 #pragma endregion
 
@@ -66,6 +77,7 @@ public:
     void applyGravity(float gravity);
     void draw() override;
     bool shouldDrawMario(bool immunity);
+    bool shouldUseStarSprite();
     void jump(float jumpForce);
     float getTime();
     void move(int direction, float cameraX);
