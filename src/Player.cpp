@@ -40,6 +40,8 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
 
     jumplMarioL = LoadTexture("resources/textures/Lmario5.png");
     jumplMarioR = LoadTexture("resources/textures/mario5.png");
+
+    deadMario = LoadTexture("resources/textures/deadMario.png");
 #pragma endregion
 
 #pragma region BIG MARIO
@@ -57,6 +59,24 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     jumpbMarioL = LoadTexture("resources/textures/bMarioJumpL.png");
     jumpbMarioR = LoadTexture("resources/textures/bMarioJumpR.png");
 #pragma endregion
+
+#pragma region STAR MARIO
+
+    walkRightStar[0] = LoadTexture("resources/textures/starMario1.png");
+    walkRightStar[1] = LoadTexture("resources/textures/starMario2.png");
+    walkRightStar[2] = LoadTexture("resources/textures/starMario3.png");
+    walkRightStar[3] = LoadTexture("resources/textures/starMario4.png");
+
+    walkLeftStar[0] = LoadTexture("resources/textures/LstarMario1.png");
+    walkLeftStar[1] = LoadTexture("resources/textures/LstarMario2.png");
+    walkLeftStar[2] = LoadTexture("resources/textures/LstarMario3.png");
+    walkLeftStar[3] = LoadTexture("resources/textures/LstarMario4.png");
+
+    jumpStarLeft = LoadTexture("resources/textures/LstarMarioJump.png");
+    jumpStarRight = LoadTexture("resources/textures/starMarioJump.png");
+
+#pragma endregion
+
 #pragma endregion
 
 #pragma region SOUNDS
@@ -158,13 +178,15 @@ float Player::getTime() { //get the time in game
     return time;
 }
 
+bool Player::shouldUseStarSprite() {
+    return ((int)(GetTime() * 10) % 2) == 0;
+}
+
 void Player::draw() {
 
-    
     if (isWalking) { //only run timer if mario is walking
         timer += GetFrameTime();
     }
-
 
     if (timer >= frameSpeed) {
         timer = 0.0f;
@@ -174,40 +196,44 @@ void Player::draw() {
     Vector2 position = { hitbox.x, hitbox.y }; //get the position of mario
 
     switch (state) {
+    case 0: //dead
+
+        DrawTexture(deadMario, position.x, position.y, WHITE);
+        break;
     case 1: // small mario
         if (!isJumping) { //not jumping
             if (direction == 1) { // right
-                if (isWalking) {//if is walking show animation
-                    if (shouldDrawMario(immunity)) {//Do the blinking effect
+                if (isWalking) {
+                    if (shouldDrawMario(immunity)) {
                         DrawTexture(walkRight[currentFrame], position.x, position.y, WHITE);
                     }
                 }
                 else {
-                    if (shouldDrawMario(immunity)) {//Do the blinking effect
+                    if (shouldDrawMario(immunity)) {
                         DrawTexture(walkRight[0], position.x, position.y, WHITE);
                     }
                 }
             }
             else { // left
-                if (isWalking) {//if is walking show animation
-                    if (shouldDrawMario(immunity)) {//Do the blinking effect
+                if (isWalking) {
+                    if (shouldDrawMario(immunity)) {
                         DrawTexture(walkLeft[currentFrame], position.x, position.y, WHITE);
                     }
                 }
                 else {
-                    if (shouldDrawMario(immunity)) {//Do the blinking effect
+                    if (shouldDrawMario(immunity)) {
                         DrawTexture(walkLeft[0], position.x, position.y, WHITE);
                     }
                 }
             }
         }
         else { // jumping
-            if (direction == 1) {// right
+            if (direction == 1) {
                 if (shouldDrawMario(immunity)) {
                     DrawTexture(jumplMarioR, position.x, position.y, WHITE);
                 }
             }
-            else {// left
+            else {
                 if (shouldDrawMario(immunity)) {
                     DrawTexture(jumplMarioL, position.x, position.y, WHITE);
                 }
@@ -216,40 +242,40 @@ void Player::draw() {
         break;
 
     case 2: // Big mario
-        if (!isJumping) {//not jumping
-            if (direction == 1) { // right
-                if (isWalking) { //if is walking show animation
-                    if (shouldDrawMario(immunity)) {//Do the blinking effect
+        if (!isJumping) {
+            if (direction == 1) {
+                if (isWalking) {
+                    if (shouldDrawMario(immunity)) {
                         DrawTexture(walkRightBig[currentFrame], position.x, position.y, WHITE);
                     }
                 }
-                else { //if not show idle sprite
-                    if (shouldDrawMario(immunity)) { //Do the blinking effect
+                else {
+                    if (shouldDrawMario(immunity)) {
                         DrawTexture(walkRightBig[0], position.x, position.y, WHITE);
                     }
                 }
             }
-            else { // left
-                if (isWalking) {//if is walking show animation
-                    if (shouldDrawMario(immunity)) {//Do the blinking effect
+            else {
+                if (isWalking) {
+                    if (shouldDrawMario(immunity)) {
                         DrawTexture(walkLeftBig[currentFrame], position.x, position.y, WHITE);
                     }
                 }
                 else {
-                    if (shouldDrawMario(immunity)) {//Do the blinking effect
+                    if (shouldDrawMario(immunity)) {
                         DrawTexture(walkLeftBig[0], position.x, position.y, WHITE);
                     }
                 }
             }
         }
         else { // jumping
-            if (direction == 1) {// right
-                if (shouldDrawMario(immunity)) {//Do the blinking effect
+            if (direction == 1) {
+                if (shouldDrawMario(immunity)) {
                     DrawTexture(jumpbMarioR, position.x, position.y, WHITE);
                 }
             }
-            else {// left
-                if (shouldDrawMario(immunity)) {//Do the blinking effect
+            else {
+                if (shouldDrawMario(immunity)) {
                     DrawTexture(jumpbMarioL, position.x, position.y, WHITE);
                 }
             }
@@ -257,24 +283,81 @@ void Player::draw() {
         break;
 
     case 3: //powerUp
+    {
+        bool useStarSprite = shouldUseStarSprite();
 
         switch (hasPowerUp)
         {
         case 1: //drawFlower Mario
-
             break;
 
         case 2: //draw star mario
-
-            DrawRectangleRec(hitbox, BLUE);
             starPowerUpTimer();
 
+            if (!isJumping) {
+                if (direction == 1) {
+                    if (isWalking) {
+                        if (useStarSprite) {
+                            DrawTexture(walkRightStar[currentFrame], position.x, position.y, WHITE);
+                        }
+                        else {
+                            DrawTexture(walkRightBig[currentFrame], position.x, position.y, WHITE);
+                        }
+                    }
+                    else {
+                        if (useStarSprite) {
+                            DrawTexture(walkRightStar[0], position.x, position.y, WHITE);
+                        }
+                        else {
+                            DrawTexture(walkRightBig[0], position.x, position.y, WHITE);
+                        }
+                    }
+                }
+                else {
+                    if (isWalking) {
+                        if (useStarSprite) {
+                            DrawTexture(walkLeftStar[currentFrame], position.x, position.y, WHITE);
+                        }
+                        else {
+                            DrawTexture(walkLeftBig[currentFrame], position.x, position.y, WHITE);
+                        }
+                    }
+                    else {
+                        if (useStarSprite) {
+                            DrawTexture(walkLeftStar[0], position.x, position.y, WHITE);
+                        }
+                        else {
+                            DrawTexture(walkLeftBig[0], position.x, position.y, WHITE);
+                        }
+                    }
+                }
+            }
+            else {
+                if (direction == 1) {
+                    if (useStarSprite) {
+                        DrawTexture(jumpStarRight, position.x, position.y, WHITE);
+                    }
+                    else {
+                        DrawTexture(jumplMarioR, position.x, position.y, WHITE);
+                    }
+                }
+                else {
+                    if (useStarSprite) {
+                        DrawTexture(jumpStarLeft, position.x, position.y, WHITE);
+                    }
+                    else {
+                        DrawTexture(jumplMarioL, position.x, position.y, WHITE);
+                    }
+                }
+            }
             break;
 
         default:
             break;
         }
+
         break;
+    }
 
     default:
         break;
@@ -424,7 +507,7 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                 ent->decreaseState();
 
                 if (hasPowerUp != 2) {
-                    jump(8.0f);
+                    jump(350.0f);
                 }
 
                 delete ent;          // feee memory
