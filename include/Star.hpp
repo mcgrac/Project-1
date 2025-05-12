@@ -6,8 +6,10 @@ class Star : public BaseObject {
 private:
 
 	Texture2D star;
+	Texture2D star2;
+
 	Vector2 velocity{ 60.0f,0 };
-	const float terminalVelocityY = 5.0f;
+	const float terminalVelocityY = 500.0f;
 
 
 protected:
@@ -27,4 +29,3 @@ public:
 
 	void handleCollision();
 };
-
