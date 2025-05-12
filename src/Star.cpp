@@ -3,7 +3,8 @@
 
 Star::Star(float x, float y, float width, float height, int id, int state, int typePower_) : BaseObject(x, y, width, height, id, state, typePower_){
 
-	star = LoadTexture("resources/textures/coin.png");
+    star = LoadTexture("resources/textures/star1.png");
+    star2 = LoadTexture("resources/textures/star2.png");
 }
 
 Star::~Star() {
@@ -45,7 +46,7 @@ void Star::update(float gravity) {
         velocity.y += gravity;
         if (velocity.y > terminalVelocityY) { velocity.y = terminalVelocityY; } //prevents the gravity to be too much high
 
-        hitbox.y += velocity.y;
+        hitbox.y += velocity.y * delta;
         //handleCollisionY();
 
         handleCollision();
@@ -69,7 +70,7 @@ void Star::handleCollision() {
             // Colisión con el suelo (cayendo)
             if (velocity.y > 0 && CheckCollisionPointRec(bottom, block)) {
                 hitbox.y = block.y - hitbox.height;
-                velocity.y = -50.0f; // Rebote hacia arriba (puedes ajustar la fuerza)
+                velocity.y = -200.0f; // Rebote hacia arriba (puedes ajustar la fuerza)
             }
 
             // Colisión con el techo (subiendo)
@@ -143,4 +144,3 @@ void Star::draw() {
 
     DrawTexture(star, hitbox.x, hitbox.y, WHITE);
 }
-
