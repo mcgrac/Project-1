@@ -17,7 +17,6 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "GameManager.hpp"
 #include "SurpriseBlock.hpp"
 #include"NormalBlock.hpp"
-#include "PowerUp.hpp"
 #include"GameCamera.hpp"
 #include"Star.hpp"
 
@@ -41,14 +40,14 @@ int main()
 
 	GameManager gm(1, 0); //create a game manager for controlling the game flow
 	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0); //create Mario
-	GameCamera camera(screenWidth, 0, 1952); //create the camera
+	GameCamera camera(screenWidth, 0, 3584); //create the camera
 
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
 	{
 		gm.playSounds(); //this will call all the sounds
 
-		if (mario->getHitbox().x >= 1000) { //If mario arrives to the end of the level
+		if (mario->getHitbox().x >= 3300) { //If mario arrives to the end of the level
 
 			gm.win(); //call win function
 
@@ -92,6 +91,10 @@ int main()
 			if (!gm.getlevelStarted()) {
 
 				gm.startLevel(gm.getAllEntities());
+
+				for (int i = 0; i < gm.getAllEntities().size();i++) {
+					printf("Entity id: %d| state: %d\n", gm.getAllEntities()[i]->getId(), gm.getAllEntities()[i]->getState());
+				}
 				gm.mapCreated();
 			}
 
