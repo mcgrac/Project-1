@@ -19,6 +19,9 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include"NormalBlock.hpp"
 #include"GameCamera.hpp"
 #include"Star.hpp"
+#include "Flower.hpp"    
+#include <cstdlib>  // for std::srand
+#include <ctime>    // for std::time
 
 using namespace std;
 
@@ -37,6 +40,10 @@ int main()
 
 	InitWindow(screenWidth, screenHeight, "Super MarioBros"); //Initialize the screen
 	InitAudioDevice(); //Initialize audio device for the sounds
+	std::srand((unsigned)std::time(nullptr));
+	Flower::LoadAssets();
+	
+	
 
 	GameManager gm(1, 0); //create a game manager for controlling the game flow
 	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0); //create Mario
@@ -213,6 +220,10 @@ int main()
 		// end drawing and the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
 	}
+
+
+	Flower::UnloadAssets();
+	
 
 	//finish the audio device
 	CloseAudioDevice();

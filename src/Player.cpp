@@ -1,8 +1,10 @@
-#include "Player.hpp"
+﻿#include "Player.hpp"
 #include <cstdio>
 #include<vector>
 #include "SurpriseBlock.hpp"
 #include "Star.hpp"
+#include "Flower.hpp"
+#include <cstdlib>   // for std::rand()
 
 using namespace std;
 
@@ -288,8 +290,52 @@ void Player::draw() {
 
         switch (hasPowerUp)
         {
-        case 1: //drawFlower Mario
-            break;
+        case 1: // Fire‐Flower Mario
+        {
+            // flash exactly like Star Mario
+            starPowerUpTimer();
+
+            if (!isJumping)
+            {
+                if (direction == 1)
+                {
+                    // walking right
+                    if (isWalking)
+                        DrawTexture(useStarSprite ? walkRightStar[currentFrame]
+                        : walkRightBig[currentFrame],
+                            position.x, position.y, WHITE);
+                    else
+                        DrawTexture(useStarSprite ? walkRightStar[0]
+                            : walkRightBig[0],
+                            position.x, position.y, WHITE);
+                }
+                else
+                {
+                    // walking left
+                    if (isWalking)
+                        DrawTexture(useStarSprite ? walkLeftStar[currentFrame]
+                        : walkLeftBig[currentFrame],
+                            position.x, position.y, WHITE);
+                    else
+                        DrawTexture(useStarSprite ? walkLeftStar[0]
+                            : walkLeftBig[0],
+                            position.x, position.y, WHITE);
+                }
+            }
+            else
+            {
+                // jumping
+                if (direction == 1)
+                    DrawTexture(useStarSprite ? jumpStarRight
+                        : jumplMarioR,
+                        position.x, position.y, WHITE);
+                else
+                    DrawTexture(useStarSprite ? jumpStarLeft
+                        : jumplMarioL,
+                        position.x, position.y, WHITE);
+            }
+        }
+        break;
 
         case 2: //draw star mario
             starPowerUpTimer();
@@ -457,14 +503,27 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                 hitbox.y = ent->getHitbox().y + ent->getHitbox().height;
                 speed.y = 1.0f;
 
-                if (SurpriseBlock* surprise = dynamic_cast<SurpriseBlock*>(ent)) { //do a dynamyc cast to know if that pointer has a surpirseBlock element to acces to it
-
-                    if (surprise->getState() == 1) { //only create the power up and interact with the block if it has not been hitted (state 1)
-                        Star* star = new Star(ent->getHitbox().x, ent->getHitbox().y, 16, 16, 3, 1, 2);
-                        star->throwPower();
-                        toAdd.push_back(star);
-                        printf("Star created: positionX: %f position Y:%f State: %d Id %d\n", star->getHitbox().x, star->getHitbox().y, star->getState(), star->getId());
-
+                if (SurpriseBlock* surprise = dynamic_cast<SurpriseBlock*>(ent)) {
+                    if (surprise->getState() == 1) {
+                        // 50/50 chance of Star vs Fire Flower
+                        if (std::rand() % 2 == 0) {
+                            Star* star = new Star(ent->getHitbox().x, ent->getHitbox().y,
+                                16, 16, /*id=*/3, /*state=*/1, /*type=*/2);
+                            star->throwPower();
+                            toAdd.push_back(star);
+                            printf("Star created at (%f, %f)\n",
+                                star->getHitbox().x, star->getHitbox().y);
+                        }
+                        else {
+                            // center flower horizontally on block, and place it just above the block
+                            float fx = ent->getHitbox().x + (ent->getHitbox().width - 16) * 0.5f;
+                            float fy = ent->getHitbox().y - 16.0f;
+                            Flower* flower = new Flower(fx, fy, 16, 16,
+                                /*id=*/3, /*state=*/1, /*type=*/1);
+                            flower->throwPower();
+                            toAdd.push_back(flower);
+                            printf("Flower created at (%f, %f)\n", fx, fy);
+                        }
                         surprise->decreaseState();
                     }
 
@@ -551,9 +610,24 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                 break;
 
-            case 1: //flower
+            case 1:  // Flower pickup
+            {
+                // 1) Enter the Power-Up state
+                state = 3;    // Power-Up Mario
+                hasPowerUp = 1;    // 1 == Flower
 
-                break;
+                modifyHitbox();     // adjust hitbox for power-up
+
+                // 2) (Optional) play a “flower pickup” sound
+                // PlaySound(flowerPickupSound);
+                 // 2) Play the power-up jingle:
+                PlaySound(Flower::sPickupSound);
+
+                // 3) Remove the flower so it “poofs away”
+                delete ent;
+                it = e.erase(it);
+                continue;  // skip ahead in the loop
+            }
 
 
             case 2: //star
