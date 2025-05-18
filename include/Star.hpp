@@ -1,5 +1,8 @@
+#pragma once
 #include"raylib.h"
 #include "BaseObject.hpp"
+
+//class GameManager;
 
 class Star : public BaseObject {
 
@@ -10,7 +13,6 @@ private:
 
 	Vector2 velocity{ 60.0f,0 };
 	const float terminalVelocityY = 500.0f;
-
 
 protected:
 
@@ -23,9 +25,6 @@ public:
 
 	void update(float gravity);
 	void draw() override;
-
-	void handleCollisionX();
-	void handleCollisionY();
 
 	void handleCollision();
 };
