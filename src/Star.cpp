@@ -1,6 +1,7 @@
 #include"Star.hpp"
 #include"GameManager.hpp"
 
+
 Star::Star(float x, float y, float width, float height, int id, int state, int typePower_) : BaseObject(x, y, width, height, id, state, typePower_){
 
     star = LoadTexture("resources/textures/star1.png");
@@ -24,7 +25,7 @@ void Star::update(float gravity) {
 
     float delta = GetFrameTime();
 
-    if (emerging) {
+    if (emerging && !touched) { //start to emerge
 
         float delta = GetFrameTime();
         float move = emergeSpeed * delta * 60;
@@ -32,10 +33,10 @@ void Star::update(float gravity) {
         emergedSoFar += move;
         if (emergedSoFar >= maxEmerge) {
             emerging = false;
-
+            touched = true;
         }
     }
-    else {
+    else if (!emerging && touched){
         
         updateRects(); //necesary for updating the mid points of the hitbox
 
@@ -89,52 +90,6 @@ void Star::handleCollision() {
             else if (velocity.x > 0 && CheckCollisionPointRec(right, block)) {
                 hitbox.x = block.x - hitbox.width - push;
                 velocity.x *= -1;
-            }
-        }
-    }
-}
-
-void Star::handleCollisionX() {
-    const float push = 0.1f;
-
-    for (Entity* ent : GameManager::getAllEntities()) {
-        if (ent->getId() != 2) continue;
-
-        Rectangle block = ent->getHitbox();
-        if (CheckCollisionRecs(getHitbox(), block)) {
-
-            // Colisión por la izquierda (está yendo hacia la izquierda)
-            if (velocity.x < 0 && CheckCollisionPointRec(left, block)) {
-                hitbox.x = block.x + block.width + push;
-                velocity.x *= -1;
-            }
-
-            // Colisión por la derecha (está yendo hacia la derecha)
-            else if (velocity.x > 0 && CheckCollisionPointRec(right, block)) {
-                hitbox.x = block.x - hitbox.width - push;
-                velocity.x *= -1;
-            }
-        }
-    }
-}
-
-void Star::handleCollisionY() {
-    for (Entity* ent : GameManager::getAllEntities()) {
-        if (ent->getId() != 2) continue;
-
-        Rectangle block = ent->getHitbox();
-        if (CheckCollisionRecs(getHitbox(), block)) {
-
-            // Colisión con el suelo (cayendo)
-            if (velocity.y > 0 && CheckCollisionPointRec(bottom, block)) {
-                hitbox.y = block.y - hitbox.height;
-                //velocity.y = -6.0f; // Rebote hacia arriba (puedes ajustar la fuerza)
-            }
-
-            // Colisión con el techo (subiendo)
-            else if (velocity.y < 0 && CheckCollisionPointRec(top, block)) {
-                hitbox.y = block.y + block.height;
-                velocity.y = 0.0f;
             }
         }
     }
