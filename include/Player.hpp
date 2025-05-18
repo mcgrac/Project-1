@@ -1,6 +1,10 @@
 #pragma once
 #include "raylib.h"
 #include "Entity.hpp"
+#include "SurpriseBlock.hpp"
+#include "Star.hpp"
+#include"Mushroom.hpp"
+#include"Flower.hpp"
 #include <vector>
 
 class Player : public Entity {
