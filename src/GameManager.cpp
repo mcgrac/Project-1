@@ -57,7 +57,7 @@ void GameManager::buildPowerUps(const string& filename, int rows, int columns) {
     }
     else {
 
-        printf("fileOpnened\n");
+        printf("fileOpnenedPowerUps\n");
     }
 
     for (int row = 0; row < rows; row++) {
@@ -89,23 +89,50 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
             case 1:
                 entities.push_back(new NormalBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 1));
                 break;
-            case 2:
-                entities.push_back(new SurpriseBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 2));
+            case 2: {
+
+                SurpriseBlock* s = new SurpriseBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 2);
+
+                entities.push_back(s);
 
                 int tilePower = mapPowerUps[row][col];
 
+                //Entity* entity = BaseObject::createPowerUp(x, y, TILE_SIZE, TILE_SIZE, 3, 1, tilePower); //create a base object which defines the type of powerUp
+
+                //entities.push_back(entity); //add the new entoty(base object to the list)
+
+                if (tilePower == 1 || tilePower == 2 || tilePower == 3) {
+                    printf("PowerUp Found\n");
+                }
                 switch (tilePower) {
 
-                case 1: //mushroom
+                case 1: {//mushroom
+                    Mushroom* mushroom = new Mushroom(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 1);
+
+                    entities.push_back(mushroom);
+                    s->getPowerUp(mushroom);
+
                     //create mushroom
+                }
                     break;
 
-                case 2: //flower
+                case 2: {//flower
+
+                    Flower* flower = new Flower(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 2);
+
+                    entities.push_back(flower);
+                    s->getPowerUp(flower);
                     //create flower
+                }
                     break;
 
-                case 3: //star
+                case 3: {//star
+                    Star* star = new Star(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 3);
 
+                    entities.push_back(star);
+                    s->getPowerUp(star); //asigns to that spececific surpirse block an stored powerUp
+
+                }
                     break;
 
                 default:
@@ -114,6 +141,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
                 //SurpriseBlock* block = new SurpriseBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 2);
                 //BaseObject* powerUp = nullptr;
                 break;
+            }
             default:
                 break;
             }
@@ -128,6 +156,9 @@ void GameManager:: LoadMapFromFile(const string& filename, int rows, int columns
     if (!file.is_open()) {
         std::cerr << "No se pudo abrir el archivo de mapa: " << filename << std::endl;
         return;
+    }
+    else {
+        printf("fileMapOpened\n");
     }
 
     for (int row = 0; row < rows; row++) {
@@ -320,7 +351,7 @@ void GameManager::drawScreen(Camera2D c, int width, int heigh) {
         DrawTextureRec(
             backgroundTexture,
             Rectangle{ c.target.x, 0.0f, (float)width, (float)heigh },
-            Vector2{ 0.0f, -32.0f },
+            Vector2{ 0.0f, 0.0f },
             WHITE
         );
         break;
