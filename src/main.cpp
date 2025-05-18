@@ -19,6 +19,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include"NormalBlock.hpp"
 #include"GameCamera.hpp"
 #include"Star.hpp"
+#include"Mushroom.hpp"
+#include"Flower.hpp"
 
 using namespace std;
 
@@ -156,6 +158,7 @@ int main()
 			//------IA CONTROLS------//
 			for (Entity* e : gm.getAllEntities()) {
 
+
 				//do a dynamic cast and getting only the entities that are goombas and access to their functions/also check if it's null for avoiding invalid access in memory
 				Goomba* g = dynamic_cast<Goomba*>(e);
 				if (g != nullptr) {
@@ -166,6 +169,16 @@ int main()
 				Star* s = dynamic_cast<Star*>(e);
 				if ( s != nullptr) { //if it is a power up not null
 					s->update(GRAVITY);
+				}
+
+				Mushroom* m = dynamic_cast<Mushroom*>(e);
+				if (m != nullptr) { //if it is a power up not null
+					m->update(GRAVITY);
+				}
+
+				Flower* f = dynamic_cast<Flower*>(e);
+				if (f != nullptr) {
+					f->update(GRAVITY);
 				}
 			}
 
