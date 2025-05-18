@@ -1,8 +1,7 @@
 #include "Player.hpp"
 #include <cstdio>
 #include<vector>
-#include "SurpriseBlock.hpp"
-#include "Star.hpp"
+
 
 using namespace std;
 
@@ -161,6 +160,8 @@ void Player::modifyHitbox() { //this is used for mofifyng the hitbox when mario 
     default:
         break;
     }
+
+    //printf("MarioState after modifyng= %d\n", state);
 }
 void Player::isWalkingTrue() { //called while the key arrows are pressed
     isWalking = true;
@@ -429,6 +430,8 @@ void Player::immunityVoid() {
 
 void Player::colisionsPlayer(vector<Entity*>& e) {
 
+    printf("MarioState= %d\n", state);
+
     vector<Entity*> toAdd; // Temporal list
 
     //we use an itarator here because we don't want to make acces to deleted memory
@@ -460,10 +463,14 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                 if (SurpriseBlock* surprise = dynamic_cast<SurpriseBlock*>(ent)) { //do a dynamyc cast to know if that pointer has a surpirseBlock element to acces to it
 
                     if (surprise->getState() == 1) { //only create the power up and interact with the block if it has not been hitted (state 1)
-                        Star* star = new Star(ent->getHitbox().x, ent->getHitbox().y, 16, 16, 3, 1, 2);
-                        star->throwPower();
-                        toAdd.push_back(star);
-                        printf("Star created: positionX: %f position Y:%f State: %d Id %d\n", star->getHitbox().x, star->getHitbox().y, star->getState(), star->getId());
+
+                        //Star* star = new Star(ent->getHitbox().x, ent->getHitbox().y, 16, 16, 3, 1, 2);
+                        //star->throwPower();
+                        //toAdd.push_back(star);
+
+                        surprise->retPowerUp()->throwPower(); //throw the power of the corresponding powerUp (NOW)
+                        //toAdd.push_back(surprise->retPowerUp());
+                        printf("Star created: positionX: %f position Y:%f State: %d Id %d\n", surprise->retPowerUp()->getHitbox().x, surprise->retPowerUp()->getHitbox().y, surprise->retPowerUp()->getState(), surprise->retPowerUp()->getId());
 
                         surprise->decreaseState();
                     }
@@ -536,39 +543,57 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
         // Collisions with powerUp (id == 3)
         if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 3) {
 
+            //printf("MarioState before moddifying= %d\n", state);
             if (state == 1) {
                 hitbox.y -= 16; //elevate mario before its hitbox change
             }
-            state = 3;
-
-            modifyHitbox(); //modify hitbox in case mario gets the power up when he is little
 
             BaseObject* base = dynamic_cast<BaseObject*>(ent);
 
-            switch (base->getTypePowerUp())
-            {
-            case 0: //mushroom
+            //printf("getPowerUp\n");
 
-                break;
+            if (base->getTouched()) {
+                switch (base->getTypePowerUp())
+                {
+                case 1: //mushroom
 
-            case 1: //flower
+                    if (state == 1) { state = 2; } //change from small mario to big mario
 
-                break;
+                    delete ent;          // feee memory
+                    printf("mushroom collided");
+                    it = e.erase(it);    // delete from the vector and continue
+                    //continue;  //use continuo for going outside and to the next iteration
+
+                    break;
+
+                case 2: //flower
+                    printf("flower collided\n");
+                    state = 3;
+                    hasPowerUp = 1;
+
+                    delete ent;
+                    it = e.erase(it);
+                    break;
 
 
-            case 2: //star
+                case 3: //star
 
-                hasPowerUp = 2; //has a star powerUp
-                
-                //delete powerUp
-                delete ent;          // feee memory
-                it = e.erase(it);    // delete from the vector and continue
-                continue;  //use continuo for going outside and to the next iteration
-                break;
+                    state = 3;
+                    hasPowerUp = 2; //has a star powerUp
 
-            default:
-                break;
+                    //delete powerUp
+                    delete ent;          // feee memory
+                    it = e.erase(it);    // delete from the vector and continue
+                    //continue;  //use continuo for going outside and to the next iteration
+                    break;
+
+                default:
+                    break;
+                }
             }
+
+            modifyHitbox(); //modify hitbox in case mario gets the power up when he is little
+
 
         }
         else {
