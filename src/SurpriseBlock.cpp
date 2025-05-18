@@ -1,4 +1,5 @@
 #include"SurpriseBlock.hpp"
+#include"BaseObject.hpp"
 
 SurpriseBlock::SurpriseBlock(float x, float y, float width, float heigh, int id, int state, int type_):Block(x, y, width, heigh, id, state, type_), powerGiven(false){
 
@@ -13,10 +14,13 @@ SurpriseBlock::~SurpriseBlock() {};
 
 void SurpriseBlock::givePowerUp() {
 
-
 	powerGiven = true;
 }
 
+void SurpriseBlock::getPowerUp(BaseObject* b) {
+
+	powerUpStored = b;
+}
 void SurpriseBlock::draw() {
 
 	//printf("SURPRISE BLOCK DRAW.  state: %d\n", state);
