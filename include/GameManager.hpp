@@ -9,6 +9,11 @@
 #include "SurpriseBlock.hpp"
 #include "BreakBlock.hpp"
 #include"NormalBlock.hpp"
+#include"Star.hpp" //problema
+#include"Flower.hpp"//problema
+#include"Mushroom.hpp"//problema
+//#include"Coin.hpp"//problema
+#include"BaseObject.hpp" //inlcuded now
 #include <iostream>
 #include <fstream>
 
