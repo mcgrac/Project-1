@@ -12,8 +12,9 @@
 #include"Star.hpp" //problema
 #include"Flower.hpp"//problema
 #include"Mushroom.hpp"//problema
-//#include"Coin.hpp"//problema
+#include"Coin.hpp"//problema
 #include"BaseObject.hpp" //inlcuded now
+#include"Player.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -27,7 +28,8 @@ private:
     1->floorBlock
     2->breakBlock
     3->surpriseBlock
-    4->finalStaires */
+    4->finalStaires 
+    5-> coinsInMap*/
 
     int mapPowerUps[28][224];
     /* 1->mushroom
@@ -107,6 +109,8 @@ public:
     static vector<Entity*>& getAllEntities() {
         return allEntities;
     }
+
+    //float Score() { return getScorePlayer(); }
 #pragma endregion
 };
 #endif
