@@ -19,6 +19,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include"NormalBlock.hpp"
 #include"GameCamera.hpp"
 #include"Star.hpp"
+#include"Coin.hpp"
 #include"Mushroom.hpp"
 #include"Flower.hpp"
 
@@ -164,6 +165,8 @@ int main()
 				if (g != nullptr) {
 					g->updateRects();
 					g->moveGoomba(gm.getAllEntities(), GRAVITY);
+
+
 				}
 
 				Star* s = dynamic_cast<Star*>(e);
@@ -179,6 +182,11 @@ int main()
 				Flower* f = dynamic_cast<Flower*>(e);
 				if (f != nullptr) {
 					f->update(GRAVITY);
+				}
+
+				Coin* c = dynamic_cast<Coin*>(e);
+				if (c != nullptr) {
+					c->update();
 				}
 			}
 
