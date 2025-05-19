@@ -23,6 +23,9 @@ private:
     int currentFrame = 0;
     int frameSpeed = 10;
 
+    bool touched = false;
+    float clock = 0.0f;
+
 protected:
     float movementSpeed;
     int direction;
@@ -35,6 +38,9 @@ public:
 
     void draw() override;
 
+    void update();
+
+    void die();
     void moveGoomba(vector<Entity*>& entity, float gravity);
     void collisionGoomba(vector<Entity*>& entity);
 };
