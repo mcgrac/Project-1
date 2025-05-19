@@ -89,7 +89,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
             case 1:
                 entities.push_back(new NormalBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 1));
                 break;
-            case 2: {
+            case 2: { //surpriseBlock
 
                 SurpriseBlock* s = new SurpriseBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 2);
 
@@ -135,11 +135,24 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
                 }
                     break;
 
+                case 4:{ //coin
+                    Coin* coin = new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, true);
+
+                    entities.push_back(coin);
+                    s->getPowerUp(coin);
+                    
+                    }
+                      break;
+
                 default:
                     break;
                 }
-                //SurpriseBlock* block = new SurpriseBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 2);
-                //BaseObject* powerUp = nullptr;
+                break;
+            }
+             
+            case 5: {
+                entities.push_back(new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, false));
+
                 break;
             }
             default:
