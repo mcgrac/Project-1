@@ -64,6 +64,8 @@ private:
     bool isWalking;
 
     int hasPowerUp; // 0 is for nothing, 1 -> flower, 2 -> star
+    float score;
+
 
     //For spritesheet animation (NOT USED FOR NOW)
     Rectangle frameRec;
@@ -102,5 +104,6 @@ public:
     bool retJumping() { return isJumping; }
     bool retColliding() { return colliding; }
     bool retIsWalking() { return isWalking; };
+    float getScorePlayer() { return score; }
 #pragma endregion
 };
