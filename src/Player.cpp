@@ -5,6 +5,12 @@
 #include "Star.hpp"
 #include "Flower.hpp"
 #include <cstdlib>   // for std::rand()
+#include "raylib.h"  // for GetFrameTime(), IsKeyPressed, etc.
+#define GRAVITY 20.0f  // same as your main.cpp
+
+using std::vector;
+
+#pragma region CTOR/DTOR
 
 using namespace std;
 
@@ -12,7 +18,7 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     : Entity(x, y, width, height, id, state),
     speed{ speedX, speedY },
     movementSpeed(movementSpeed_),
-    isJumping(false),
+    isJumping(false),       
     colliding(false),
     immunity(false),
     isWalking(false),
@@ -22,7 +28,8 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     timer(0),
     frameSpeed(0.1f),
     direction(direction_),
-    hasPowerUp(hasPowerUp_)
+    hasPowerUp(hasPowerUp_),
+    flowerTime(0.0f)
 
 {
 
@@ -672,6 +679,20 @@ void Player::starPowerUpTimer() {
             hasPowerUp = 0; //eliminate PowerUp
             state = 2; //change to normal big mario
             time = 0;
+        }
+    }
+}
+
+void Player::flowerPowerUpTimer() {
+    if (hasPowerUp == 1) {
+        // Count up each frame
+        flowerTime += GetFrameTime();
+        if (flowerTime >= 5.0f) {
+            // 5 seconds elapsed → lose flower power
+            hasPowerUp = 0;    // no power-up
+            state = 2;    // back to Big Mario
+            flowerTime = 0.0f; // reset timer
+            modifyHitbox();     // restore hitbox size
         }
     }
 }

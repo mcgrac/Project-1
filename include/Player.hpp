@@ -60,7 +60,7 @@ private:
     bool isWalking;
 
     int hasPowerUp; // 0 is for nothing, 1 -> flower, 2 -> star
-
+    float flowerTime;  // seconds since flower pickup
     //For spritesheet animation (NOT USED FOR NOW)
     Rectangle frameRec;
     int frameCounter;
@@ -89,6 +89,8 @@ public:
     void modifyHitbox();
     void increaseState();
     void starPowerUpTimer();
+    void flowerPowerUpTimer();
+
 
    
 #pragma region GETTERS
@@ -98,5 +100,9 @@ public:
     bool retJumping() { return isJumping; }
     bool retColliding() { return colliding; }
     bool retIsWalking() { return isWalking; };
+
+    /// Returns the currently held power-up type (0 = none, 1 = flower, 2 = star)
+    int getPowerUpType() const { return hasPowerUp; }
+
 #pragma endregion
 };

@@ -30,9 +30,9 @@ Flower::Flower(float x, float y, float width, float height,
 }
 
 void Flower::throwPower() {
-    // Start emerging animation
+    // Start emerging animation,  resets the pop-up distance.
     emerging = true;
-    emergedSoFar = 0.0f;
+    emergedSoFar = 0.0f;                                                                                                        
     // Initialize horizontal float once popped
     velocity.x = floatSpeed * direction;
     PlaySound(sSndSpawn);

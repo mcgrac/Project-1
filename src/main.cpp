@@ -19,7 +19,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include"NormalBlock.hpp"
 #include"GameCamera.hpp"
 #include"Star.hpp"
-#include "Flower.hpp"    
+#include "Flower.hpp"  
+#include "Fireball.hpp" 
 #include <cstdlib>  // for std::srand
 #include <ctime>    // for std::time
 
@@ -42,6 +43,8 @@ int main()
 	InitAudioDevice(); //Initialize audio device for the sounds
 	std::srand((unsigned)std::time(nullptr));
 	Flower::LoadAssets();
+	Fireball::LoadAssets();
+
 	
 	
 
@@ -160,6 +163,21 @@ int main()
 				mario->jump(JUMP_FORCE);
 			}
 
+			// after your Mario movement & jumping code, before the AI loop:
+			if (mario->getPowerUpType() == 1 && IsKeyPressed(KEY_S)) {
+				// spawn fireball at Mario’s mouth
+				Rectangle m = mario->getHitbox();
+				Fireball* fb = new Fireball(
+					m.x + (m.width / 2),           // start X near center
+					m.y + (m.height / 2),          // start Y mid-body
+					8, 8,                        // size
+					mario->getDir() == 1 ? 1 : -1 // direction
+				);
+				GameManager::getAllEntities().push_back(fb);
+			}
+
+
+
 			//------IA CONTROLS------//
 			for (Entity* e : gm.getAllEntities()) {
 
@@ -175,6 +193,33 @@ int main()
 					s->update(GRAVITY);
 				}
 			}
+
+			// Update Fireballs
+			for (Entity* e : gm.getAllEntities()) {
+				if (auto fb = dynamic_cast<Fireball*>(e)) {
+					fb->update(GRAVITY);
+				}
+			}
+
+			// Remove dead Fireballs
+			{
+				auto& ents = gm.getAllEntities();
+				ents.erase(
+					remove_if(ents.begin(), ents.end(),
+						[&](Entity* e) {
+							if (auto fb = dynamic_cast<Fireball*>(e)) {
+								if (!fb->isAlive()) {
+									delete fb;
+									return true;
+								}
+							}
+							return false;
+						}
+					), ents.end()
+				);
+			}
+			mario->flowerPowerUpTimer();
+
 
 			//------CAMERA CONTROLS------//
 			camera.update(mario->getHitbox());
@@ -222,7 +267,9 @@ int main()
 	}
 
 
+	Fireball::UnloadAssets();
 	Flower::UnloadAssets();
+
 	
 
 	//finish the audio device
