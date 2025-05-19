@@ -3,9 +3,9 @@
 #include"Entity.hpp"
 
 
-class Star;
-class Mushroom;
-class Flower;
+//class Star;
+//class Mushroom;
+//class Flower;
 
 class BaseObject : public Entity {
 
@@ -14,7 +14,7 @@ private:
 
 protected:
 
-	int typePower; //1 -> mushroom, 2->flower, 3->star
+	int typePower; //1 -> mushroom, 2->flower, 3->star, 4->coin
 
 	bool touched = false;
 	bool emerging = false; // Al principio está saliendo del bloque
