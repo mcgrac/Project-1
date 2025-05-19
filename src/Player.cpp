@@ -19,7 +19,8 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     timer(0),
     frameSpeed(0.1f),
     direction(direction_),
-    hasPowerUp(hasPowerUp_)
+    hasPowerUp(hasPowerUp_),
+    score(0.0f)
 
 {
 
@@ -511,11 +512,14 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                 PlaySound(jumpGoombaS);
 
+                //ent->tou
                 ent->decreaseState();
 
                 if (hasPowerUp != 2) {
                     jump(350.0f);
                 }
+
+                //animacion
 
                 delete ent;          // feee memory
                 it = e.erase(it);    // delete from the vector and continue
@@ -544,30 +548,36 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
         if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 3) {
 
             //printf("MarioState before moddifying= %d\n", state);
-            if (state == 1) {
-                hitbox.y -= 16; //elevate mario before its hitbox change
-            }
+
 
             BaseObject* base = dynamic_cast<BaseObject*>(ent);
 
-            //printf("getPowerUp\n");
+            printf("getPowerUp\n");
 
             if (base->getTouched()) {
                 switch (base->getTypePowerUp())
                 {
                 case 1: //mushroom
 
+                    if (state == 1) {
+                        hitbox.y -= 16; //elevate mario before its hitbox change
+                    }
                     if (state == 1) { state = 2; } //change from small mario to big mario
 
                     delete ent;          // feee memory
-                    printf("mushroom collided");
+                    //printf("mushroom collided");
                     it = e.erase(it);    // delete from the vector and continue
                     //continue;  //use continuo for going outside and to the next iteration
 
                     break;
 
                 case 2: //flower
-                    printf("flower collided\n");
+
+                    if (state == 1) {
+                        hitbox.y -= 16; //elevate mario before its hitbox change
+                    }
+
+                    //printf("flower collided\n");
                     state = 3;
                     hasPowerUp = 1;
 
@@ -577,6 +587,9 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
 
                 case 3: //star
+                    if (state == 1) {
+                        hitbox.y -= 16; //elevate mario before its hitbox change
+                    }
 
                     state = 3;
                     hasPowerUp = 2; //has a star powerUp
@@ -587,6 +600,13 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                     //continue;  //use continuo for going outside and to the next iteration
                     break;
 
+                case 4: //coin
+
+                    printf("coin getter\n");
+
+                    delete ent;
+                    it = e.erase(it);
+                    break;
                 default:
                     break;
                 }
