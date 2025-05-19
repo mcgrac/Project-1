@@ -49,7 +49,7 @@ void Goomba::draw() {
     if (state == 0) { //gomba is dead
 
         DrawTexture(goombaDeadT, hitbox.x, hitbox.y, WHITE);
-        //die();
+
     }
     else {
 
@@ -62,6 +62,25 @@ void Goomba::draw() {
     }
 }
 
+//void Goomba::update() {
+//    //moveGoomba();
+//    //collisionGoomba();
+//    if (touched) {
+//        die();
+//    }
+//
+//
+//}
+//
+//void Goomba::die() {
+//    clock += GetFrameTime();
+//
+//    if (clock >= 3.0f) {
+//
+//        delete this;
+//    }
+//
+//}
 
 void Goomba::moveGoomba(vector<Entity*>& entity, float gravity) {
 
