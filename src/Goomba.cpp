@@ -82,6 +82,11 @@ void Goomba::draw() {
 //
 //}
 
+void Goomba::update(vector<Entity*>& entity, float gravity) {
+    moveGoomba(entity, gravity);
+    updateRects();
+}
+
 void Goomba::moveGoomba(vector<Entity*>& entity, float gravity) {
 
     float delta = GetFrameTime();
