@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Player::Player(float x, float y, float width, float height, int id, int state, float speedX, float speedY, float movementSpeed_, int direction_, int hasPowerUp_)
+Player::Player(float x, float y, float width, float height, int id, int state, float speedX, float speedY, float movementSpeed_, int direction_, int hasPowerUp_, GameCamera* cam_)
     : Entity(x, y, width, height, id, state),
     speed{ speedX, speedY },
     movementSpeed(movementSpeed_),
@@ -20,7 +20,8 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     frameSpeed(0.1f),
     direction(direction_),
     hasPowerUp(hasPowerUp_),
-    score(0.0f)
+    score(0.0f),
+    camera(cam_)
 
 {
 
@@ -77,6 +78,21 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
 
 #pragma endregion
 
+#pragma region MARIO FIRE
+    walkRightFire[0] = LoadTexture("resources/textures/fmario1.png");
+    walkRightFire[1] = LoadTexture("resources/textures/fmario2.png");
+    walkRightFire[2] = LoadTexture("resources/textures/fmario3.png");
+    walkRightFire[3] = LoadTexture("resources/textures/fmario4.png");
+
+    walkLeftFire[0] = LoadTexture("resources/textures/Lfmario1.png");
+    walkLeftFire[1] = LoadTexture("resources/textures/Lfmario2.png");
+    walkLeftFire[2] = LoadTexture("resources/textures/Lfmario3.png");
+    walkLeftFire[3] = LoadTexture("resources/textures/Lfmario4.png");
+
+    jumpFireLeft = LoadTexture("resources/textures/fMarioJumpL.png");
+    jumpFireRight = LoadTexture("resources/textures/fMarioJumpR.png");
+#pragma endregion
+
 #pragma endregion
 
 #pragma region SOUNDS
@@ -90,6 +106,7 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     lostLife = LoadSound("resources/audio/LostLife.wav");
     jumpGoombaS = LoadSound("resources/audio/smb_stomp.wav");
 #pragma endregion
+
     updateRects();
 }
 
@@ -124,6 +141,36 @@ Player::~Player() { //destructor -> unload everithing from memory
 
     UnloadTexture(jumpbMarioL);
     UnloadTexture(jumpbMarioR);
+#pragma endregion
+
+#pragma region STAR
+    UnloadTexture(walkRightStar[0]);
+    UnloadTexture(walkRightStar[1]);
+    UnloadTexture(walkRightStar[2]);
+    UnloadTexture(walkRightStar[3]);
+
+    UnloadTexture(walkLeftStar[0]);
+    UnloadTexture(walkLeftStar[1]);
+    UnloadTexture(walkLeftStar[2]);
+    UnloadTexture(walkLeftStar[3]);
+
+    UnloadTexture(jumpStarLeft);
+    UnloadTexture(jumpStarRight);
+#pragma endregion
+
+#pragma region FIRE MARIO
+    UnloadTexture(walkRightFire[0]);
+    UnloadTexture(walkRightFire[1]);
+    UnloadTexture(walkRightFire[2]);
+    UnloadTexture(walkRightFire[3]);
+
+    UnloadTexture(walkLeftFire[0]);
+    UnloadTexture(walkLeftFire[1]);
+    UnloadTexture(walkLeftFire[2]);
+    UnloadTexture(walkLeftFire[3]);
+
+    UnloadTexture(jumpFireLeft);
+    UnloadTexture(jumpFireRight);
 #pragma endregion
 
 #pragma endregion
@@ -164,6 +211,7 @@ void Player::modifyHitbox() { //this is used for mofifyng the hitbox when mario 
 
     //printf("MarioState after modifyng= %d\n", state);
 }
+
 void Player::isWalkingTrue() { //called while the key arrows are pressed
     isWalking = true;
 }
@@ -291,6 +339,54 @@ void Player::draw() {
         switch (hasPowerUp)
         {
         case 1: //drawFlower Mario
+
+            if (!isJumping) {
+                if (direction == 1) {
+                    if (isWalking) {
+
+                        DrawTexture(walkRightFire[currentFrame], position.x, position.y, WHITE);
+                        /*if (shouldDrawMario(immunity)) {
+                            DrawTexture(walkRightBig[currentFrame], position.x, position.y, WHITE);
+                        }*/
+                    }
+                    else {
+
+                        DrawTexture(walkRightFire[0], position.x, position.y, WHITE);
+                        /*if (shouldDrawMario(immunity)) {
+                            DrawTexture(walkRightBig[0], position.x, position.y, WHITE);
+                        }*/
+                    }
+                }
+                else {
+                    if (isWalking) {
+
+                        DrawTexture(walkLeftFire[currentFrame], position.x, position.y, WHITE);
+                        /*if (shouldDrawMario(immunity)) {
+                            DrawTexture(walkLeftBig[currentFrame], position.x, position.y, WHITE);
+                        }*/
+                    }
+                    else {
+                        DrawTexture(walkLeftFire[0], position.x, position.y, WHITE);
+                        /*if (shouldDrawMario(immunity)) {
+                            DrawTexture(walkLeftBig[0], position.x, position.y, WHITE);
+                        }*/
+                    }
+                }
+            }
+            else { // jumping
+                if (direction == 1) {
+                    DrawTexture(jumpFireRight, position.x, position.y, WHITE);
+                    //if (shouldDrawMario(immunity)) {
+                    //    DrawTexture(jumpbMarioR, position.x, position.y, WHITE);
+                    //}
+                }
+                else {
+                    DrawTexture(jumpFireLeft, position.x, position.y, WHITE);
+                    //if (shouldDrawMario(immunity)) {
+                    //    DrawTexture(jumpbMarioL, position.x, position.y, WHITE);
+                    //}
+                }
+            }
             break;
 
         case 2: //draw star mario
@@ -366,6 +462,77 @@ void Player::draw() {
     }
 }
 
+void Player::update(vector<Entity*>& entity, float gravity) {
+
+    applyGravity(gravity);
+
+    updateRects();
+
+    if (IsKeyDown(KEY_RIGHT)) {
+
+        if (direction != 1) {
+
+            printf("chage direction to right");
+
+            changeDirection();
+        }
+
+        if (direction == 1) { // if I am going right
+
+            move(1, camera->getRawCamera().target.x); //move to the right
+        }
+        isWalking = true;
+    }
+
+    if (IsKeyDown(KEY_LEFT)) {
+
+        if (direction == 1) {
+
+            printf("chage direction to left");
+
+            changeDirection();
+        }
+
+        if (direction != 1) { // if I am going left
+
+            move(-1, camera->getRawCamera().target.x); //move to the left
+        }
+        isWalking = true;
+    }
+
+    if (IsKeyReleased(KEY_RIGHT) || IsKeyReleased(KEY_LEFT)) {
+        printf("key released");
+
+        isWalking = false;
+    }
+
+    colisionsPlayer(entity);
+
+    if (immunity) {
+
+        immunityVoid();
+    }
+
+    if (IsKeyPressed(KEY_SPACE) && !isJumping) {
+
+        printf("JUMPING\n");
+        jump(400.0f);
+    }
+
+    if (state == 3 && hasPowerUp == 1 && IsKeyPressed(KEY_F)) {
+
+        printf("FireballCasted\n");
+        castFireball(entity);
+    }
+
+}
+
+void Player::castFireball(vector<Entity*>& entity) {
+
+    entity.push_back(new Fireball(hitbox.x + 16, hitbox.y, 16, 16, direction));
+
+    printf("entity size: %d\n", entity.size());
+}
 void Player::jump(float jumpForce) {
     if (!isJumping || !colliding) { //jump if it's not jumping or it has hitted a goomba(colliding will only be true when colliding blocks)
         speed.y = -jumpForce;
@@ -509,20 +676,23 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                 }
 
                 printf("COLLISION GOOMBA CON LOS PIES\n");
-
                 PlaySound(jumpGoombaS);
 
-                //ent->tou
                 ent->decreaseState();
 
                 if (hasPowerUp != 2) {
                     jump(350.0f);
                 }
 
+                addScore(200);
+
+                hitbox.y -= 5.0f;
                 //animacion
 
-                delete ent;          // feee memory
-                it = e.erase(it);    // delete from the vector and continue
+                ent->markForDelation();
+
+                //delete ent;          // feee memory
+                //it = e.erase(it);    // delete from the vector and continue
                 continue; //use continuo for going outside and to the next iteration
             }
             else { //collision with the rest of the body
@@ -564,9 +734,11 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                     }
                     if (state == 1) { state = 2; } //change from small mario to big mario
 
-                    delete ent;          // feee memory
-                    //printf("mushroom collided");
-                    it = e.erase(it);    // delete from the vector and continue
+                    ent->markForDelation();
+
+                    //delete ent;          // feee memory
+                    ////printf("mushroom collided");
+                    //it = e.erase(it);    // delete from the vector and continue
                     //continue;  //use continuo for going outside and to the next iteration
 
                     break;
@@ -581,8 +753,9 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                     state = 3;
                     hasPowerUp = 1;
 
-                    delete ent;
-                    it = e.erase(it);
+                    ent->markForDelation();
+                    //delete ent;
+                    //it = e.erase(it);
                     break;
 
 
@@ -594,9 +767,10 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                     state = 3;
                     hasPowerUp = 2; //has a star powerUp
 
+                    ent->markForDelation();
                     //delete powerUp
-                    delete ent;          // feee memory
-                    it = e.erase(it);    // delete from the vector and continue
+                    //delete ent;          // feee memory
+                    //it = e.erase(it);    // delete from the vector and continue
                     //continue;  //use continuo for going outside and to the next iteration
                     break;
 
@@ -604,8 +778,11 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                     printf("coin getter\n");
 
-                    delete ent;
-                    it = e.erase(it);
+                    addScore(100);
+
+                    ent->markForDelation();
+                    //delete ent;
+                    //it = e.erase(it);
                     break;
                 default:
                     break;
@@ -645,4 +822,9 @@ void Player::starPowerUpTimer() {
             time = 0;
         }
     }
+}
+
+void Player::addScore(int scoreToAdd) {
+
+    score += scoreToAdd;
 }
