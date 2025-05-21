@@ -41,9 +41,9 @@ int main()
 	InitWindow(screenWidth, screenHeight, "Super MarioBros"); //Initialize the screen
 	InitAudioDevice(); //Initialize audio device for the sounds
 
-	GameManager gm(1, 0); //create a game manager for controlling the game flow
-	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0); //create Mario
 	GameCamera camera(screenWidth, 0, 3584); //create the camera
+	Player* mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0, &camera); //create Mario
+	GameManager gm(1, 0, mario); //create a game manager for controlling the game flow
 
 	// game loop
 	while (!WindowShouldClose())// run the loop untill the user presses ESCAPE or presses the Close button on the window
@@ -56,7 +56,7 @@ int main()
 
 			//this will delete mario and liberate it's memory and replace it with another mario with the values reseted
 			delete mario;
-			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0);
+			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0, &camera);
 
 			gm.die(); //for the game manager to know that the level has ended and another new level could be started
 			camera.reset(); //reset camera position
@@ -68,7 +68,7 @@ int main()
 
 			//this will delete mario and liberate it's memory and replace it with another mario with the values reseted
 			delete mario;
-			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0);
+			mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0, &camera);
 
 			gm.die(); //for the game manager to know that the level has ended and another new level could be started
 			camera.reset(); //reset camera position
@@ -102,93 +102,97 @@ int main()
 			}
 
 			//-----MARIO CONTROLS--------//
-			mario->applyGravity(GRAVITY);
-			mario->updateRects(); //updating the middle points of the hitbox at every moment when it move
+			mario->update(gm.getAllEntities(), GRAVITY);
 
-			if (IsKeyDown(KEY_RIGHT)) {
+			//mario->applyGravity(GRAVITY);
+			//mario->updateRects(); //updating the middle points of the hitbox at every moment when it move
 
-				if (mario->getDir() != 1) {
+			//if (IsKeyDown(KEY_RIGHT)) {
 
-					printf("chage direction to right");
+			//	if (mario->getDir() != 1) {
 
-					mario->changeDirection();
-				}
+			//		printf("chage direction to right");
 
-				if (mario->getDir() == 1) { // if I am going right
+			//		mario->changeDirection();
+			//	}
 
-					mario->move(1, camera.getRawCamera().target.x); //move to the right
-				}
-				mario->isWalkingTrue();
-			}
+			//	if (mario->getDir() == 1) { // if I am going right
 
-			if (IsKeyDown(KEY_LEFT)) {
+			//		mario->move(1, camera.getRawCamera().target.x); //move to the right
+			//	}
+			//	mario->isWalkingTrue();
+			//}
 
-				if (mario->getDir() == 1) {
+			//if (IsKeyDown(KEY_LEFT)) {
 
-					printf("chage direction to left");
+			//	if (mario->getDir() == 1) {
 
-					mario->changeDirection();
-				}
+			//		printf("chage direction to left");
 
-				if (mario->getDir() != 1) { // if I am going left
+			//		mario->changeDirection();
+			//	}
 
-					mario->move(-1, camera.getRawCamera().target.x); //move to the left
-				}
-				mario->isWalkingTrue();
-			}
+			//	if (mario->getDir() != 1) { // if I am going left
+
+			//		mario->move(-1, camera.getRawCamera().target.x); //move to the left
+			//	}
+			//	mario->isWalkingTrue();
+			//}
 
 
-			if (IsKeyReleased(KEY_RIGHT) || IsKeyReleased(KEY_LEFT)) {
-				printf("key released");
+			//if (IsKeyReleased(KEY_RIGHT) || IsKeyReleased(KEY_LEFT)) {
+			//	printf("key released");
 
-				mario->isWalkingFalse();
-			}
+			//	mario->isWalkingFalse();
+			//}
 
-			mario->colisionsPlayer(gm.getAllEntities());
+			//mario->colisionsPlayer(gm.getAllEntities());
 
-			if (mario->retImmunity()) {
+			//if (mario->retImmunity()) {
 
-				mario->immunityVoid();
-			}
+			//	mario->immunityVoid();
+			//}
 
-			if (IsKeyPressed(KEY_SPACE) && !mario->retJumping()) {
+			//if (IsKeyPressed(KEY_SPACE) && !mario->retJumping()) {
 
-				mario->jump(JUMP_FORCE);
-			}
+			//	mario->jump(JUMP_FORCE);
+			//}
 
 			//------IA CONTROLS------//
-			for (Entity* e : gm.getAllEntities()) {
+			gm.manageEntities(GRAVITY);
+
+			//for (Entity* e : gm.getAllEntities()) {
 
 
-				//do a dynamic cast and getting only the entities that are goombas and access to their functions/also check if it's null for avoiding invalid access in memory
-				Goomba* g = dynamic_cast<Goomba*>(e);
-				if (g != nullptr) {
-					g->updateRects();
-					g->moveGoomba(gm.getAllEntities(), GRAVITY);
+			//	//do a dynamic cast and getting only the entities that are goombas and access to their functions/also check if it's null for avoiding invalid access in memory
+			//	Goomba* g = dynamic_cast<Goomba*>(e);
+			//	if (g != nullptr) {
+			//		g->updateRects();
+			//		g->moveGoomba(gm.getAllEntities(), GRAVITY);
 
 
-				}
+			//	}
 
-				Star* s = dynamic_cast<Star*>(e);
-				if ( s != nullptr) { //if it is a power up not null
-					s->update(GRAVITY);
-				}
+			//	Star* s = dynamic_cast<Star*>(e);
+			//	if ( s != nullptr) { //if it is a power up not null
+			//		s->update(GRAVITY);
+			//	}
 
-				Mushroom* m = dynamic_cast<Mushroom*>(e);
-				if (m != nullptr) { //if it is a power up not null
-					m->update(GRAVITY);
-				}
+			//	Mushroom* m = dynamic_cast<Mushroom*>(e);
+			//	if (m != nullptr) { //if it is a power up not null
+			//		m->update(GRAVITY);
+			//	}
 
-				Flower* f = dynamic_cast<Flower*>(e);
-				if (f != nullptr) {
-					f->update(GRAVITY);
-				}
+			//	Flower* f = dynamic_cast<Flower*>(e);
+			//	if (f != nullptr) {
+			//		f->update(GRAVITY);
+			//	}
 
-				Coin* c = dynamic_cast<Coin*>(e);
-				if (c != nullptr) {
-					c->update();
-				}
-			}
+			//	Coin* c = dynamic_cast<Coin*>(e);
+			//	if (c != nullptr) {
+			//		c->update(GRAVITY);
+			//	}
+			//}
 
 			//------CAMERA CONTROLS------//
 			camera.update(mario->getHitbox());
@@ -225,11 +229,15 @@ int main()
 
 		}
 
-		DrawText(TextFormat("Is walking = %d", mario->retIsWalking()), 10, 10, 20, BLACK);
-		DrawText(TextFormat("Souns played = %d", gm.retSound()), 10, 30, 20, BLACK);
-
 		//end camera mode
 		camera.end();
+
+
+		DrawText(TextFormat("Is walking = %d", mario->retIsWalking()), 10, 10, 20, BLACK);
+		DrawText(TextFormat("Souns played = %d", gm.retSound()), 10, 30, 20, BLACK);
+		DrawText(TextFormat("Score: %d", mario->getScorePlayer()), 10, 50, 20, BLACK);
+
+
 
 		// end drawing and the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
