@@ -2,10 +2,10 @@
 #include "raylib.h"
 #include "Entity.hpp"
 #include "SurpriseBlock.hpp"
-#include "Star.hpp"
-#include"Mushroom.hpp"
-#include"Flower.hpp"
+#include"BaseObject.hpp"
 #include <vector>
+#include "GameCamera.hpp"
+#include "Fireball.hpp"
 
 class Player : public Entity {
 
@@ -42,6 +42,15 @@ private:
     Texture2D jumpStarLeft;
     Texture2D jumpStarRight;
 #pragma endregion
+
+#pragma region FIRE MARIO
+    Texture2D walkRightFire[4];
+    Texture2D walkLeftFire[4];
+
+    Texture2D jumpFireLeft;
+    Texture2D jumpFireRight;
+#pragma endregion
+
 #pragma endregion
 
 #pragma region SOUNDS
@@ -52,6 +61,8 @@ private:
     Sound lostLife;
     Sound jumpGoombaS;
 #pragma endregion
+
+    GameCamera* camera; // pointer to camera
 
     int direction; //1 right / 0 left
     float time; //3.0f
@@ -64,7 +75,7 @@ private:
     bool isWalking;
 
     int hasPowerUp; // 0 is for nothing, 1 -> flower, 2 -> star
-    float score;
+    int score;
 
 
     //For spritesheet animation (NOT USED FOR NOW)
@@ -77,7 +88,7 @@ private:
 public:
 
 
-    Player(float x, float y, float width, float height, int id, int state, float speedX, float speedY, float movementSpeed_, int direction_, int hasPowerUp_);
+    Player(float x, float y, float width, float height, int id, int state, float speedX, float speedY, float movementSpeed_, int direction_, int hasPowerUp_, GameCamera* cam_);
     ~Player();
 
     void applyGravity(float gravity);
@@ -95,7 +106,9 @@ public:
     void modifyHitbox();
     void increaseState();
     void starPowerUpTimer();
-
+    void update(vector<Entity*>& entity, float gravity) override;
+    void castFireball(vector<Entity*>& entity);
+    void addScore(int scoreToAdd);
    
 #pragma region GETTERS
     //getterS
@@ -104,6 +117,6 @@ public:
     bool retJumping() { return isJumping; }
     bool retColliding() { return colliding; }
     bool retIsWalking() { return isWalking; };
-    float getScorePlayer() { return score; }
+    int getScorePlayer() { return score; }
 #pragma endregion
 };
