@@ -9,10 +9,6 @@ private:
 
 public:
 
-	//BreakBlock() {}
-	BreakBlock(float x, float y, float width, float heigh, int id, int state, int type) : Block(x, y, width, heigh, id, state, type) {
-
-		breakBlock = LoadTexture("resources/textures/Block2.png");
-	}
-
+	BreakBlock(float x, float y, float width, float heigh, int id, int state, int type_);
+	void draw() override;
 };
