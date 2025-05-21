@@ -21,7 +21,8 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     direction(direction_),
     hasPowerUp(hasPowerUp_),
     score(0.0f),
-    camera(cam_)
+    camera(cam_),
+    alive(true)
 
 {
 
@@ -245,9 +246,9 @@ void Player::draw() {
 
     Vector2 position = { hitbox.x, hitbox.y }; //get the position of mario
 
+
     switch (state) {
     case 0: //dead
-
         DrawTexture(deadMario, position.x, position.y, WHITE);
         break;
     case 1: // small mario
@@ -464,65 +465,62 @@ void Player::draw() {
 
 void Player::update(vector<Entity*>& entity, float gravity) {
 
-    applyGravity(gravity);
+    if (state == 1 ||state ==2 ||state == 3) { //if mario alive
+        applyGravity(gravity);
+        updateRects();
+        if (IsKeyDown(KEY_RIGHT)) {
 
-    updateRects();
+            if (direction == -1) {
 
-    if (IsKeyDown(KEY_RIGHT)) {
+                printf("chage direction to right");
 
-        if (direction != 1) {
+                changeDirection();
+            }
 
-            printf("chage direction to right");
+            if (direction == 1) { // if I am going right
 
-            changeDirection();
+                move(1, camera->getRawCamera().target.x); //move to the right
+            }
+            isWalking = true;
         }
+        if (IsKeyDown(KEY_LEFT)) {
 
-        if (direction == 1) { // if I am going right
+            if (direction == 1) {
 
-            move(1, camera->getRawCamera().target.x); //move to the right
+                printf("chage direction to left");
+
+                changeDirection();
+            }
+
+            if (direction == -1) { // if I am going left
+
+                move(-1, camera->getRawCamera().target.x); //move to the left
+            }
+            isWalking = true;
         }
-        isWalking = true;
-    }
+        if (IsKeyReleased(KEY_RIGHT) || IsKeyReleased(KEY_LEFT)) {
+            printf("key released");
 
-    if (IsKeyDown(KEY_LEFT)) {
-
-        if (direction == 1) {
-
-            printf("chage direction to left");
-
-            changeDirection();
+            isWalking = false;
         }
+        colisionsPlayer(entity);
+        if (immunity) {
 
-        if (direction != 1) { // if I am going left
-
-            move(-1, camera->getRawCamera().target.x); //move to the left
+            immunityVoid();
         }
-        isWalking = true;
+        if (IsKeyPressed(KEY_SPACE) && !isJumping) {
+
+            printf("JUMPING\n");
+            jump(400.0f);
+        }
+        if (state == 3 && hasPowerUp == 1 && IsKeyPressed(KEY_F)) {
+
+            printf("FireballCasted\n");
+            castFireball(entity);
+        }
     }
-
-    if (IsKeyReleased(KEY_RIGHT) || IsKeyReleased(KEY_LEFT)) {
-        printf("key released");
-
-        isWalking = false;
-    }
-
-    colisionsPlayer(entity);
-
-    if (immunity) {
-
-        immunityVoid();
-    }
-
-    if (IsKeyPressed(KEY_SPACE) && !isJumping) {
-
-        printf("JUMPING\n");
-        jump(400.0f);
-    }
-
-    if (state == 3 && hasPowerUp == 1 && IsKeyPressed(KEY_F)) {
-
-        printf("FireballCasted\n");
-        castFireball(entity);
+    else {
+        die();
     }
 
 }
@@ -550,9 +548,9 @@ void Player::changeDirection() {
 
     if (direction == 1) { 
         
-        direction = 0; 
+        direction = -1; 
     }
-    else if (direction == 0) {
+    else if (direction == -1) {
 
         direction = 1;
     }
@@ -824,7 +822,26 @@ void Player::starPowerUpTimer() {
     }
 }
 
-void Player::addScore(int scoreToAdd) {
+void Player::addScore(int scoreToAdd) { //uses for adding a certain score
 
     score += scoreToAdd;
+}
+
+void Player::die() {
+
+    printf("MARIO DEAD\n");
+
+    float delta = GetFrameTime();//frame independent
+    time += GetFrameTime(); //use variable time for doing the animation
+
+    if (time <= 3.0f) { //move up for 3 seconds
+        hitbox.y -= 10.0f * delta;
+    }
+    else if (time > 3.0f && time <=6.0f){ //move down for another 3 seconds
+        hitbox.y += 10.0f * delta;
+    }
+    else { //set alive to false for ending the level and the animation
+        time = 0.0f;
+        alive = false;
+    }
 }
