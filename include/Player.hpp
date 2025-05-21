@@ -64,7 +64,7 @@ private:
 
     GameCamera* camera; // pointer to camera
 
-    int direction; //1 right / 0 left
+    int direction; //1 right / -1 left
     float time; //3.0f
 
     Vector2 speed;
@@ -76,14 +76,14 @@ private:
 
     int hasPowerUp; // 0 is for nothing, 1 -> flower, 2 -> star
     int score;
-
+    bool alive;
 
     //For spritesheet animation (NOT USED FOR NOW)
     Rectangle frameRec;
     int frameCounter;
     int currentFrame;
     float frameSpeed;
-    float timer;
+    float timer; //this is used for the walking animations
 
 public:
 
@@ -109,6 +109,8 @@ public:
     void update(vector<Entity*>& entity, float gravity) override;
     void castFireball(vector<Entity*>& entity);
     void addScore(int scoreToAdd);
+
+    void die();
    
 #pragma region GETTERS
     //getterS
@@ -118,5 +120,6 @@ public:
     bool retColliding() { return colliding; }
     bool retIsWalking() { return isWalking; };
     int getScorePlayer() { return score; }
+    bool getAlive() { return alive; }
 #pragma endregion
 };
