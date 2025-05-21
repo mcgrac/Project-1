@@ -91,7 +91,7 @@ void GameManager::manageEntities(float gravity) {
     }
 }
 
-void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_, int col_) {
+void GameManager::buildLevel(int tileSize_, int rows_, int col_) {
     const int TILE_SIZE = tileSize_;
     int row = rows_;
     int col = col_;
@@ -109,13 +109,13 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
             //for each tile place the correct block
             switch (tile) {
             case 1: //invisibleBlocks
-                entities.push_back(new NormalBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 1));
+                allEntities.push_back(new NormalBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 1));
                 break;
             case 2: { //surpriseBlock
 
                 SurpriseBlock* s = new SurpriseBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 2);
 
-                entities.push_back(s);
+                allEntities.push_back(s);
 
                 int tilePower = mapPowerUps[row][col];
 
@@ -131,7 +131,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
                 case 1: {//mushroom
                     Mushroom* mushroom = new Mushroom(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 1);
 
-                    entities.push_back(mushroom);
+                    allEntities.push_back(mushroom);
                     s->getPowerUp(mushroom);
 
                     //create mushroom
@@ -142,7 +142,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
 
                     Flower* flower = new Flower(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 2);
 
-                    entities.push_back(flower);
+                    allEntities.push_back(flower);
                     s->getPowerUp(flower);
                     //create flower
                 }
@@ -151,7 +151,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
                 case 3: {//star
                     Star* star = new Star(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 3);
 
-                    entities.push_back(star);
+                    allEntities.push_back(star);
                     s->getPowerUp(star); //asigns to that spececific surpirse block an stored powerUp
 
                 }
@@ -160,7 +160,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
                 case 4:{ //coin
                     Coin* coin = new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, true, player);
 
-                    entities.push_back(coin);
+                    allEntities.push_back(coin);
                     s->getPowerUp(coin);
                     
                     }
@@ -174,16 +174,17 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
              
             case 3: { //breakBlock
 
-                entities.push_back(new BreakBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 3));
+                allEntities.push_back(new BreakBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 3));
                 break;
             }
             case 4: { //pipe
 
-                entities.push_back(new NormalBlock(x, y, pipe.width, pipe.height, 2, 1, 1));
+                createPiranha(x, y); //create piranha when finding a pipe
+                allEntities.push_back(new NormalBlock(x, y, pipe.width, pipe.height, 2, 1, 1));
                 break;
             }
             case 5: {
-                entities.push_back(new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, false, player));
+                allEntities.push_back(new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, false, player));
 
                 break;
             }
@@ -215,28 +216,31 @@ void GameManager:: LoadMapFromFile(const string& filename, int rows, int columns
     file.close();
 }
 
-void GameManager::createGoomba(vector<Entity*>& entities) {
+void GameManager::createGoomba() {
 
     printf("goombas created\n");
 
     Goomba* goomba = new Goomba(400.0f, 300.0f, 16, 16, 1, 1, 100.0f, 1);
-    entities.push_back(goomba);
+    allEntities.push_back(goomba);
 
     Goomba* goomba2 = new Goomba(500.0f, 300.0f, 16, 16, 1, 1, 100.0f, -1);
-    entities.push_back(goomba2); 
+    allEntities.push_back(goomba2); 
 }
 
-void GameManager::startLevel(vector<Entity*>& entities) {
+void GameManager::createPiranha(float x, float y) {
+    allEntities.push_back(new Piranha(x, y, 32, 32, 1, 1));
+}
+void GameManager::startLevel() {
 
-    if (!entities.empty()) {
-        for (Entity* ent : entities) {
+    if (!allEntities.empty()) {
+        for (Entity* ent : allEntities) {
             delete ent; // free memory of each entity
         }
-        entities.clear(); // clean el vector
+        allEntities.clear(); // clean el vector
     }
 
-    buildLevel(entities, 16, 28, 224); //build level will create all the landscape (blocks and other elements of the map)
-    createGoomba(entities); //create all the enemies (only goombas for the moment)
+    buildLevel(16, 28, 224); //build level will create all the landscape (blocks and other elements of the map)
+    createGoomba(); //create all the enemies (only goombas for the moment)
 }
 
 void GameManager::mapCreated() {
