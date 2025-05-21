@@ -24,7 +24,7 @@ public:
     void throwPower() override;
 
     // Update logic: emerging or floating
-    void update(float gravity);
+    void update(vector<Entity*>& entity, float gravity) override;
     // Draw the flower
     void draw() override;
 
