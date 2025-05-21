@@ -15,7 +15,7 @@ void Mushroom::throwPower() {
     emergedSoFar = 0.0f;
 }
 
-void Mushroom::update(float gravity) {
+void Mushroom::update(vector<Entity*>& entity, float gravity) {
     float delta = GetFrameTime();
 
     if (emerging && !touched) {
