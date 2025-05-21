@@ -68,25 +68,25 @@ void Star::handleCollision() {
 
             printf("handling collisions star");
 
-            // Colisión con el suelo (cayendo)
+            // Collision with floor (falling)
             if (velocity.y > 0 && CheckCollisionPointRec(bottom, block)) {
                 hitbox.y = block.y - hitbox.height;
-                velocity.y = -200.0f; // Rebote hacia arriba (puedes ajustar la fuerza)
+                velocity.y = -200.0f; // Bounce
             }
 
-            // Colisión con el techo (subiendo)
+            // Collision with the celling
             else if (velocity.y < 0 && CheckCollisionPointRec(top, block)) {
                 hitbox.y = block.y + block.height;
                 velocity.y = 0.0f;
             }
 
-            // Colisión por la izquierda (está yendo hacia la izquierda)
+            // Collision left
             if (velocity.x < 0 && CheckCollisionPointRec(left, block)) {
                 hitbox.x = block.x + block.width + push;
                 velocity.x *= -1;
             }
 
-            // Colisión por la derecha (está yendo hacia la derecha)
+            // Collision right
             else if (velocity.x > 0 && CheckCollisionPointRec(right, block)) {
                 hitbox.x = block.x - hitbox.width - push;
                 velocity.x *= -1;
