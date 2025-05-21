@@ -1,6 +1,5 @@
 #include "Fireball.hpp"
-#include "GameManager.hpp"
-#include "Goomba.hpp"
+
 #include <algorithm>    // for std::remove
 #include <raylib.h>
 
@@ -10,7 +9,7 @@ Sound     Fireball::sSndLaunch;
 Sound     Fireball::sSndHit;
 
 void Fireball::LoadAssets() {
-    sTex = LoadTexture("resources/textures/fireball.png");
+    sTex = LoadTexture("resources/textures/fireball1.png");
     sSndLaunch = LoadSound("resources/audio/ThrowFireball.wav");
     sSndHit = LoadSound("resources/audio/FireballHit.wav");
 }
@@ -44,39 +43,41 @@ void Fireball::update(vector<Entity*>& entity, float gravity) {
     float dt = GetFrameTime();
 
     // Apply gravity to vertical velocity, clamped
-    velocity.y += gravity * dt;
+    velocity.y += gravity * dt * 60;
     if (velocity.y > terminalVelocityY) velocity.y = terminalVelocityY;
 
+    
     // Move fireball
     hitbox.x += velocity.x * dt;
     hitbox.y += velocity.y * dt;
 
     // Check for collisions (blocks/enemies)
-    handleCollisions();
+    handleCollisions(entity);
 
     // Update midpoint helpers
     updateRects();
 }
 
-void Fireball::handleCollisions() {
-    auto& entities = GameManager::getAllEntities();
+void Fireball::handleCollisions(vector<Entity*>& entity) {
+
+    auto& entities = entity;
 
     for (auto it = entities.begin(); it != entities.end(); ++it) {
         Entity* e = *it;
 
         // 1) Enemy collision: kill Goomba
         if (e->getId() == 1 && CheckCollisionRecs(hitbox, e->getHitbox())) {
-            if (Goomba* g = dynamic_cast<Goomba*>(e)) {
-                g->decreaseState();
-                if (g->getState() == 0) {
+            if (Enemy* enemy = dynamic_cast<Enemy*>(e)) {
+                enemy->decreaseState();
+                if (enemy->getState() == 0) {
 
-                    g->markForDelation();
+                    enemy->markForDelation();
                     //delete g;
                     //entities.erase(it);
                 }
             }
-            // Fireball also dies
 
+            // Fireball also dies
             toDelete = true;
             alive = false;
             PlaySound(sSndHit);
@@ -89,17 +90,19 @@ void Fireball::handleCollisions() {
 
             // Side collisions
             if (velocity.x > 0 && CheckCollisionPointRec(getRight(), b)) {
-                if (bouncesLeft-- > 0) velocity.x *= -1;
-                else { alive = false; PlaySound(sSndHit); return; }
+                if (bouncesLeft-- != 0) velocity.x *= -1;
+                else { toDelete = true; PlaySound(sSndHit); return; }
             }
             else if (velocity.x < 0 && CheckCollisionPointRec(getLeft(), b)) {
-                if (bouncesLeft-- > 0) velocity.x *= -1;
-                else { alive = false; PlaySound(sSndHit); return; }
+                if (bouncesLeft-- != 0) velocity.x *= -1;
+                else { toDelete = true; PlaySound(sSndHit); return; }
             }
             // Vertical collisions
             else if ((velocity.y > 0 && CheckCollisionPointRec(getBottom(), b)) ||
                 (velocity.y < 0 && CheckCollisionPointRec(getTop(), b))) {
-                alive = false;
+                if (bouncesLeft-- == 0) { toDelete = true; } //if bounces is 0 delete this
+                velocity.y = -250.0f; //bounce
+                //alive = false;
                 PlaySound(sSndHit);
                 return;
             }
@@ -108,8 +111,7 @@ void Fireball::handleCollisions() {
 }
 
 void Fireball::draw() {
-    if (alive) {
-        DrawTexture(sTex, hitbox.x, hitbox.y, WHITE);
-    }
+
+    DrawTexture(sTex, hitbox.x, hitbox.y, WHITE);
 
 }
