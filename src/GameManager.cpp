@@ -1,8 +1,8 @@
 #include "GameManager.hpp"
 
 
-GameManager::GameManager(int screen, int op_)
-    : titleScreen(screen), op(op_) {
+GameManager::GameManager(int screen, int op_, Player* player_)
+    : titleScreen(screen), op(op_), player(player_) {
 
 #pragma region TEXTURES
     backgroundTexture = LoadTexture("resources/textures/Background.png");
@@ -15,6 +15,9 @@ GameManager::GameManager(int screen, int op_)
     winTexture = LoadTexture("resources/textures/tyMario.png");
     looseTexture = LoadTexture("resources/textures/game_over.png");
     arrowTexture = LoadTexture("resources/textures/arrow.png");
+
+    //pipe
+    pipe = LoadTexture("resources/textures/Pipe.png");
 #pragma endregion
 
 #pragma region SOUNDS
@@ -37,6 +40,7 @@ GameManager::~GameManager() {
     UnloadTexture(winTexture);
     UnloadTexture(arrowTexture);
     UnloadTexture(looseTexture);
+    UnloadTexture(pipe);
 #pragma endregion
 
 #pragma region SOUNDS
@@ -69,6 +73,24 @@ void GameManager::buildPowerUps(const string& filename, int rows, int columns) {
     file.close();
 }
 
+void GameManager::manageEntities(float gravity) {
+
+    for (auto it = allEntities.begin(); it != allEntities.end(); ) {
+        Entity* entity = *it;
+        entity->update(allEntities, gravity);
+
+        if (entity->getToDelate()) {
+
+            printf("entity id: %d DELETED", entity->getId());
+            delete entity;
+            it = allEntities.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+}
+
 void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_, int col_) {
     const int TILE_SIZE = tileSize_;
     int row = rows_;
@@ -86,7 +108,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
 
             //for each tile place the correct block
             switch (tile) {
-            case 1:
+            case 1: //invisibleBlocks
                 entities.push_back(new NormalBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 1));
                 break;
             case 2: { //surpriseBlock
@@ -101,7 +123,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
 
                 //entities.push_back(entity); //add the new entoty(base object to the list)
 
-                if (tilePower == 1 || tilePower == 2 || tilePower == 3) {
+                if (tilePower == 1 || tilePower == 2 || tilePower == 3 || tilePower == 4) {
                     printf("PowerUp Found\n");
                 }
                 switch (tilePower) {
@@ -136,7 +158,7 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
                     break;
 
                 case 4:{ //coin
-                    Coin* coin = new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, true);
+                    Coin* coin = new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, true, player);
 
                     entities.push_back(coin);
                     s->getPowerUp(coin);
@@ -150,8 +172,18 @@ void GameManager::buildLevel(vector<Entity*>& entities, int tileSize_, int rows_
                 break;
             }
              
+            case 3: { //breakBlock
+
+                entities.push_back(new BreakBlock(x, y, TILE_SIZE, TILE_SIZE, 2, 1, 3));
+                break;
+            }
+            case 4: { //pipe
+
+                entities.push_back(new NormalBlock(x, y, pipe.width, pipe.height, 2, 1, 1));
+                break;
+            }
             case 5: {
-                entities.push_back(new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, false));
+                entities.push_back(new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, false, player));
 
                 break;
             }
@@ -393,3 +425,5 @@ void GameManager::drawScreen(Camera2D c, int width, int heigh) {
         break;
     }
 }
+
+
