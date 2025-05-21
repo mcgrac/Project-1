@@ -15,6 +15,7 @@
 #include"Coin.hpp"//problema
 #include"BaseObject.hpp" //inlcuded now
 #include"Player.hpp"
+#include"Piranha.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -91,8 +92,8 @@ public:
 
     void manageEntities(float gravity);
 
-    void buildLevel(vector<Entity*>& entities, int tileSize_, int rows_, int col_);
-    void startLevel(vector<Entity*>& entities);
+    void buildLevel(int tileSize_, int rows_, int col_);
+    void startLevel();
     void buildPowerUps(const string& filename, int rows, int columns);
 
     int GetScreen();
@@ -110,8 +111,8 @@ public:
     void drawScreen(Camera2D c, int width, int heigh);
     void playSounds();
 
-    void createGoomba(vector<Entity*>& entities);
-
+    void createGoomba();
+    void createPiranha(float x, float y);
 
 #pragma region GETTERS
     bool getlevelStarted() { return levelStarted; }
