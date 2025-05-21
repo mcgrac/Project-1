@@ -49,6 +49,6 @@ void GameCamera::end() {
     EndMode2D();
 }
 
-Camera2D GameCamera::getRawCamera() const {
+Camera2D& GameCamera::getRawCamera() {
     return camera;
 }
