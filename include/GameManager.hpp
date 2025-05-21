@@ -29,7 +29,9 @@ private:
     2->breakBlock
     3->surpriseBlock
     4->finalStaires 
-    5-> coinsInMap*/
+    5->coinsInMap
+    6->pole
+    7->flag*/
 
     int mapPowerUps[28][224];
     /* 1->mushroom
@@ -65,6 +67,9 @@ private:
     Texture2D winTexture;
     Texture2D looseTexture;
     Texture2D arrowTexture;
+
+    //pipe
+    Texture2D pipe;
 #pragma endregion
 
 #pragma region SOUNDS
@@ -73,15 +78,18 @@ private:
     Sound winS;
 #pragma endregion
 
+    Player* player;
 
 
 public:
-    GameManager(int screen, int op_);
+    GameManager(int screen, int op_, Player* player_);
     ~GameManager();
 
     void mapCreated();
     void die();
     void LoadMapFromFile(const string& filename, int rows, int columns);
+
+    void manageEntities(float gravity);
 
     void buildLevel(vector<Entity*>& entities, int tileSize_, int rows_, int col_);
     void startLevel(vector<Entity*>& entities);
@@ -89,8 +97,9 @@ public:
 
     int GetScreen();
     int getOp();
-    void setScreen(int titleScreen);
 
+
+    void setScreen(int titleScreen);
     void win();
     void drawArrow();
     void opUp();
@@ -103,14 +112,13 @@ public:
 
     void createGoomba(vector<Entity*>& entities);
 
+
 #pragma region GETTERS
     bool getlevelStarted() { return levelStarted; }
     bool retSound() { return soundPlayedOnce; }
     static vector<Entity*>& getAllEntities() {
         return allEntities;
     }
-
-    //float Score() { return getScorePlayer(); }
 #pragma endregion
 };
 #endif
