@@ -9,9 +9,6 @@
 
 class BaseObject : public Entity {
 
-private:
-
-
 protected:
 
 	int typePower; //1 -> mushroom, 2->flower, 3->star, 4->coin
