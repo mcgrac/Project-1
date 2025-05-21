@@ -17,5 +17,5 @@ public:
     void begin();
     void end();
     void reset();
-    Camera2D getRawCamera() const;
+    Camera2D& getRawCamera();
 };
