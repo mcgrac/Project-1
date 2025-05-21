@@ -19,7 +19,7 @@ public:
     ~Mushroom();
 
     void throwPower() override;
-    void update(float gravity);
+    void update(vector<Entity*>& entity, float gravity) override;
     void draw() override;
 
     void handleCollision();
