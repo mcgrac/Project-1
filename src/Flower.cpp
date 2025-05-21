@@ -44,7 +44,7 @@ void Flower::throwPower() {
     PlaySound(sSndSpawn);
 }
 
-void Flower::update(float gravity) {
+void Flower::update(vector<Entity*>& entity, float gravity) {
     float dt = GetFrameTime();
     if (emerging && !touched) {
         // Pop up from block
