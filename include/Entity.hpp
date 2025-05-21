@@ -19,8 +19,9 @@ protected:
 	////create a vector that will contain all the entities
 	//static vector<Entity*> allEntities;
 
-	int id;     // 0 player, 1 enemy, 2 block, 3 powerUp
+	int id;     // 0 player, 1 enemy, 2 block, 3 powerUp, 4 Fireballs
 	int state;  // 0 dead, 1 little mario, 2 big mario, 3 power up mario
+	bool toDelete; //for deleting entities
 
 public:
 
@@ -29,7 +30,9 @@ public:
 	~Entity();
 
 	virtual void draw() {}; //this will be overwritten in every class of every object to draw it's sprites
+	virtual void update(vector<Entity*>& entities, float gravity) {};
 
+	void markForDelation();
 	void updateRects(); //update position of the hitbox
 	void decreaseState(); //used when a block is hitted, a goomba is hitted or mario is damaged
 
@@ -46,6 +49,7 @@ public:
 	//static vector<Entity*>& getAllEntities() {
 	//	return allEntities;
 	//}
+	bool getToDelate() { return toDelete; }
 #pragma endregion
 };
 #endif
