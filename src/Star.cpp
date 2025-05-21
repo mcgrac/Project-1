@@ -21,7 +21,7 @@ void Star::throwPower() {
 	// Puedes resetear valores si quieres reutilizar objetos
 }
 
-void Star::update(float gravity) {
+void Star::update(vector<Entity*>& entity, float gravity) {
 
     float delta = GetFrameTime();
 
