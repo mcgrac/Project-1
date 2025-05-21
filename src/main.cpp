@@ -62,7 +62,7 @@ int main()
 			camera.reset(); //reset camera position
 		}
 
-		if (mario->getState() == 0) { //If mario dies
+		if (mario->getAlive() == false) { //If mario dies
 
 			gm.gameOver(); //call game over function
 
@@ -93,7 +93,7 @@ int main()
 			//restart the level and build again all the blocks and the enemies
 			if (!gm.getlevelStarted()) {
 
-				gm.startLevel(gm.getAllEntities());
+				gm.startLevel();
 
 				for (int i = 0; i < gm.getAllEntities().size();i++) {
 					printf("Entity id: %d| state: %d\n", gm.getAllEntities()[i]->getId(), gm.getAllEntities()[i]->getState());
@@ -159,8 +159,9 @@ int main()
 			//}
 
 			//------IA CONTROLS------//
-			gm.manageEntities(GRAVITY);
-
+			if (mario->getState() != 0) {
+				gm.manageEntities(GRAVITY);
+			}
 			//for (Entity* e : gm.getAllEntities()) {
 
 
@@ -236,7 +237,7 @@ int main()
 		DrawText(TextFormat("Is walking = %d", mario->retIsWalking()), 10, 10, 20, BLACK);
 		DrawText(TextFormat("Souns played = %d", gm.retSound()), 10, 30, 20, BLACK);
 		DrawText(TextFormat("Score: %d", mario->getScorePlayer()), 10, 50, 20, BLACK);
-
+		DrawText(TextFormat("Direction: %d", mario->getDir()), 10, 70, 20, BLACK);
 
 
 		// end drawing and the frame and get ready for the next one  (display frame, poll input, etc...)
