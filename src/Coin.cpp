@@ -1,13 +1,13 @@
 #include"Coin.hpp"
 
-Coin::Coin(float x, float y, float width, float height, int id, int state, int typePower_, bool inBlock_) : BaseObject(x, y, width, height, id, state, typePower_), inBlock(inBlock_) {
+Coin::Coin(float x, float y, float width, float height, int id, int state, int typePower_, bool inBlock_, Player* player_) : BaseObject(x, y, width, height, id, state, typePower_), inBlock(inBlock_), player(player_) {
 
 	coin = LoadTexture("resources/textures/coin.png");
 }
 
 Coin::~Coin() {
 
-
+	UnloadTexture(coin);
 }
 
 void Coin::throwPower() {
@@ -16,7 +16,7 @@ void Coin::throwPower() {
 	emergedSoFar = 0.0f;
 }
 
-void Coin::update() {
+void Coin::update(vector<Entity*>& entity, float gravity) {
 
 	if (inBlock) { //only do the emerging animation if it is contained in a block
 		emerge();
@@ -37,8 +37,14 @@ void Coin::emerge() {
 		emergedSoFar += move;
 
 		if (emergedSoFar >= maxEmerge) { // if it energe one tile it stops emerging
+
 			emerging = false;
+
+			player->addScore(100);
+
 			touched = true;
+			toDelete = true;
+
 		}
 	}
 }
