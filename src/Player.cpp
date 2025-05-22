@@ -520,7 +520,7 @@ void Player::update(vector<Entity*>& entity, float gravity) {
         }
     }
     else {
-        die();
+        die(gravity);
     }
 
 }
@@ -559,7 +559,7 @@ void Player::changeDirection() {
 void Player::applyGravity(float gravity) {
 
     //Apply gravity
-    speed.y += gravity;
+    speed.y += gravity * GetFrameTime();
     hitbox.y += speed.y * GetFrameTime();
 }
 void Player::move(int direction, float cameraX) {
@@ -596,10 +596,6 @@ void Player::immunityVoid() {
 
 void Player::colisionsPlayer(vector<Entity*>& e) {
 
-    printf("MarioState= %d\n", state);
-
-    vector<Entity*> toAdd; // Temporal list
-
     //we use an itarator here because we don't want to make acces to deleted memory
     //we traverse the vector of entities until the end of the list, not having in account the size, because it might change when deleting something
 
@@ -608,7 +604,6 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
         // Collision with blocks (id == 2)
         if (ent->getId() == 2 && CheckCollisionRecs(hitbox, ent->getHitbox())) {
-            //printf("colision con bloque\n");
 
             if (!ent) { //if the pointer is null
                 ++it; //next iteration
@@ -630,12 +625,7 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                     if (surprise->getState() == 1) { //only create the power up and interact with the block if it has not been hitted (state 1)
 
-                        //Star* star = new Star(ent->getHitbox().x, ent->getHitbox().y, 16, 16, 3, 1, 2);
-                        //star->throwPower();
-                        //toAdd.push_back(star);
-
                         surprise->retPowerUp()->throwPower(); //throw the power of the corresponding powerUp (NOW)
-                        //toAdd.push_back(surprise->retPowerUp());
                         printf("Star created: positionX: %f position Y:%f State: %d Id %d\n", surprise->retPowerUp()->getHitbox().x, surprise->retPowerUp()->getHitbox().y, surprise->retPowerUp()->getState(), surprise->retPowerUp()->getId());
 
                         surprise->decreaseState();
@@ -665,7 +655,7 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
         }
 
         // Collisions with goomba (id == 1)
-        if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 1) {
+        if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 1 && ent->getState() == 1) {
             if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->getState() == 1 || hasPowerUp == 2) { //collision with mario's feet or mario has a star powerUp
 
                 if (!ent) {
@@ -684,13 +674,7 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                 addScore(200);
 
-                hitbox.y -= 5.0f;
-                //animacion
-
-                ent->markForDelation();
-
-                //delete ent;          // feee memory
-                //it = e.erase(it);    // delete from the vector and continue
+                hitbox.y -= 5.0f; //for avoiding continious collision
                 continue; //use continuo for going outside and to the next iteration
             }
             else { //collision with the rest of the body
@@ -698,10 +682,7 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                 printf("COLISION CON GOOMBA\n");
 
                 state--;
-                if (state == 0) {
-                    // Mario die
-                }
-                else {
+                if (state != 0) {
                     modifyHitbox(); //modify its hitbox when its hitted
                     immunity = true;
                 }
@@ -714,9 +695,6 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
         // Collisions with powerUp (id == 3)
         if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 3) {
-
-            //printf("MarioState before moddifying= %d\n", state);
-
 
             BaseObject* base = dynamic_cast<BaseObject*>(ent);
 
@@ -734,11 +712,6 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
                     ent->markForDelation();
 
-                    //delete ent;          // feee memory
-                    ////printf("mushroom collided");
-                    //it = e.erase(it);    // delete from the vector and continue
-                    //continue;  //use continuo for going outside and to the next iteration
-
                     break;
 
                 case 2: //flower
@@ -747,13 +720,10 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                         hitbox.y -= 16; //elevate mario before its hitbox change
                     }
 
-                    //printf("flower collided\n");
                     state = 3;
                     hasPowerUp = 1;
 
                     ent->markForDelation();
-                    //delete ent;
-                    //it = e.erase(it);
                     break;
 
 
@@ -766,10 +736,6 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                     hasPowerUp = 2; //has a star powerUp
 
                     ent->markForDelation();
-                    //delete powerUp
-                    //delete ent;          // feee memory
-                    //it = e.erase(it);    // delete from the vector and continue
-                    //continue;  //use continuo for going outside and to the next iteration
                     break;
 
                 case 4: //coin
@@ -779,8 +745,6 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
                     addScore(100);
 
                     ent->markForDelation();
-                    //delete ent;
-                    //it = e.erase(it);
                     break;
                 default:
                     break;
@@ -797,11 +761,6 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
         }
 
         ++it; //next iteration
-    }
-
-    //add the elements created during the loop before starting the next one
-    for (Entity* newEntity : toAdd) {
-        e.push_back(newEntity);
     }
 }
 
@@ -824,21 +783,23 @@ void Player::starPowerUpTimer() {
 
 void Player::addScore(int scoreToAdd) { //uses for adding a certain score
 
+    DrawText(TextFormat("%d", scoreToAdd), hitbox.x, hitbox.y, 5, BLACK);
     score += scoreToAdd;
 }
 
-void Player::die() {
+void Player::die(float gravity) {
 
     printf("MARIO DEAD\n");
 
-    float delta = GetFrameTime();//frame independent
     time += GetFrameTime(); //use variable time for doing the animation
 
-    if (time <= 3.0f) { //move up for 3 seconds
-        hitbox.y -= 10.0f * delta;
-    }
-    else if (time > 3.0f && time <=6.0f){ //move down for another 3 seconds
-        hitbox.y += 10.0f * delta;
+    if (time >= 0.0f && time <= 1.5f) { //move up for 3 seconds
+
+        applyGravity(gravity);
+
+        if (time >= 0.0f && time <= 0.1f){
+            jump(300.0f);
+        }
     }
     else { //set alive to false for ending the level and the animation
         time = 0.0f;
