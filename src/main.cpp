@@ -25,8 +25,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 
 using namespace std;
 
-#define GRAVITY  20.0f    // GRAVITY IN EACH FRAME
-#define JUMP_FORCE 350.0f // JUMP FORCE
+#define GRAVITY  1000.0f    // GRAVITY IN EACH FRAME
 #define TILE_SIZE 16.0f  // MINIMUM TILE SIZE
 
 int main()
@@ -219,7 +218,6 @@ int main()
 		if (gm.GetScreen() == 0) {
 
 			camera.begin();
-			mario->draw();
 
 			//draw all the entities
 			for (int i = 0; i < gm.getAllEntities().size(); ++i) { 
@@ -228,6 +226,7 @@ int main()
 
 			}
 
+			mario->draw();
 		}
 
 		//end camera mode
@@ -238,7 +237,7 @@ int main()
 		DrawText(TextFormat("Souns played = %d", gm.retSound()), 10, 30, 20, BLACK);
 		DrawText(TextFormat("Score: %d", mario->getScorePlayer()), 10, 50, 20, BLACK);
 		DrawText(TextFormat("Direction: %d", mario->getDir()), 10, 70, 20, BLACK);
-
+		
 
 		// end drawing and the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
