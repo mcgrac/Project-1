@@ -1,7 +1,7 @@
 #include "Fireball.hpp"
 
 #include <algorithm>    // for std::remove
-#include <raylib.h>
+
 
 // Static definitions
 Texture2D Fireball::sTex;
@@ -43,7 +43,7 @@ void Fireball::update(vector<Entity*>& entity, float gravity) {
     float dt = GetFrameTime();
 
     // Apply gravity to vertical velocity, clamped
-    velocity.y += gravity * dt * 60;
+    velocity.y += gravity * dt;
     if (velocity.y > terminalVelocityY) velocity.y = terminalVelocityY;
 
     
