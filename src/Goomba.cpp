@@ -48,7 +48,7 @@ void Goomba::draw() {
 
     if (state == 0) { //gomba is dead
 
-        DrawTexture(goombaDeadT, hitbox.x, hitbox.y, WHITE);
+        DrawTexture(goombaDeadT, hitbox.x, hitbox.y + 9, WHITE);
 
     }
     else {
@@ -62,29 +62,14 @@ void Goomba::draw() {
     }
 }
 
-//void Goomba::update() {
-//    //moveGoomba();
-//    //collisionGoomba();
-//    if (touched) {
-//        die();
-//    }
-//
-//
-//}
-//
-//void Goomba::die() {
-//    clock += GetFrameTime();
-//
-//    if (clock >= 3.0f) {
-//
-//        delete this;
-//    }
-//
-//}
-
 void Goomba::update(vector<Entity*>& entity, float gravity) {
-    moveGoomba(entity, gravity);
-    updateRects();
+    if (state != 0) {
+        moveGoomba(entity, gravity);
+        updateRects();
+    }
+    else {
+        die();
+    }
 }
 
 void Goomba::moveGoomba(vector<Entity*>& entity, float gravity) {
@@ -92,7 +77,7 @@ void Goomba::moveGoomba(vector<Entity*>& entity, float gravity) {
     float delta = GetFrameTime();
 
     // gravity
-    hitbox.y += gravity * delta * 5;
+    hitbox.y += gravity * delta / 10;
 
     // lateral movement
     if (direction == 1) {
@@ -121,5 +106,16 @@ void Goomba::collisionGoomba(vector<Entity*>& entity) {
                 direction = 1;
             }
         }
+    }
+}
+
+void Goomba::die() {
+    clock += GetFrameTime();
+
+    if (clock >= 2.0f) {
+
+        printf("markforDelation\n");
+
+        markForDelation();
     }
 }
