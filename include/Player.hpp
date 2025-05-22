@@ -6,6 +6,7 @@
 #include <vector>
 #include "GameCamera.hpp"
 #include "Fireball.hpp"
+#include "Goomba.hpp"
 
 class Player : public Entity {
 
@@ -65,7 +66,7 @@ private:
     GameCamera* camera; // pointer to camera
 
     int direction; //1 right / -1 left
-    float time; //3.0f
+    float time; 
 
     Vector2 speed;
     float movementSpeed;
@@ -110,7 +111,7 @@ public:
     void castFireball(vector<Entity*>& entity);
     void addScore(int scoreToAdd);
 
-    void die();
+    void die(float gravity);
    
 #pragma region GETTERS
     //getterS
