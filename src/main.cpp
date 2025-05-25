@@ -12,16 +12,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "raylib.h"
 #include "resource_dir.h"	
 #include "Player.hpp"
-#include "Block.hpp"
-#include "Goomba.hpp"
 #include "GameManager.hpp"
-#include "SurpriseBlock.hpp"
-#include"NormalBlock.hpp"
 #include"GameCamera.hpp"
-#include"Star.hpp"
-#include"Coin.hpp"
-#include"Mushroom.hpp"
-#include"Flower.hpp"
 
 using namespace std;
 
@@ -49,7 +41,18 @@ int main()
 	{
 		gm.playSounds(); //this will call all the sounds
 
-		if (mario->getHitbox().x >= 3300) { //If mario arrives to the end of the level
+		//if (mario->getHitbox().x >= 3300) { //If mario arrives to the end of the level
+
+		//	gm.win(); //call win function
+
+		//	//this will delete mario and liberate it's memory and replace it with another mario with the values reseted
+		//	delete mario;
+		//	mario = new Player(300.0f, 100.0f, TILE_SIZE, TILE_SIZE * 2, 0, 2, 0, 0, 200.0f, 1, 0, &camera);
+
+		//	gm.die(); //for the game manager to know that the level has ended and another new level could be started
+		//	camera.reset(); //reset camera position
+		//}
+		if (mario->getFlagAnimation() && ((mario->getHitbox().y >= 352.0f && (mario->getState() == 3 || mario->getState() == 2)) || (mario->getHitbox().y >= 384.0f && mario->getState() == 1))) { //If mario arrives to the end of the level
 
 			gm.win(); //call win function
 
@@ -60,6 +63,7 @@ int main()
 			gm.die(); //for the game manager to know that the level has ended and another new level could be started
 			camera.reset(); //reset camera position
 		}
+
 
 		if (mario->getAlive() == false) { //If mario dies
 
@@ -73,15 +77,16 @@ int main()
 			camera.reset(); //reset camera position
 		}
 
+		gm.update();
 		//Go to the next screen
-		if (IsKeyPressed(KEY_N)) {
-			gm.nextScreen();
-		}
+		//if (IsKeyPressed(KEY_N)) {
+		//	gm.nextScreen();
+		//}
 
-		if (gm.GetScreen() == 2) { // for choosing an option in the main menu
+		//if (gm.GetScreen() == 2) { // for choosing an option in the main menu
 
-			gm.opSelector();
-		}
+		//	gm.opSelector();
+		//}
 
 		//--------------------------//
 		//---------GAME LOGIC-------// Apply only when we are in the game screen [0]
@@ -158,7 +163,7 @@ int main()
 			//}
 
 			//------IA CONTROLS------//
-			if (mario->getState() != 0) {
+			if (mario->getState() != 0 && !mario->getFlagAnimation()) {
 				gm.manageEntities(GRAVITY);
 			}
 			//for (Entity* e : gm.getAllEntities()) {
