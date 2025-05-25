@@ -1,12 +1,14 @@
 #include "Piranha.hpp"
 
-Piranha::Piranha(float x, float y, float width, float height, int id, int state) :Enemy(x, y, width, height, id, state), timer(0.0f), piranhaMoved(0.0f), moving(false), movementSpeed(0.7f), movedSoFar(0.0f), goingUp(false) {
+Piranha::Piranha(float x, float y, float width, float height, int id, int state, char typeEnemy_) :Enemy(x, y, width, height, id, state, typeEnemy_), timer(0.0f), piranhaMoved(0.0f), moving(false), movementSpeed(0.7f), movedSoFar(0.0f), goingUp(false) {
 
 	piranha = LoadTexture("resources/textures/piranha.png");
+	piranha2 = LoadTexture("resources/textures/piranha2.png");
 }
 Piranha::~Piranha() {
 
 	UnloadTexture(piranha);
+	UnloadTexture(piranha2);
 }
 void Piranha::update(vector<Entity*>& entity, float gravity) {
 
@@ -37,7 +39,7 @@ void Piranha::update(vector<Entity*>& entity, float gravity) {
 		movedSoFar += moveStep;
 		
 
-		if (movedSoFar >= 32.0f) { //if it has emerged 32 pixels (2 tiles), reset.
+		if (movedSoFar >= 39.0f) { //if it has emerged 32 pixels (2 tiles), reset.
 			movedSoFar = 0.0f;
 			if (goingUp) { //starts to go down
 				goingUp = false;
@@ -63,5 +65,16 @@ void Piranha::shouldMove(float delta) {
 }
 
 void Piranha::draw() {
-	DrawTexture(piranha, hitbox.x, hitbox.y, WHITE);
+
+	if (iterator()) {
+		DrawTexture(piranha, hitbox.x, hitbox.y, WHITE);
+	}
+	else {
+		DrawTexture(piranha2, hitbox.x, hitbox.y, WHITE);
+	}
+
+}
+
+bool Piranha::iterator() {
+	return ((int)(GetTime() * 8) % 2) == 0;
 }
