@@ -22,7 +22,8 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
     hasPowerUp(hasPowerUp_),
     score(0.0f),
     camera(cam_),
-    alive(true)
+    alive(true),
+    flagAnimation(false)
 
 {
 
@@ -92,6 +93,26 @@ Player::Player(float x, float y, float width, float height, int id, int state, f
 
     jumpFireLeft = LoadTexture("resources/textures/fMarioJumpL.png");
     jumpFireRight = LoadTexture("resources/textures/fMarioJumpR.png");
+#pragma endregion
+
+#pragma region MARIO FLAG
+
+    //star mario
+    starMarioFlag[0] = LoadTexture("resources/textures/bsmario_flag1.png");
+    starMarioFlag[1] = LoadTexture("resources/textures/bsmario_flag2.png");
+
+    //fire
+    fireMarioFlag[0] = LoadTexture("resources/textures/fmario_flag1.png");
+    fireMarioFlag[1] = LoadTexture("resources/textures/fmario_flag2.png");
+
+    //big
+    bMarioFlag[0] = LoadTexture("resources/textures/bmario_flag1.png");
+    bMarioFlag[1] = LoadTexture("resources/textures/bmario_flag2.png");
+
+    //small
+    sMarioFlag[0] = LoadTexture("resources/textures/Lmario_flag1.png");
+    sMarioFlag[1] = LoadTexture("resources/textures/Lmario_flag2.png");
+
 #pragma endregion
 
 #pragma endregion
@@ -174,6 +195,20 @@ Player::~Player() { //destructor -> unload everithing from memory
     UnloadTexture(jumpFireRight);
 #pragma endregion
 
+#pragma region FLAG
+    UnloadTexture(starMarioFlag[0]);
+    UnloadTexture(starMarioFlag[1]);
+
+    UnloadTexture(fireMarioFlag[0]);
+    UnloadTexture(fireMarioFlag[1]);
+
+    UnloadTexture(bMarioFlag[0]);
+    UnloadTexture(bMarioFlag[1]);
+
+    UnloadTexture(sMarioFlag[0]);
+    UnloadTexture(sMarioFlag[1]);
+#pragma endregion
+
 #pragma endregion
 
 #pragma region SOUNDS
@@ -252,7 +287,7 @@ void Player::draw() {
         DrawTexture(deadMario, position.x, position.y, WHITE);
         break;
     case 1: // small mario
-        if (!isJumping) { //not jumping
+        if (!isJumping && !flagAnimation) {
             if (direction == 1) { // right
                 if (isWalking) {
                     if (shouldDrawMario(immunity)) {
@@ -278,7 +313,7 @@ void Player::draw() {
                 }
             }
         }
-        else { // jumping
+        else if (isJumping && !flagAnimation) { // jumping
             if (direction == 1) {
                 if (shouldDrawMario(immunity)) {
                     DrawTexture(jumplMarioR, position.x, position.y, WHITE);
@@ -290,10 +325,19 @@ void Player::draw() {
                 }
             }
         }
+        else { //mario is going down the flag
+
+            if (shouldUseStarSprite()) {
+                DrawTexture(sMarioFlag[0], position.x, position.y, WHITE);
+            }
+            else {
+                DrawTexture(sMarioFlag[1], position.x, position.y, WHITE);
+            }
+        }
         break;
 
     case 2: // Big mario
-        if (!isJumping) {
+        if (!isJumping && !flagAnimation) {
             if (direction == 1) {
                 if (isWalking) {
                     if (shouldDrawMario(immunity)) {
@@ -319,7 +363,7 @@ void Player::draw() {
                 }
             }
         }
-        else { // jumping
+        else if (isJumping && !flagAnimation){ // jumping
             if (direction == 1) {
                 if (shouldDrawMario(immunity)) {
                     DrawTexture(jumpbMarioR, position.x, position.y, WHITE);
@@ -329,6 +373,15 @@ void Player::draw() {
                 if (shouldDrawMario(immunity)) {
                     DrawTexture(jumpbMarioL, position.x, position.y, WHITE);
                 }
+            }
+        }
+        else { //mario is going down the flag
+
+            if (shouldUseStarSprite()) {
+                DrawTexture(bMarioFlag[0], position.x, position.y, WHITE);
+            }
+            else {
+                DrawTexture(bMarioFlag[1], position.x, position.y, WHITE);
             }
         }
         break;
@@ -341,7 +394,7 @@ void Player::draw() {
         {
         case 1: //drawFlower Mario
 
-            if (!isJumping) {
+            if (!isJumping && !flagAnimation) {
                 if (direction == 1) {
                     if (isWalking) {
 
@@ -374,7 +427,7 @@ void Player::draw() {
                     }
                 }
             }
-            else { // jumping
+            else if (isJumping && !flagAnimation) { // jumping
                 if (direction == 1) {
                     DrawTexture(jumpFireRight, position.x, position.y, WHITE);
                     //if (shouldDrawMario(immunity)) {
@@ -388,12 +441,22 @@ void Player::draw() {
                     //}
                 }
             }
+            else { //mario is going down the flag
+
+                if (shouldUseStarSprite()) {
+                    DrawTexture(fireMarioFlag[0], position.x, position.y, WHITE);
+                }
+                else {
+                    DrawTexture(fireMarioFlag[1], position.x, position.y, WHITE);
+                }
+            }
+
             break;
 
         case 2: //draw star mario
             starPowerUpTimer();
 
-            if (!isJumping) {
+            if (!isJumping && !flagAnimation) {
                 if (direction == 1) {
                     if (isWalking) {
                         if (useStarSprite) {
@@ -431,7 +494,7 @@ void Player::draw() {
                     }
                 }
             }
-            else {
+            else if (isJumping && !flagAnimation) { // jumping
                 if (direction == 1) {
                     if (useStarSprite) {
                         DrawTexture(jumpStarRight, position.x, position.y, WHITE);
@@ -447,6 +510,15 @@ void Player::draw() {
                     else {
                         DrawTexture(jumplMarioL, position.x, position.y, WHITE);
                     }
+                }
+            }
+            else { //mario is going down the flag
+
+                if (shouldUseStarSprite()) {
+                    DrawTexture(starMarioFlag[0], position.x, position.y, WHITE);
+                }
+                else {
+                    DrawTexture(starMarioFlag[1], position.x, position.y, WHITE);
                 }
             }
             break;
@@ -465,8 +537,12 @@ void Player::draw() {
 
 void Player::update(vector<Entity*>& entity, float gravity) {
 
-    if (state == 1 ||state ==2 ||state == 3) { //if mario alive
-        applyGravity(gravity);
+    if (hitbox.y >= 448.0f) { alive = false; }//if it has fallen in a hole
+
+    float delta = GetFrameTime();
+
+    if ((state == 1 ||state ==2 ||state == 3) && !flagAnimation) { //if mario alive
+        applyGravity(gravity, delta);
         updateRects();
         if (IsKeyDown(KEY_RIGHT)) {
 
@@ -479,7 +555,7 @@ void Player::update(vector<Entity*>& entity, float gravity) {
 
             if (direction == 1) { // if I am going right
 
-                move(1, camera->getRawCamera().target.x); //move to the right
+                move(1, camera->getRawCamera().target.x, delta); //move to the right
             }
             isWalking = true;
         }
@@ -494,7 +570,7 @@ void Player::update(vector<Entity*>& entity, float gravity) {
 
             if (direction == -1) { // if I am going left
 
-                move(-1, camera->getRawCamera().target.x); //move to the left
+                move(-1, camera->getRawCamera().target.x, delta); //move to the left
             }
             isWalking = true;
         }
@@ -506,7 +582,7 @@ void Player::update(vector<Entity*>& entity, float gravity) {
         colisionsPlayer(entity);
         if (immunity) {
 
-            immunityVoid();
+            immunityVoid(delta);
         }
         if (IsKeyPressed(KEY_SPACE) && !isJumping) {
 
@@ -519,8 +595,11 @@ void Player::update(vector<Entity*>& entity, float gravity) {
             castFireball(entity);
         }
     }
+    else if (state == 0 && !flagAnimation){
+        die(gravity, delta);
+    }
     else {
-        die(gravity);
+        win(delta);
     }
 
 }
@@ -556,15 +635,17 @@ void Player::changeDirection() {
     }
 }
 
-void Player::applyGravity(float gravity) {
+void Player::applyGravity(float gravity, float delta) {
 
     //Apply gravity
-    speed.y += gravity * GetFrameTime();
-    hitbox.y += speed.y * GetFrameTime();
-}
-void Player::move(int direction, float cameraX) {
+    //speed.y += gravity * GetFrameTime();
+    //hitbox.y += speed.y * GetFrameTime();
 
-    float delta = GetFrameTime(); // time between frames
+    speed.y += gravity * delta;
+    hitbox.y += speed.y * delta;
+}
+void Player::move(int direction, float cameraX, float delta) {
+
     float nextX = hitbox.x;
 
     if (direction == 1) {
@@ -584,9 +665,9 @@ void Player::move(int direction, float cameraX) {
     }
 }
 
-void Player::immunityVoid() {
+void Player::immunityVoid(float delta) {
     if (immunity) {
-        time += GetFrameTime(); //counts back from 3 to 0
+        time += delta; //counts back from 3 to 0
         if (time >= 3) { //counts until three, which is the time of immunity
             immunity = false;
             time = 0;
@@ -601,6 +682,10 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
 
     for (auto it = e.begin(); it != e.end(); ) { 
         Entity* ent = *it;
+
+        if (flag == nullptr && ent->getId() == 6) {
+            flag = dynamic_cast<Flag*>(ent);
+        }
 
         // Collision with blocks (id == 2)
         if (ent->getId() == 2 && CheckCollisionRecs(hitbox, ent->getHitbox())) {
@@ -654,8 +739,83 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
             colliding = false;
         }
 
-        // Collisions with goomba (id == 1)
+        // Collisions with enemy (id == 1)
+        //if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 1) {
+
+        //    Enemy* enemy = dynamic_cast<Enemy*>(ent);
+
+        //    if (enemy->getTypeEnemy() == 'g' && CheckCollisionPointRec(bottom, ent->getHitbox())) {//if the enemy is a goomba and collision with feet
+
+        //        if (!ent) {
+        //            ++it; //next iteration
+        //            continue; //use continuo for going outside and to the next iteration
+        //        }
+
+        //        printf("COLLISION GOOMBA CON LOS PIES\n");
+        //        PlaySound(jumpGoombaS);
+
+        //        ent->decreaseState();
+
+        //        if (hasPowerUp != 2) {
+        //            jump(350.0f);
+        //        }
+
+        //        addScore(200);
+
+        //        hitbox.y -= 5.0f; //for avoiding continious collision
+        //        continue; //use continuo for going outside and to the next iteration
+        //    
+        //    }
+        //    else if (hasPowerUp == 2) {
+        //        if (!ent) {
+        //            ++it; //next iteration
+        //            continue; //use continuo for going outside and to the next iteration
+        //        }
+
+        //        ent->markForDelation();
+        //    }
+        //    else {
+        //        state--;
+        //        if (state != 0) {
+        //            modifyHitbox(); //modify its hitbox when its hitted
+        //            immunity = true;
+        //        }
+        //        continue;
+        //    }
+        //}
+        //else{
+        //    colliding = false;
+        //}
+
         if (CheckCollisionRecs(hitbox, ent->getHitbox()) && !immunity && ent->getId() == 1 && ent->getState() == 1) {
+
+            if (ent == nullptr) { //if the pointer is null, continue
+
+                continue;
+            }
+
+            if (Piranha* piranha = dynamic_cast<Piranha*>(ent)) { //if colliding with piranha
+
+                if (hasPowerUp != 2) { //if has not the star power up
+                    state--; //decrese state mario
+                    if (state != 0) {
+                        modifyHitbox(); //modify its hitbox when its hitted
+                        immunity = true;
+                    }
+                }
+                else { //if has the star power up
+
+                    //ent->decreaseState();
+                    //ent->markForDelation();
+
+                    delete piranha;
+                    it = e.erase(it);
+                    
+                }
+
+                continue;
+            }
+
             if (CheckCollisionPointRec(bottom, ent->getHitbox()) && ent->getState() == 1 || hasPowerUp == 2) { //collision with mario's feet or mario has a star powerUp
 
                 if (!ent) {
@@ -760,6 +920,9 @@ void Player::colisionsPlayer(vector<Entity*>& e) {
             colliding = false;
         }
 
+        if (CheckCollisionRecs(hitbox, ent->getHitbox()) && ent->getId() == 5) { //colliding with the pole
+            flagAnimation = true;
+        }
         ++it; //next iteration
     }
 }
@@ -783,11 +946,18 @@ void Player::starPowerUpTimer() {
 
 void Player::addScore(int scoreToAdd) { //uses for adding a certain score
 
-    DrawText(TextFormat("%d", scoreToAdd), hitbox.x, hitbox.y, 5, BLACK);
+    //DrawText(TextFormat("%d", scoreToAdd), hitbox.x, hitbox.y, 5, BLACK);
+    scoreAdded = true;
+    amountScoreAdded = scoreToAdd;
     score += scoreToAdd;
 }
 
-void Player::die(float gravity) {
+void Player::scoreAddedFalse() {
+    scoreAdded = false;
+    amountScoreAdded = 0;
+}
+
+void Player::die(float gravity, float delta) {
 
     printf("MARIO DEAD\n");
 
@@ -795,7 +965,7 @@ void Player::die(float gravity) {
 
     if (time >= 0.0f && time <= 1.5f) { //move up for 3 seconds
 
-        applyGravity(gravity);
+        applyGravity(gravity, delta);
 
         if (time >= 0.0f && time <= 0.1f){
             jump(300.0f);
@@ -805,4 +975,14 @@ void Player::die(float gravity) {
         time = 0.0f;
         alive = false;
     }
+}
+
+void Player::win(float delta) {
+    printf("Winning flag\n");
+
+    flag->move(80, delta);
+    //flagAnimation = true;
+    hitbox.y += 80 * delta;
+
+
 }
