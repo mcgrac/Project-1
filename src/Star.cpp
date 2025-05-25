@@ -27,7 +27,6 @@ void Star::update(vector<Entity*>& entity, float gravity) {
 
     if (emerging && !touched) { //start to emerge
 
-        float delta = GetFrameTime();
         float move = emergeSpeed * delta * 60;
         hitbox.y -= move;
         emergedSoFar += move;
@@ -44,7 +43,7 @@ void Star::update(vector<Entity*>& entity, float gravity) {
         hitbox.x += velocity.x * delta;
  
         //gravity //movement y-axis
-        velocity.y += gravity;
+        velocity.y += (gravity * delta);
         if (velocity.y > terminalVelocityY) { velocity.y = terminalVelocityY; } //prevents the gravity to be too much high
 
         hitbox.y += velocity.y * delta;
