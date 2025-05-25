@@ -16,8 +16,7 @@ GameManager::GameManager(int screen, int op_, Player* player_)
     looseTexture = LoadTexture("resources/textures/game_over.png");
     arrowTexture = LoadTexture("resources/textures/arrow.png");
 
-    //pipe
-    pipe = LoadTexture("resources/textures/Pipe.png");
+
 #pragma endregion
 
 #pragma region SOUNDS
@@ -40,7 +39,7 @@ GameManager::~GameManager() {
     UnloadTexture(winTexture);
     UnloadTexture(arrowTexture);
     UnloadTexture(looseTexture);
-    UnloadTexture(pipe);
+
 #pragma endregion
 
 #pragma region SOUNDS
@@ -51,6 +50,15 @@ GameManager::~GameManager() {
 }
 
 vector<Entity*> GameManager::allEntities;
+
+void GameManager::update() {
+
+    //printf("Game Manager actual mscreen: %d\n", titleScreen);
+    //printf("Game Manager actual OP: %d\n", op);
+    if (titleScreen == 2) { opSelector(); } //for choosing an option in the main menu
+    nextScreen();
+
+}
 void GameManager::buildPowerUps(const string& filename, int rows, int columns) {
 
     ifstream file(filename);
@@ -131,10 +139,8 @@ void GameManager::buildLevel(int tileSize_, int rows_, int col_) {
                 case 1: {//mushroom
                     Mushroom* mushroom = new Mushroom(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 1);
 
-                    allEntities.push_back(mushroom);
-                    s->getPowerUp(mushroom);
-
-                    //create mushroom
+                    allEntities.push_back(mushroom);//add the mushroom to the entity list
+                    s->getPowerUp(mushroom);//asigns to that spececific surpirse block an stored powerUp
                 }
                     break;
 
@@ -142,16 +148,15 @@ void GameManager::buildLevel(int tileSize_, int rows_, int col_) {
 
                     Flower* flower = new Flower(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 2);
 
-                    allEntities.push_back(flower);
-                    s->getPowerUp(flower);
-                    //create flower
+                    allEntities.push_back(flower);//add the flower to the entity list
+                    s->getPowerUp(flower);//asigns to that spececific surpirse block an stored powerUp
                 }
                     break;
 
                 case 3: {//star
                     Star* star = new Star(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 3);
 
-                    allEntities.push_back(star);
+                    allEntities.push_back(star);//add the star to the entity list
                     s->getPowerUp(star); //asigns to that spececific surpirse block an stored powerUp
 
                 }
@@ -160,8 +165,8 @@ void GameManager::buildLevel(int tileSize_, int rows_, int col_) {
                 case 4:{ //coin
                     Coin* coin = new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, true, player);
 
-                    allEntities.push_back(coin);
-                    s->getPowerUp(coin);
+                    allEntities.push_back(coin);//add the coin to the entity list
+                    s->getPowerUp(coin);//asigns to that spececific surpirse block an stored powerUp
                     
                     }
                       break;
@@ -180,11 +185,19 @@ void GameManager::buildLevel(int tileSize_, int rows_, int col_) {
             case 4: { //pipe
 
                 createPiranha(x, y); //create piranha when finding a pipe
-                allEntities.push_back(new NormalBlock(x, y, pipe.width, pipe.height, 2, 1, 1));
+                allEntities.push_back(new Pipe(x, y, 32, 64, 2, 1));
+
+                //allEntities.push_back(new NormalBlock(x, y, pipe.width, pipe.height, 2, 1, 1)); //create the invisible blocks for the pipe
                 break;
             }
-            case 5: {
-                allEntities.push_back(new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, false, player));
+            case 5: { //coins that are not inside blocks
+                allEntities.push_back(new Coin(x, y, TILE_SIZE, TILE_SIZE, 3, 1, 4, false, player));//add the coin to the entity list
+
+                break;
+            }
+            case 6: { //flag
+                allEntities.push_back(new Entity(x, y, 16, 144, 5, 1)); //pole
+                allEntities.push_back(new Flag(x - 8, y, 16, 16, 6, 1)); //flag
 
                 break;
             }
@@ -216,20 +229,23 @@ void GameManager:: LoadMapFromFile(const string& filename, int rows, int columns
     file.close();
 }
 
+
 void GameManager::createGoomba() {
 
     printf("goombas created\n");
 
-    Goomba* goomba = new Goomba(400.0f, 300.0f, 16, 16, 1, 1, 100.0f, 1);
+    Goomba* goomba = new Goomba(400.0f, 300.0f, 16, 16, 1, 1, 'g', 100.0f, 1);
     allEntities.push_back(goomba);
 
-    Goomba* goomba2 = new Goomba(500.0f, 300.0f, 16, 16, 1, 1, 100.0f, -1);
+    Goomba* goomba2 = new Goomba(500.0f, 300.0f, 16, 16, 1, 1, 'g', 100.0f, -1);
     allEntities.push_back(goomba2); 
 }
 
 void GameManager::createPiranha(float x, float y) {
-    allEntities.push_back(new Piranha(x, y, 32, 32, 1, 1));
+    allEntities.push_back(new Piranha(x + 8.0f, y + 16.0f, 16, 23, 1, 1, 'p'));
 }
+
+
 void GameManager::startLevel() {
 
     if (!allEntities.empty()) {
@@ -299,37 +315,61 @@ void GameManager::opSelector() {
 }
 
 void GameManager::nextScreen() {
-    if (titleScreen == 1) {
-        titleScreen = 2;
+    //if (titleScreen == 1) {
+    //    titleScreen = 2;
+    //}
+    //else if (titleScreen == 2 && op == 0) {
+    //    titleScreen = 3;
+    //}
+    //else if (titleScreen == 2 && op == 1) {
+    //    titleScreen = 6;
+    //}
+    //else if (titleScreen == 2 && op == 2) {
+    //    CloseWindow();
+    //}
+    //else if (titleScreen == 3) {
+    //    titleScreen = 0;
+    //}
+    //else if (titleScreen == 4) {
+    //    titleScreen = 2;
+    //    soundPlayedOnce = false;
+    //}
+    //else if (titleScreen == 6) {
+    //    titleScreen = 7;
+    //}
+    //else if (titleScreen == 7) {
+    //    titleScreen = 2;
+    //}
+    //else if (titleScreen == 0) {
+    //    titleScreen = 5;
+    //}
+    //else if (titleScreen == 5) {
+    //    titleScreen = 2;
+    //    soundPlayedOnce = false;
+    //}
+
+    if (titleScreen == 1 || titleScreen == 3 || titleScreen == 4 || titleScreen == 5) {
+        float clock = counterBack(3.0f);
+        if (clock <= 0) {
+
+            //if the screen is the credits, win or lose screen, go to main menu screen
+            if (titleScreen == 1 || titleScreen == 4 || titleScreen == 5) { 
+                soundPlayedOnce = false;
+                titleScreen = 2; 
+            }
+            if (titleScreen == 3) { titleScreen = 0; }//go to game screen
+
+        }
     }
-    else if (titleScreen == 2 && op == 0) {
-        titleScreen = 3;
-    }
-    else if (titleScreen == 2 && op == 1) {
-        titleScreen = 6;
-    }
-    else if (titleScreen == 2 && op == 2) {
-        CloseWindow();
-    }
-    else if (titleScreen == 3) {
-        titleScreen = 0;
-    }
-    else if (titleScreen == 4) {
-        titleScreen = 2;
-        soundPlayedOnce = false;
-    }
-    else if (titleScreen == 6) {
-        titleScreen = 7;
-    }
-    else if (titleScreen == 7) {
-        titleScreen = 2;
-    }
-    else if (titleScreen == 0) {
-        titleScreen = 5;
-    }
-    else if (titleScreen == 5) {
-        titleScreen = 2;
-        soundPlayedOnce = false;
+
+    if (IsKeyPressed(KEY_N)) {
+        if (titleScreen == 2) { //if in the main menu
+            if (op == 0) { titleScreen = 3; } //go to startGame screen
+            else if (op == 1) {  titleScreen = 6; } //go to howToPlay 1
+            else if (op == 2) { CloseWindow(); } //close game
+        }
+        else if (titleScreen == 6) { titleScreen = 7; } //go to how to play 2
+        else if (titleScreen == 7) { titleScreen = 2; } //go to main menu
     }
 }
 
@@ -428,6 +468,38 @@ void GameManager::drawScreen(Camera2D c, int width, int heigh) {
     default:
         break;
     }
+
+    drawScore();
+}
+
+void GameManager::drawScore() {
+
+    if (player->getScoreAdded() && (counterBack(1.0f) > 0.0f)) { //if some score has been added, draw it in the screen
+
+        DrawText(TextFormat("%d", player->getScoreToAddAmount()), player->getHitbox().x + 16, player->getHitbox().y, 10, BLACK);
+
+    }
+    else {
+        player->scoreAddedFalse();//stop drawing score and reseting variable to false
+    }
+
+}
+
+float GameManager::counterBack(float initialTime) {
+
+    if (startCounterTime < 0.0f) {
+        startCounterTime = GetTime(); // guarda el tiempo inicial solo una vez
+    }
+
+    float elapsed = GetTime() - startCounterTime;
+    float remaining = initialTime - elapsed;
+
+    if (remaining <= 0.0f) {
+        startCounterTime = -1.0f; // reinicia para una futura llamada
+        return 0.0f;
+    }
+
+    return remaining;
 }
 
 
