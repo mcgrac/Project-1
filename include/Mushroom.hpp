@@ -6,7 +6,7 @@ class Mushroom : public BaseObject {
 private:
     Texture2D mushroom;
     Vector2 velocity{ 0.0f, 0.0f };
-    const float terminalVelocityY = 5.0f;
+    const float terminalVelocityY = 500.0f;
     const float initialSpeed = 60.0f;
 
     bool emerging = false;
