@@ -31,7 +31,7 @@ protected:
     int direction;
 
 public:
-    Goomba(float x, float y, float width, float height, int id, int state, float movementSpeed_, int direction_);
+    Goomba(float x, float y, float width, float height, int id, int state, char typeEnemy_, float movementSpeed_, int direction_);
     ~Goomba();
 
     float getMovementSpeed();
