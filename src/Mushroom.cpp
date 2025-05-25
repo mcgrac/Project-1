@@ -33,12 +33,12 @@ void Mushroom::update(vector<Entity*>& entity, float gravity) {
 
         hitbox.x += velocity.x * delta;
 
-        velocity.y += gravity;
+        velocity.y += gravity * delta;
         if (velocity.y > terminalVelocityY) {
             velocity.y = terminalVelocityY;
         }
 
-        hitbox.y += velocity.y;
+        hitbox.y += velocity.y * delta;
 
         handleCollision();
     }
