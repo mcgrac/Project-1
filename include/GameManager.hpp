@@ -1,23 +1,25 @@
 #ifndef GAMEMANAGER_HPP
 #define GAMEMANAGER_HPP
 
-#include "raylib.h"
+#include"raylib.h"
 #include<vector>
-#include "Entity.hpp"         
-#include "Goomba.hpp"         
-#include "Block.hpp"          
-#include "SurpriseBlock.hpp"
-#include "BreakBlock.hpp"
+#include"Entity.hpp"         
+#include"Goomba.hpp"         
+#include"Block.hpp"          
+#include"SurpriseBlock.hpp"
+#include"BreakBlock.hpp"
 #include"NormalBlock.hpp"
-#include"Star.hpp" //problema
-#include"Flower.hpp"//problema
-#include"Mushroom.hpp"//problema
-#include"Coin.hpp"//problema
-#include"BaseObject.hpp" //inlcuded now
+#include"Star.hpp" 
+#include"Flower.hpp"
+#include"Mushroom.hpp"
+#include"Coin.hpp"
+#include"BaseObject.hpp" 
 #include"Player.hpp"
 #include"Piranha.hpp"
-#include <iostream>
-#include <fstream>
+#include"Pipe.hpp"
+#include<iostream>
+#include<fstream>
+#include"Flag.hpp"
 
 using namespace std;
 
@@ -53,6 +55,7 @@ private:
     int op; //arrow selection main menu
     bool soundPlayedOnce = false; //for playing just once some sounds (ex: game over/win sounds)
     bool levelStarted = false; //for restarting the level
+    float startCounterTime = -1.0f; //for the back counter
 
     //create a vector that will contain all the entities
     static vector<Entity*> allEntities;
@@ -69,8 +72,7 @@ private:
     Texture2D looseTexture;
     Texture2D arrowTexture;
 
-    //pipe
-    Texture2D pipe;
+
 #pragma endregion
 
 #pragma region SOUNDS
@@ -99,6 +101,7 @@ public:
     int GetScreen();
     int getOp();
 
+    void update();
 
     void setScreen(int titleScreen);
     void win();
@@ -108,12 +111,16 @@ public:
     void opSelector();
     void nextScreen();
     void gameOver();
+
     void drawScreen(Camera2D c, int width, int heigh);
+    void drawScore();
+
     void playSounds();
 
     void createGoomba();
     void createPiranha(float x, float y);
 
+    float counterBack(float initialTime);
 #pragma region GETTERS
     bool getlevelStarted() { return levelStarted; }
     bool retSound() { return soundPlayedOnce; }
