@@ -19,7 +19,7 @@ protected:
 	////create a vector that will contain all the entities
 	//static vector<Entity*> allEntities;
 
-	int id;     // 0 player, 1 enemy, 2 block, 3 powerUp, 4 Fireballs
+	int id;     // 0 player, 1 enemy, 2 block, 3 powerUp, 4 Fireballs, 5 PoleFlag, 6 flag
 	int state;  // 0 dead, 1 little mario, 2 big mario, 3 power up mario
 	bool toDelete; //for deleting entities
 
