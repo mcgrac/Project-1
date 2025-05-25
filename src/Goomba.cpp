@@ -1,8 +1,8 @@
 #include "Goomba.hpp"
 #include "raylib.h"
 
-Goomba::Goomba(float x, float y, float width, float height, int id, int state, float movementSpeed_, int direction_)
-    : Enemy(x, y, width, height, id, state), movementSpeed(movementSpeed_), direction(direction_) {
+Goomba::Goomba(float x, float y, float width, float height, int id, int state, char typeEnemy_, float movementSpeed_, int direction_)
+    : Enemy(x, y, width, height, id, state, typeEnemy_), movementSpeed(movementSpeed_), direction(direction_) {
 
 #pragma region TEXTURES
     goomba1 = LoadTexture("resources/textures/Goomba1.png");
@@ -63,6 +63,9 @@ void Goomba::draw() {
 }
 
 void Goomba::update(vector<Entity*>& entity, float gravity) {
+
+    //printf("UPDATE GOOMBA\n");
+
     if (state != 0) {
         moveGoomba(entity, gravity);
         updateRects();
