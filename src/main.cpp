@@ -131,12 +131,9 @@ int main()
 		//end camera mode
 		camera.end();
 
-
-		DrawText(TextFormat("hitbox.y = %f", mario->getHitbox().y), 10, 10, 20, BLACK);
-		DrawText(TextFormat("hitbox.x = %f", mario->getHitbox().x), 10, 30, 20, BLACK);
-		DrawText(TextFormat("Score: %d", mario->getScorePlayer()), 10, 50, 20, BLACK);
-		DrawText(TextFormat("Direction: %d", mario->getDir()), 10, 70, 20, BLACK);
-		
+		if (gm.GetScreen() == 0) {
+			DrawText(TextFormat("Score: %d", mario->getScorePlayer()), 10, 10, 20, BLACK);
+		}
 
 		// end drawing and the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
